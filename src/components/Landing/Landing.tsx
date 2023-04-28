@@ -4,7 +4,9 @@ import trackClickthrough from "@/lib/funcs/trackClickthrough";
 import { Button, Flex, Text } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { useStyles } from "../Common/StyleProvider";
+import JoinModal from "../Common/JoinModal";
+import { useModal } from "../Providers/ModalProvider";
+import { useStyles } from "../Providers/StyleProvider";
 
 export default function Landing({}: {}) {
   const searchParams = useSearchParams();
@@ -23,18 +25,13 @@ export default function Landing({}: {}) {
 
   return (
     <Flex direction="column" position="relative" id="parent">
-      {/* <Text position="fixed" bottom="10px" color="hl">
-        Next section
-      </Text> */}
       <IntroSection />
-      {/* <ArtistsListenersSection />
-      <KandiSection /> */}
     </Flex>
   );
 }
 
 function IntroSection() {
-  const { setGradientPosition } = useStyles();
+  const { setJoinModal } = useModal();
   const router = useRouter();
 
   return (
@@ -45,11 +42,15 @@ function IntroSection() {
         overflowWrap="break-word"
         direction="column"
         id="section-1"
+        align={{ sm: "center", md: "flex-start" }}
         justify="flex-end"
       >
         <Text
           fontSize={{ sm: "65px", md: "9.5vw" }}
           lineHeight={{ sm: "65px", md: "9vw" }}
+          fontWeight={{ sm: "bold", md: "medium" }}
+          mb={2}
+          textAlign={{ sm: "center", md: "start" }}
         >
           {/* Connecting electronic music culture. */}
           More than just music.
@@ -67,7 +68,7 @@ function IntroSection() {
             fontWeight="bold"
             fontSize="17px"
             border="2px"
-            onClick={() => router.push("/join")}
+            onClick={() => setJoinModal(true)}
             _hover={{ borderColor: "black", color: "white", bg: "black" }}
           >
             Win tickets to Boiler Room NYC

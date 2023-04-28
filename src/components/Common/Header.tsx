@@ -5,11 +5,13 @@ import { Link as NextLink } from "@chakra-ui/next-js";
 import { FaTiktok as TikTok } from "react-icons/fa";
 import { GrInstagram as Instagram, GrSpotify as Spotify } from "react-icons/gr";
 import trackClickthrough from "@/lib/funcs/trackClickthrough";
-import { useStyles } from "./StyleProvider";
+import { useStyles } from "../Providers/StyleProvider";
 import { useEffect, useState } from "react";
+import { useModal } from "../Providers/ModalProvider";
 
 export default function Header() {
   const { gradientPosition } = useStyles();
+  const { setJoinModal } = useModal();
   const [gb, setGb] = useState(gradientPosition === "bottom");
 
   useEffect(() => {
@@ -24,13 +26,7 @@ export default function Header() {
       zIndex={2}
       color={gb ? "white" : "black"}
     >
-      <Flex
-        w="100%"
-        justify="space-between"
-        align="center"
-        fontSize="30px"
-        fontWeight="medium"
-      >
+      <Flex w="100%" justify="space-between" align="center" fontSize="30px">
         <Flex direction="row" align="center">
           <Text>
             <NextLink href="/" _hover={{ textDecoration: "none" }}>
@@ -43,25 +39,28 @@ export default function Header() {
             h="35px"
             w="35px"
             p={0}
-            border="2px solid white"
+            border="2px solid"
             borderRadius="50%"
             ml={3}
           >
-            <Flex bg="white" w="15px" h="15px" borderRadius="50%" />
+            <Flex
+              w="15px"
+              h="15px"
+              borderRadius="50%"
+              bg={gradientPosition === "top" ? "black" : "white"}
+            />
           </Flex>
         </Flex>
 
         <Flex align="center" fontSize="25px" fontWeight="medium">
-          <NextLink
-            href="/join"
-            mr={5}
-            borderColor="white"
-            borderRadius="20px"
+          <Text
             fontSize="20px"
-            _hover={{ textDecoration: "none" }}
+            mr={5}
+            _hover={{ cursor: "pointer" }}
+            onClick={() => setJoinModal(true)}
           >
             Join
-          </NextLink>
+          </Text>
           <Text
             onClick={() => trackClickthrough("to_events")}
             // border="1px solid"

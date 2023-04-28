@@ -1,5 +1,6 @@
 import { extendTheme } from "@chakra-ui/react";
 import { Archivo } from "next/font/google";
+import "@fontsource/inconsolata";
 
 import Button from "./Button";
 
@@ -14,6 +15,7 @@ const theme = extendTheme({
   },
   fonts: {
     body: archivo.style.fontFamily,
+    bodyalt: `'Inconsolata', monospace`,
   },
   textStyles: {},
 });

@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import { ReactNode, useState } from "react";
-import { useStyles } from "./StyleProvider";
+import { useStyles } from "../Providers/StyleProvider";
 
 export default function Landing({ children }: { children: ReactNode }) {
   const { gradientPosition } = useStyles();
