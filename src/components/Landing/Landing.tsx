@@ -42,29 +42,28 @@ function IntroSection() {
         overflowWrap="break-word"
         direction="column"
         id="section-1"
-        align={{ sm: "center", md: "flex-start" }}
+        align={{ base: "center", sm: "flex-start" }}
         justify="flex-end"
       >
         <Text
-          fontSize={{ sm: "65px", md: "9.5vw" }}
-          lineHeight={{ sm: "65px", md: "9vw" }}
-          fontWeight={{ sm: "bold", md: "medium" }}
+          fontSize={{ base: "65px", md: "9.5vw" }}
+          lineHeight={{ base: "65px", md: "9vw" }}
+          fontWeight={{ base: "bold", md: "medium" }}
           mb={2}
-          textAlign={{ sm: "center", md: "start" }}
+          textAlign={{ base: "center", sm: "start" }}
         >
-          {/* Connecting electronic music culture. */}
           More than just music.
         </Text>
         <Flex
           w="fit-content"
-          direction={{ sm: "column", md: "row" }}
+          direction={{ base: "column", md: "row" }}
           mt={5}
           align="center"
           fontWeight="bold"
         >
           <Button
             variant="base"
-            w="400px"
+            w={{ base: "100%", md: "400px" }}
             fontWeight="bold"
             fontSize="17px"
             border="2px"
@@ -75,9 +74,9 @@ function IntroSection() {
           </Button>
           <Button
             variant="base"
-            w={{ sm: "100%", md: "200px" }}
-            ml={{ sm: 0, md: 5 }}
-            mt={{ sm: 2, md: 0 }}
+            w={{ base: "100%", md: "200px" }}
+            ml={{ base: 0, md: 5 }}
+            mt={{ base: 2, md: 0 }}
             onClick={() => {
               router.push("/about");
             }}

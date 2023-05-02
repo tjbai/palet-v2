@@ -26,7 +26,12 @@ export default function Header() {
       zIndex={2}
       color={gb ? "white" : "black"}
     >
-      <Flex w="100%" justify="space-between" align="center" fontSize="30px">
+      <Flex
+        w="100%"
+        justify="space-between"
+        align="center"
+        fontSize={{ base: "20px", md: "30px" }}
+      >
         <Flex direction="row" align="center">
           <Text>
             <NextLink href="/" _hover={{ textDecoration: "none" }}>
@@ -36,25 +41,29 @@ export default function Header() {
           <Flex
             align="center"
             justify="center"
-            h="35px"
-            w="35px"
+            h={{ base: "25px", md: "35px" }}
+            w={{ base: "25px", md: "35px" }}
             p={0}
             border="2px solid"
             borderRadius="50%"
             ml={3}
           >
             <Flex
-              w="15px"
-              h="15px"
+              w={{ base: "10px", md: "15px" }}
+              h={{ base: "10px", md: "15px" }}
               borderRadius="50%"
               bg={gradientPosition === "top" ? "black" : "white"}
             />
           </Flex>
         </Flex>
 
-        <Flex align="center" fontSize="25px" fontWeight="medium">
+        <Flex
+          align="center"
+          fontSize={{ base: "17px", sm: "25px" }}
+          fontWeight="medium"
+        >
           <Text
-            fontSize="20px"
+            fontSize={{ base: "15px", sm: "20px" }}
             mr={5}
             _hover={{ cursor: "pointer" }}
             onClick={() => setJoinModal(true)}
@@ -66,7 +75,7 @@ export default function Header() {
             // border="1px solid"
             borderColor="white"
             borderRadius="20px"
-            fontSize="20px"
+            fontSize={{ base: "15px", sm: "20px" }}
           >
             <ChakraLink
               href="https://www.notion.so/NYC-Electronic-FRI-4-28-SAT-4-29-2-20136bf151244910ac90c0b60fb8726c"
@@ -86,7 +95,7 @@ export default function Header() {
             }}
           />
           <Icon
-            ml={5}
+            ml={{ base: 3, md: 5 }}
             as={Spotify}
             _hover={{ cursor: "pointer" }}
             onClick={() => {
@@ -98,7 +107,7 @@ export default function Header() {
             }}
           />
           <Icon
-            ml={4}
+            ml={{ base: 2.5, md: 4 }}
             as={TikTok}
             _hover={{ cursor: "pointer" }}
             onClick={() => {
