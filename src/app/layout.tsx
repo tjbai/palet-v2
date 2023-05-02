@@ -9,6 +9,7 @@ import { Router } from "next/router";
 import { useState, useEffect } from "react";
 import Loader from "@/components/Loader";
 import JoinModal from "@/components/Common/JoinModal";
+import { Analytics } from "@vercel/analytics/react";
 
 export default function RootLayout({
   children,
@@ -42,6 +43,7 @@ export default function RootLayout({
             <Footer />
           </Background>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
