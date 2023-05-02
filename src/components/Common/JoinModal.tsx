@@ -46,7 +46,7 @@ export default function JoinModal() {
 
     setFlag("");
 
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("emails")
       .select("*")
       .eq("email", submission);
@@ -81,7 +81,7 @@ export default function JoinModal() {
   };
 
   return (
-    <Modal isOpen={joinModal} onClose={() => setJoinModal(false)} isCentered>
+    <Modal isOpen={joinModal} onClose={() => setJoinModal(false)}>
       <ModalOverlay
         bg="none"
         backdropFilter="auto"
@@ -92,10 +92,9 @@ export default function JoinModal() {
         borderRadius="0px"
         bg="none"
         shadow="none"
-        autoFocus
         alignContent={"center"}
         justifyContent={"center"}
-        w="60vw"
+        w={{ base: "95vw", lg: "60vw" }}
       >
         <ModalBody bg="none" p={1} w="100%">
           <Flex
