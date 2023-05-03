@@ -35,8 +35,7 @@ function IntroSection() {
   const router = useRouter();
 
   return (
-    // <SectionWrapper>
-    <Flex position="relative" pb="60px" h="calc(100vh)">
+    <Flex position="relative" pb="60px" h={{ base: "80vh", sm: "calc(100vh)" }}>
       <Flex
         maxW="100vw"
         overflowWrap="break-word"
@@ -46,7 +45,7 @@ function IntroSection() {
         justify="flex-end"
       >
         <Text
-          fontSize={{ base: "65px", md: "9.5vw" }}
+          fontSize={{ base: "60px", md: "9.5vw" }}
           lineHeight={{ base: "65px", md: "9vw" }}
           fontWeight={{ base: "bold", md: "medium" }}
           mb={2}
@@ -65,7 +64,7 @@ function IntroSection() {
             variant="base"
             w={{ base: "100%", md: "400px" }}
             fontWeight="bold"
-            fontSize="17px"
+            fontSize={{ base: "15px", sm: "17px" }}
             border="2px"
             onClick={() => setJoinModal(true)}
             _hover={{ borderColor: "black", color: "white", bg: "black" }}
@@ -84,7 +83,7 @@ function IntroSection() {
             color="white"
             border="2px solid black"
             _hover={{ borderColor: "black", bg: "none", color: "black" }}
-            fontSize="17px"
+            fontSize={{ base: "15px", sm: "17px" }}
           >
             Learn more
           </Button>

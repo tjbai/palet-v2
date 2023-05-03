@@ -30,7 +30,7 @@ function MainSection() {
 
   function ListenerSpew() {
     return (
-      <VStack align="flex-start" fontSize={{ sm: "20px", md: "2vw" }} mt={3}>
+      <VStack align="flex-start" fontSize={{ base: "20px", md: "2vw" }} mt={3}>
         <Text>
           Palet is a streaming platform that builds on the ways you stream,
           discover, and engage with music.
@@ -56,7 +56,7 @@ function MainSection() {
 
   function ArtistSpew() {
     return (
-      <VStack align="flex-start" fontSize={{ sm: "20px", md: "2vw" }} mt={3}>
+      <VStack align="flex-start" fontSize={{ base: "20px", md: "2vw" }} mt={3}>
         <Text>We make your life easy.</Text>
         <Text>
           Palet puts all the tools you might need to build a career and brand in
@@ -81,7 +81,7 @@ function MainSection() {
     return (
       <VStack
         align="flex-start"
-        fontSize={{ sm: "20px", md: "2vw" }}
+        fontSize={{ base: "20px", md: "2vw" }}
         mt={3}
         position="absolute"
       >
@@ -104,11 +104,15 @@ function MainSection() {
   return (
     <Flex position="relative" top="60px" h="100vh">
       <Flex position="relative" top="-60px" id="section-2" />
-      <Flex direction="column" id="section-2" pt={{ sm: "20px", md: "1.5vw" }}>
+      <Flex
+        direction="column"
+        id="section-2"
+        pt={{ base: "20px", md: "1.5vw" }}
+      >
         <Flex
           w="fit-content"
-          fontSize={{ sm: "35px", md: "5vw" }}
-          lineHeight={{ sm: "35px", md: "4vw" }}
+          fontSize={{ base: "30px", md: "5vw" }}
+          lineHeight={{ base: "30px", md: "4vw" }}
         >
           <Text
             _hover={{
@@ -122,7 +126,7 @@ function MainSection() {
             Listeners
           </Text>
           <Text
-            ml="1vw"
+            ml="1.5vw"
             _hover={{
               cursor: "pointer",
             }}
@@ -134,7 +138,7 @@ function MainSection() {
             Artists
           </Text>
           <Text
-            ml="1vw"
+            ml="1.5vw"
             _hover={{ cursor: "pointer" }}
             onClick={() => setSelection("kandi")}
             fontWeight={selection === "kandi" ? "bold" : "fine"}
@@ -143,7 +147,7 @@ function MainSection() {
           </Text>
         </Flex>
 
-        <Text maxW={{ sm: "100%", md: "100vw" }} mt="1.5vw" fontSize="25px">
+        <Text maxW={{ base: "100%", md: "100vw" }} mt="1.5vw" fontSize="25px">
           {selection === "listeners" ? (
             <ListenerSpew />
           ) : selection === "artists" ? (

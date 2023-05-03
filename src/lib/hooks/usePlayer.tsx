@@ -1,15 +1,20 @@
-import { useState } from "react";
+// import { useEffect, useState } from "react";
 
-const useReactPlayer = () => {
-  const [playing, setPlaying] = useState(false);
+// const usePlayer = () => {
+//   // const [playlistId, setPlaylistId] = useState("");
+//   const [songId, setSongId] = useState("");
+//   const [sourceUrl, setSourceUrl] = useState("");
+//   const [playing, setPlaying] = useState(false);
 
-  const play = () => setPlaying(true);
+//   useEffect(() => {
+//     if (songId) setSourceUrl()
+//   }, [songId])
 
-  const pause = () => setPlaying(false);
+//   const toggle = () => setPlaying((p) => !p);
 
-  const toggle = () => setPlaying((p) => !p);
+//   const playSong = (songId: string) => setSongId(songId);
 
-  return { playing, setPlaying, play, pause, toggle };
-};
+//   return { toggle, playSong, songId };
+// };
 
-export default useReactPlayer;
+// export default usePlayer;
