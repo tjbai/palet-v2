@@ -78,7 +78,7 @@ export default function Header() {
             fontSize={{ base: "15px", sm: "20px" }}
           >
             <ChakraLink
-              href="https://www.notion.so/NYC-Electronic-FRI-4-28-SAT-4-29-2-20136bf151244910ac90c0b60fb8726c"
+              href="https://celestial-lighter-b8e.notion.site/NYC-Electronic-THU-5-4-FRI-5-5-SAT-5-6-a45ca136b71f4771b842c4bee11fd1f0"
               isExternal
               _hover={{ textDecoration: "none" }}
             >
