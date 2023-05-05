@@ -1,12 +1,10 @@
 "use client";
 
-import {
-  NowPlaying,
-  PlaylistContext,
-  usePlayer,
-} from "@/components/Providers/PlayerProvider";
+import { usePlayer } from "@/components/Providers/PlayerProvider";
 import { useStyles } from "@/components/Providers/StyleProvider";
 import ClickIcon from "@/components/Util/ClickIcon";
+import artistsToString from "@/lib/funcs/artistsToString";
+import { PlaylistContext, NowPlaying } from "@/lib/hooks/usePlayerState";
 import { Flex, HStack, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { RiSkipForwardFill, RiSkipBackFill } from "react-icons/ri";
@@ -44,7 +42,12 @@ export default function Player1({
         borderColor={gradient.position === "top" ? "black" : "white"}
         transition="color 2s ease-in-out"
       >
-        <Text fontWeight="bold">NOW PLAYING: {nowPlaying?.title}</Text>
+        <Text fontWeight="bold">
+          NOW PLAYING: {nowPlaying?.title}
+          {nowPlaying?.artists
+            ? " by " + artistsToString(nowPlaying?.artists)
+            : ""}
+        </Text>
         <Controls />
       </Flex>
       <Flex
@@ -52,6 +55,7 @@ export default function Player1({
         top="130px"
         direction="column"
         overflowX="scroll"
+        pt="15px"
       >
         {playlistContext.songs.map((song, index) => (
           <ScrollPiece
@@ -98,6 +102,7 @@ function ScrollPiece({
       w="100%"
       mb="15px"
       pb="15px"
+      opacity={selected ? 1 : 0.5}
     >
       <text
         className={
