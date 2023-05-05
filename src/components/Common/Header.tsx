@@ -27,6 +27,7 @@ export default function Header() {
       position="fixed"
       zIndex={2}
       color={gb ? "white" : "black"}
+      transition="color 2s ease-in-out"
     >
       <Flex
         w="100%"
@@ -56,6 +57,7 @@ export default function Header() {
               w={{ base: "9px", md: "12px" }}
               h={{ base: "9px", md: "12px" }}
               borderRadius="50%"
+              transition="2s ease-in-out"
               bg={gradient.position === "top" ? "black" : "white"}
             />
           </Flex>

@@ -21,7 +21,7 @@ export default function RootLayout({
             <Header />
             <JoinModal />
             {children}
-            <Footer />
+            {/* <Footer /> */}
           </Background>
         </Providers>
         <Analytics />

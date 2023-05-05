@@ -3,3 +3,22 @@ body {
   max-width: 100vw;
   overflow-x: hidden;
 }
+
+.player1-reactive-selected {
+  text-shadow:
+   -1px -1px 0 #000,  
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+     1px 1px 0 #000;
+  color: white
+}
+
+.player1-reactive-unselected {
+  text-shadow:
+  -1px -1px 0 #000,  
+   1px -1px 0 #000,
+   -1px 1px 0 #000,
+    1px 1px 0 #000;
+  color: transparent
+}
+

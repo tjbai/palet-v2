@@ -13,6 +13,7 @@ import ReactPlayer from "react-player";
 /* Fetching entire playlists should go into this interface */
 export interface PlaylistContext {
   id: string | number;
+  name?: string;
   index: number;
   songs: NowPlaying[];
 }
@@ -28,6 +29,7 @@ interface PlayerContext {
   nowPlaying: NowPlaying | null;
   setNowPlaying: Dispatch<SetStateAction<NowPlaying | null>>;
   nextSong: () => void;
+  prevSong: () => void;
 }
 
 const playerContext = createContext({} as PlayerContext);
@@ -56,6 +58,15 @@ export default function PlayerProvider(props: { children: ReactNode }) {
     });
   };
 
+  const prevSong = () => {
+    if (!playlistContext) return;
+    if (playlistContext.index === 0) return;
+    setPlaylistContext({
+      ...playlistContext,
+      index: playlistContext.index - 1,
+    });
+  };
+
   return (
     <playerContext.Provider
       value={{
@@ -64,6 +75,7 @@ export default function PlayerProvider(props: { children: ReactNode }) {
         nowPlaying,
         setNowPlaying,
         nextSong,
+        prevSong,
       }}
     >
       {hasWindow ? (
