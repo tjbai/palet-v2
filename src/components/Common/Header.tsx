@@ -1,22 +1,24 @@
 "use client";
 
-import { Flex, Icon, Text, Link as ChakraLink } from "@chakra-ui/react";
+import trackClickthrough from "@/lib/funcs/trackClickthrough";
 import { Link as NextLink } from "@chakra-ui/next-js";
+import { Link as ChakraLink, Flex, Icon, Text } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { FaTiktok as TikTok } from "react-icons/fa";
 import { GrInstagram as Instagram, GrSpotify as Spotify } from "react-icons/gr";
-import trackClickthrough from "@/lib/funcs/trackClickthrough";
-import { useStyles } from "../Providers/StyleProvider";
-import { useEffect, useState } from "react";
 import { useModal } from "../Providers/ModalProvider";
+import { useStyles } from "../Providers/StyleProvider";
 
 export default function Header() {
-  const { gradientPosition } = useStyles();
+  const { gradient } = useStyles();
   const { setJoinModal } = useModal();
-  const [gb, setGb] = useState(gradientPosition === "bottom");
+  const [gb, setGb] = useState(gradient.position === "bottom");
+  const router = useRouter();
 
   useEffect(() => {
-    setGb(gradientPosition === "bottom");
-  }, [gradientPosition]);
+    setGb(gradient.position === "bottom");
+  }, [gradient]);
 
   return (
     <Flex
@@ -32,7 +34,7 @@ export default function Header() {
         align="center"
         fontSize={{ base: "20px", md: "30px" }}
       >
-        <Flex direction="row" align="center">
+        <Flex direction="row" align="center" fontWeight="bold">
           <Text>
             <NextLink href="/" _hover={{ textDecoration: "none" }}>
               Palet
@@ -41,41 +43,43 @@ export default function Header() {
           <Flex
             align="center"
             justify="center"
-            h={{ base: "25px", md: "35px" }}
-            w={{ base: "25px", md: "35px" }}
+            h={{ base: "22px", md: "30px" }}
+            w={{ base: "22px", md: "30px" }}
             p={0}
             border="2px solid"
             borderRadius="50%"
             ml={3}
+            _hover={{ cursor: "pointer" }}
+            onClick={() => router.replace("/player")}
           >
             <Flex
-              w={{ base: "10px", md: "15px" }}
-              h={{ base: "10px", md: "15px" }}
+              w={{ base: "9px", md: "12px" }}
+              h={{ base: "9px", md: "12px" }}
               borderRadius="50%"
-              bg={gradientPosition === "top" ? "black" : "white"}
+              bg={gradient.position === "top" ? "black" : "white"}
             />
           </Flex>
         </Flex>
 
-        <Flex
-          align="center"
-          fontSize={{ base: "17px", sm: "25px" }}
-          fontWeight="medium"
-        >
+        <Flex align="center" fontSize={{ base: "17px", md: "22px" }}>
           <Text
-            fontSize={{ base: "15px", sm: "20px" }}
+            fontSize={{ base: "12px", md: "15px" }}
             mr={5}
             _hover={{ cursor: "pointer" }}
             onClick={() => setJoinModal(true)}
+            px={2}
+            border="1px solid"
+            borderRadius="20px"
           >
             Join
           </Text>
           <Text
             onClick={() => trackClickthrough("to_events")}
-            // border="1px solid"
             borderColor="white"
+            fontSize={{ base: "12px", md: "15px" }}
+            border="1px solid"
+            px={2}
             borderRadius="20px"
-            fontSize={{ base: "15px", sm: "20px" }}
           >
             <ChakraLink
               href="https://celestial-lighter-b8e.notion.site/NYC-Electronic-THU-5-4-FRI-5-5-SAT-5-6-a45ca136b71f4771b842c4bee11fd1f0"

@@ -4,7 +4,6 @@ import trackClickthrough from "@/lib/funcs/trackClickthrough";
 import { Button, Flex, Text } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import JoinModal from "../Common/JoinModal";
 import { useModal } from "../Providers/ModalProvider";
 import { useStyles } from "../Providers/StyleProvider";
 
@@ -12,7 +11,7 @@ export default function Landing({}: {}) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const ref = searchParams.get("ref");
-  const { setGradientPosition } = useStyles();
+  const { setGradient, setBackgroundImage } = useStyles();
 
   useEffect(() => {
     async function logRef(ref: string) {
@@ -20,7 +19,8 @@ export default function Landing({}: {}) {
       router.replace("/");
     }
     if (ref) logRef(ref);
-    setGradientPosition("bottom");
+    setGradient((p) => ({ ...p, position: "bottom" }));
+    setBackgroundImage("images/landing-bg-v2.jpg");
   }, []);
 
   return (

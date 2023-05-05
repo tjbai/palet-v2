@@ -1,6 +1,8 @@
 import { extendTheme } from "@chakra-ui/react";
+
 import "@fontsource/inconsolata";
 import "@fontsource/archivo";
+import "@fontsource/arimo";
 
 import Button from "./Button";
 
@@ -12,7 +14,7 @@ const theme = extendTheme({
     hl: "#f97470",
   },
   fonts: {
-    body: `'Archivo', sans-serif`,
+    body: `'Arimo', sans-serif`,
     bodyalt: `'Inconsolata', monospace`,
   },
   textStyles: {},

@@ -1,13 +1,13 @@
 import { Box } from "@chakra-ui/react";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { useStyles } from "../Providers/StyleProvider";
 
-export default function Landing({ children }: { children: ReactNode }) {
-  const { gradientPosition } = useStyles();
+export default function Background({ children }: { children: ReactNode }) {
+  const { gradient, backgroundImage } = useStyles();
 
   return (
     <Box
-      backgroundImage="/images/landing-bg-v2.jpg"
+      backgroundImage={backgroundImage}
       backgroundSize="cover"
       backgroundPosition="center center"
       backgroundAttachment="fixed"
@@ -25,9 +25,9 @@ export default function Landing({ children }: { children: ReactNode }) {
         height: "100%",
         transition: "1s",
         background:
-          gradientPosition === "bottom"
-            ? "linear-gradient(to bottom, rgba(255,255,255,0) 20%, rgba(255,255,255,1) 100%)"
-            : "linear-gradient(to top, rgba(255,255,255,0) 20%, rgba(255,255,255,1) 100%)",
+          gradient.position === "bottom"
+            ? `linear-gradient(to bottom, rgba(255,255,255,0) ${gradient.intensity}%, rgba(255,255,255,1) 100%)`
+            : `linear-gradient(to top, rgba(255,255,255,0) ${gradient.intensity}%, rgba(255,255,255,1) 100%)`,
         zIndex: "-1",
       }}
       px="25px"

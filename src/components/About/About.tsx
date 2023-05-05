@@ -1,7 +1,16 @@
-import { VStack, Flex, Button, Highlight, Text, Link } from "@chakra-ui/react";
+import {
+  VStack,
+  Flex,
+  Button,
+  Highlight,
+  Text,
+  Link,
+  position,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import SectionWrapper from "../Common/SectionWrapper";
-import { useStyles } from "../Providers/StyleProvider";
+import { Gradient, useStyles } from "../Providers/StyleProvider";
+import { previewData } from "next/dist/client/components/headers";
 
 export default function About() {
   return (
@@ -11,21 +20,14 @@ export default function About() {
   );
 }
 
-// const scrollToSection = (section: number) => {
-//   const sectionElement = document.getElementById(`section-${section}`);
-//   sectionElement?.scrollIntoView({
-//     behavior: "smooth",
-//   });
-// };
-
 function MainSection() {
   const [selection, setSelection] = useState<"artists" | "listeners" | "kandi">(
     "listeners"
   );
 
-  const { setGradientPosition } = useStyles();
+  const { setGradient } = useStyles();
   useEffect(() => {
-    setGradientPosition("top");
+    setGradient((prev) => ({ ...prev, position: "top" }));
   }, []);
 
   function ListenerSpew() {
