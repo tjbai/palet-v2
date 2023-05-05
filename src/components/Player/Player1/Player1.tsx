@@ -24,8 +24,13 @@ export default function Player1({
 
   useEffect(() => {
     if (!nowPlaying) return;
-    const element = document.getElementById(`${nowPlaying.id}`);
-    element?.scrollIntoView({ behavior: "smooth" });
+
+    const timeout = setTimeout(() => {
+      const element = document.getElementById(`${nowPlaying.id}`);
+      element?.scrollIntoView({ behavior: "smooth" });
+    }, 250);
+
+    return () => clearTimeout(timeout);
   }, [nowPlaying]);
 
   return (
@@ -33,7 +38,7 @@ export default function Player1({
       <Flex
         w="calc(100vw - 50px)"
         borderY="1px solid"
-        h="60px"
+        h={{ base: "45px", md: "60px" }}
         top="70px"
         position="fixed"
         align="center"
@@ -41,6 +46,7 @@ export default function Player1({
         color={gradient.position === "top" ? "black" : "white"}
         borderColor={gradient.position === "top" ? "black" : "white"}
         transition="color 2s ease-in-out"
+        fontSize={{ base: "12px", md: "17px" }}
       >
         <Text fontWeight="bold">
           NOW PLAYING: {nowPlaying?.title}
@@ -52,7 +58,7 @@ export default function Player1({
       </Flex>
       <Flex
         position="relative"
-        top="130px"
+        top={{ base: "115px", md: "130px" }}
         direction="column"
         overflowX="scroll"
         pt="15px"
@@ -94,8 +100,8 @@ function ScrollPiece({
     <Flex
       id={`${song.id}`}
       fontStyle="italic"
-      fontSize="150px"
-      lineHeight="135px"
+      fontSize={{ base: "40px", sm: "70px", md: "100px", lg: "150px" }}
+      lineHeight={{ base: "40px", sm: "65px", md: "90px", lg: "135px" }}
       _hover={{ cursor: "pointer" }}
       onClick={selectSong}
       borderBottom="1px solid black"
