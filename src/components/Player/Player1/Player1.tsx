@@ -2,25 +2,20 @@
 
 import { usePlayer } from "@/components/Providers/PlayerProvider";
 import { useStyles } from "@/components/Providers/StyleProvider";
-import ClickIcon from "@/components/Util/ClickIcon";
-import artistsToString from "@/lib/funcs/artistsToString";
-import { PlaylistContext, NowPlaying } from "@/lib/hooks/usePlayerState";
-import { Flex, HStack, Text } from "@chakra-ui/react";
+import { NowPlaying, PlaylistContext } from "@/lib/hooks/usePlayerState";
+import { Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { RiSkipForwardFill, RiSkipBackFill } from "react-icons/ri";
+import BelowNowPlayingWrapper from "../BelowNowPlayingWrapper";
 
 export default function Player1({
   playlistContext,
 }: {
   playlistContext: PlaylistContext;
 }) {
-  const { setBackgroundImage, setGradient, gradient } = useStyles();
+  const { setBackground } = useStyles();
   const { nowPlaying } = usePlayer();
 
-  useEffect(() => {
-    setBackgroundImage("images/player-bg-1.jpg");
-    setGradient({ position: "top", intensity: 70 });
-  }, []);
+  useEffect(() => setBackground("player1"), []);
 
   useEffect(() => {
     if (!nowPlaying) return;
@@ -34,45 +29,16 @@ export default function Player1({
   }, [nowPlaying]);
 
   return (
-    <Flex position="relative" h="80vh">
-      <Flex
-        w="calc(100vw - 50px)"
-        borderY="1px solid"
-        h={{ base: "45px", md: "60px" }}
-        top="70px"
-        position="fixed"
-        align="center"
-        justify="space-between"
-        color={gradient.position === "top" ? "black" : "white"}
-        borderColor={gradient.position === "top" ? "black" : "white"}
-        transition="color 2s ease-in-out"
-        fontSize={{ base: "12px", md: "17px" }}
-      >
-        <Text fontWeight="bold">
-          NOW PLAYING: {nowPlaying?.title}
-          {nowPlaying?.artists
-            ? " by " + artistsToString(nowPlaying?.artists)
-            : ""}
-        </Text>
-        <Controls />
-      </Flex>
-      <Flex
-        position="relative"
-        top={{ base: "115px", md: "130px" }}
-        direction="column"
-        overflowX="scroll"
-        pt="15px"
-      >
-        {playlistContext.songs.map((song, index) => (
-          <ScrollPiece
-            key={song.id}
-            song={song}
-            index={index}
-            playlistContext={playlistContext}
-          />
-        ))}
-      </Flex>
-    </Flex>
+    <BelowNowPlayingWrapper height={80} padding={15}>
+      {playlistContext.songs.map((song, index) => (
+        <ScrollPiece
+          key={song.id}
+          song={song}
+          index={index}
+          playlistContext={playlistContext}
+        />
+      ))}
+    </BelowNowPlayingWrapper>
   );
 }
 
@@ -92,9 +58,7 @@ function ScrollPiece({
     setSelected(nowPlaying?.id === song.id);
   }, [nowPlaying]);
 
-  const selectSong = () => {
-    setPlaylistContext({ ...playlistContext, index });
-  };
+  const selectSong = () => setPlaylistContext({ ...playlistContext, index });
 
   return (
     <Flex
@@ -109,6 +73,7 @@ function ScrollPiece({
       mb="15px"
       pb="15px"
       opacity={selected ? 1 : 0.5}
+      zIndex={10}
     >
       <text
         className={
@@ -118,17 +83,5 @@ function ScrollPiece({
         {song.title}
       </text>
     </Flex>
-  );
-}
-
-function Controls() {
-  const { nextSong, prevSong } = usePlayer();
-
-  return (
-    <HStack>
-      <ClickIcon as={RiSkipBackFill} onClick={prevSong} />
-      <ClickIcon />
-      <ClickIcon as={RiSkipForwardFill} onClick={nextSong} />
-    </HStack>
   );
 }

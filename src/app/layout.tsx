@@ -1,7 +1,6 @@
 "use client";
 
 import Background from "@/components/Common/Background";
-import Footer from "@/components/Common/Footer";
 import Header from "@/components/Common/Header";
 import JoinModal from "@/components/Common/JoinModal";
 import { Analytics } from "@vercel/analytics/react";
@@ -21,7 +20,6 @@ export default function RootLayout({
             <Header />
             <JoinModal />
             {children}
-            {/* <Footer /> */}
           </Background>
         </Providers>
         <Analytics />

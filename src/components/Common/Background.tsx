@@ -8,6 +8,7 @@ export default function Background({ children }: { children: ReactNode }) {
   return (
     <Box
       backgroundImage={backgroundImage}
+      backgroundColor="#dcdcdc"
       backgroundSize="cover"
       backgroundPosition="center center"
       backgroundAttachment="fixed"
@@ -15,6 +16,7 @@ export default function Background({ children }: { children: ReactNode }) {
       zIndex="0"
       h="100vh"
       width="100%"
+      px="25px"
       overflowY="scroll"
       _before={{
         content: `""`,
@@ -24,13 +26,13 @@ export default function Background({ children }: { children: ReactNode }) {
         width: "100%",
         height: "100%",
         transition: "1s",
-        background:
-          gradient.position === "bottom"
+        background: gradient.exists
+          ? gradient.position === "bottom"
             ? `linear-gradient(to bottom, rgba(255,255,255,0) ${gradient.intensity}%, rgba(255,255,255,1) 100%)`
-            : `linear-gradient(to top, rgba(255,255,255,0) ${gradient.intensity}%, rgba(255,255,255,1) 100%)`,
+            : `linear-gradient(to top, rgba(255,255,255,0) ${gradient.intensity}%, rgba(255,255,255,1) 100%)`
+          : "",
         zIndex: "-1",
       }}
-      px="25px"
     >
       {children}
     </Box>

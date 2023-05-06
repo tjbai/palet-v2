@@ -12,6 +12,8 @@ const theme = extendTheme({
   },
   colors: {
     hl: "#f97470",
+    bright_pink: "#FD0089",
+    bg: "#dcdcdc",
   },
   fonts: {
     body: `'Arimo', sans-serif`,

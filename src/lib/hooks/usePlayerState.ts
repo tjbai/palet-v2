@@ -6,6 +6,7 @@ export interface PlaylistContext {
   name?: string;
   index: number;
   songs: NowPlaying[];
+  coverUrl?: string;
 }
 
 export interface NowPlaying {

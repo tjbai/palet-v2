@@ -11,7 +11,7 @@ export default function Landing({}: {}) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const ref = searchParams.get("ref");
-  const { setGradient, setBackgroundImage } = useStyles();
+  const { setBackground } = useStyles();
 
   useEffect(() => {
     async function logRef(ref: string) {
@@ -19,8 +19,7 @@ export default function Landing({}: {}) {
       router.replace("/");
     }
     if (ref) logRef(ref);
-    setGradient((p) => ({ ...p, position: "bottom" }));
-    setBackgroundImage("images/landing-bg-v2.jpg");
+    setBackground("landing");
   }, []);
 
   return (

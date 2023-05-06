@@ -1,16 +1,6 @@
-import {
-  VStack,
-  Flex,
-  Button,
-  Highlight,
-  Text,
-  Link,
-  position,
-} from "@chakra-ui/react";
+import { Flex, Link, Text, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import SectionWrapper from "../Common/SectionWrapper";
-import { Gradient, useStyles } from "../Providers/StyleProvider";
-import { previewData } from "next/dist/client/components/headers";
+import { useStyles } from "../Providers/StyleProvider";
 
 export default function About() {
   return (
@@ -20,15 +10,13 @@ export default function About() {
   );
 }
 
-function MainSection() {
-  const [selection, setSelection] = useState<"artists" | "listeners" | "kandi">(
-    "listeners"
-  );
+type Selections = "artists" | "listeners" | "kandi";
 
-  const { setGradient } = useStyles();
-  useEffect(() => {
-    setGradient((prev) => ({ ...prev, position: "top" }));
-  }, []);
+function MainSection() {
+  const [selection, setSelection] = useState<Selections>("listeners");
+
+  const { setBackground } = useStyles();
+  useEffect(() => setBackground("about"), []);
 
   function ListenerSpew() {
     return (
