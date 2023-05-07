@@ -16,6 +16,7 @@
     "@fontsource/archivo": "^4.5.11",
     "@fontsource/arimo": "^4.5.11",
     "@fontsource/inconsolata": "^4.5.10",
+    "@prisma/client": "^4.13.0",
     "@supabase/supabase-js": "^2.21.0",
     "@types/node": "18.16.1",
     "@types/react": "18.2.0",
@@ -36,5 +37,8 @@
     "react-spinners": "^0.13.8",
     "typescript": "5.0.4",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^4.13.0"
   }
 }
