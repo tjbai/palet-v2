@@ -1,11 +1,11 @@
 "use client";
 
-import artistsToString from "@/lib/funcs/artistsToString";
 import { Flex, HStack, Text } from "@chakra-ui/react";
 import { RiSkipBackFill, RiSkipForwardFill } from "react-icons/ri";
 import { usePlayer } from "../Providers/PlayerProvider";
 import { useStyles } from "../Providers/StyleProvider";
 import ClickIcon from "../Util/ClickIcon";
+import { artistsToString } from "@/lib/util";
 
 export default function NowPlaying() {
   const { gradient } = useStyles();

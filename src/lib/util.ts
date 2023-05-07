@@ -1,4 +1,8 @@
-export default function hashString(str: string): number {
+export function artistsToString(artists: string[]) {
+  return artists.join(", ");
+}
+
+export function hashString(str: string): number {
   let hash = 0,
     i,
     chr;
