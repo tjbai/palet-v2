@@ -1,6 +1,6 @@
 "use client";
 
-import trackClickthrough from "@/lib/funcs/trackClickthrough";
+// import trackClickthrough from "@/lib/funcs/trackClickthrough";
 import { Button, Flex, Text } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -15,7 +15,7 @@ export default function Landing({}: {}) {
 
   useEffect(() => {
     async function logRef(ref: string) {
-      await trackClickthrough(ref);
+      // await trackClickthrough(ref);
       router.replace("/");
     }
     if (ref) logRef(ref);

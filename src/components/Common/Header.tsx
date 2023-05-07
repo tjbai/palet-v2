@@ -1,6 +1,6 @@
 "use client";
 
-import trackClickthrough from "@/lib/funcs/trackClickthrough";
+// import trackClickthrough from "@/lib/funcs/trackClickthrough";
 import { Link as NextLink } from "@chakra-ui/next-js";
 import { Link as ChakraLink, Flex, Icon, Text } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
@@ -81,7 +81,7 @@ export default function Header() {
             Join
           </Text>
           <Text
-            onClick={() => trackClickthrough("to_events")}
+            // onClick={() => trackClickthrough("to_events")}
             borderColor="white"
             fontSize={{ base: "12px", md: "15px" }}
             border="1px solid"
@@ -101,7 +101,7 @@ export default function Header() {
             as={Instagram}
             _hover={{ cursor: "pointer" }}
             onClick={() => {
-              trackClickthrough("to_ig");
+              // trackClickthrough("to_ig");
               window.open("https://www.instagram.com/palet.edm/", "_blank");
             }}
           />
@@ -110,7 +110,7 @@ export default function Header() {
             as={Spotify}
             _hover={{ cursor: "pointer" }}
             onClick={() => {
-              trackClickthrough("to_spotify");
+              // trackClickthrough("to_spotify");
               window.open(
                 "https://open.spotify.com/user/31sfjqvsrwyahshz4qe7bnlmjj5e?si=f38e00223e7a4d7b",
                 "_blank"
@@ -122,7 +122,7 @@ export default function Header() {
             as={TikTok}
             _hover={{ cursor: "pointer" }}
             onClick={() => {
-              trackClickthrough("to_tiktok");
+              // trackClickthrough("to_tiktok");
               window.open(
                 "https://www.tiktok.com/@palet.edm?_t=8brGfCYHX1H&_r=1",
                 "_blank"

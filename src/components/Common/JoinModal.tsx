@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "@/lib/db/supabaseClient";
+// import { supabase } from "@/lib/db/supabaseClient";
 import {
   Flex,
   Input,
@@ -38,46 +38,46 @@ export default function JoinModal() {
   const submitEmail = async (e: any) => {
     e.preventDefault();
 
-    const submission = email.toLowerCase();
-    if (!validateEmail(submission)) {
-      setFlag("Email format invalid");
-      return;
-    }
+    // const submission = email.toLowerCase();
+    // if (!validateEmail(submission)) {
+    //   setFlag("Email format invalid");
+    //   return;
+    // }
 
-    setFlag("");
+    // setFlag("");
 
-    const { data } = await supabase
-      .from("emails")
-      .select("*")
-      .eq("email", submission);
+    // const { data } = await supabase
+    //   .from("emails")
+    //   .select("*")
+    //   .eq("email", submission);
 
-    // Email exists
-    if (data?.length) {
-      setFlag("Email already exists");
-      setReferralLink(`https://paletapp.com/${hashString(data[0].id)}`);
-    }
-    // Email doesn't exist
-    else {
-      setEmail("");
-      // User has previously registered
-      if (localStorage.getItem("registered") === "1") {
-        setFlag("Already registered with a different email");
-      }
-      // User hasn't previously registered
-      else {
-        const { error } = await supabase
-          .from("emails")
-          .insert({ id: uuidv4(), email: submission });
-        if (error) console.error(error);
-        const { data, error: postError } = await supabase
-          .from("emails")
-          .select("*")
-          .eq("email", submission);
-        if (postError) console.error(postError);
-        else setReferralLink(`https://paletapp.com/${hashString(data[0].id)}`);
-        localStorage.setItem("registered", "1");
-      }
-    }
+    // // Email exists
+    // if (data?.length) {
+    //   setFlag("Email already exists");
+    //   setReferralLink(`https://paletapp.com/${hashString(data[0].id)}`);
+    // }
+    // // Email doesn't exist
+    // else {
+    //   setEmail("");
+    //   // User has previously registered
+    //   if (localStorage.getItem("registered") === "1") {
+    //     setFlag("Already registered with a different email");
+    //   }
+    //   // User hasn't previously registered
+    //   else {
+    //     const { error } = await supabase
+    //       .from("emails")
+    //       .insert({ id: uuidv4(), email: submission });
+    //     if (error) console.error(error);
+    //     const { data, error: postError } = await supabase
+    //       .from("emails")
+    //       .select("*")
+    //       .eq("email", submission);
+    //     if (postError) console.error(postError);
+    //     else setReferralLink(`https://paletapp.com/${hashString(data[0].id)}`);
+    //     localStorage.setItem("registered", "1");
+    //   }
+    // }
   };
 
   return (
