@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "update-types": "npx supabase gen types typescript --project-id \"hhxrnscvjkseuojixcxe\" > src/types/supabase.ts"
   },
   "dependencies": {
     "@chakra-ui/next-js": "^2.1.3",
@@ -39,6 +40,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "prisma": "^4.13.0"
+    "prisma": "^4.13.0",
+    "supabase": "^1.57.2"
   }
 }
