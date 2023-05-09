@@ -20,13 +20,11 @@ model users {
   password_hash String?
 }
 
-/// NOTE: RLS used just for read-only tables
-
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model playlists_tracks {
   track_id         BigInt           @default(autoincrement())
   playlist_id      BigInt
-  track_index      Int?             @db.SmallInt
+  track_index      Int              @db.SmallInt
   static_playlists static_playlists @relation(fields: [playlist_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   static_tracks    static_tracks    @relation(fields: [track_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
@@ -37,7 +35,7 @@ model playlists_tracks {
 model static_playlists {
   id               BigInt             @id @default(autoincrement())
   created_at       DateTime?          @default(now()) @db.Timestamptz(6)
-  name             String?            @unique
+  name             String             @unique
   cdn_image_url    String?
   origin_url       String?
   track_count      Int?               @db.SmallInt
@@ -48,8 +46,8 @@ model static_playlists {
 model static_tracks {
   id               BigInt             @id @default(autoincrement())
   created_at       DateTime?          @default(now()) @db.Timestamptz(6)
-  name             String?            @unique
-  cdn_path         String?
+  name             String             @unique
+  cdn_path         String
   artists          String[]
   duration_ms      BigInt?
   kandi_count      BigInt?            @default(0)
