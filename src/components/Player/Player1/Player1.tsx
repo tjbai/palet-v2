@@ -3,7 +3,7 @@
 import { usePlayer } from "@/components/Providers/PlayerProvider";
 import { useStyles } from "@/components/Providers/StyleProvider";
 import { NowPlaying, PlaylistContext } from "@/lib/hooks/usePlayerState";
-import { Flex } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import BelowNowPlayingWrapper from "../BelowNowPlayingWrapper";
 
@@ -13,20 +13,20 @@ export default function Player1({
   playlistContext: PlaylistContext;
 }) {
   const { setBackground } = useStyles();
-  const { nowPlaying } = usePlayer();
+  const { currentTrack } = usePlayer();
 
   useEffect(() => setBackground("player1"), []);
 
   useEffect(() => {
-    if (!nowPlaying) return;
+    if (!currentTrack) return;
 
     const timeout = setTimeout(() => {
-      const element = document.getElementById(`${nowPlaying.id}`);
+      const element = document.getElementById(`${currentTrack.id}`);
       element?.scrollIntoView({ behavior: "smooth" });
     }, 250);
 
     return () => clearTimeout(timeout);
-  }, [nowPlaying]);
+  }, [currentTrack]);
 
   return (
     <BelowNowPlayingWrapper height={80} padding={15}>
@@ -51,14 +51,14 @@ function ScrollPiece({
   index: number;
   playlistContext: PlaylistContext;
 }) {
-  const { nowPlaying, setPlaylistContext } = usePlayer();
-  const [selected, setSelected] = useState(nowPlaying?.id === song.id);
+  const { currentTrack, selectSong } = usePlayer();
+  const [selected, setSelected] = useState(currentTrack?.id === song.id);
 
   useEffect(() => {
-    setSelected(nowPlaying?.id === song.id);
-  }, [nowPlaying]);
+    setSelected(currentTrack?.id === song.id);
+  }, [currentTrack]);
 
-  const selectSong = () => setPlaylistContext({ ...playlistContext, index });
+  // const selectSong = () => setPlaylistContext({ ...playlistContext, index });
 
   return (
     <Flex
@@ -67,7 +67,9 @@ function ScrollPiece({
       fontSize={{ base: "40px", sm: "70px", md: "100px", lg: "150px" }}
       lineHeight={{ base: "40px", sm: "65px", md: "90px", lg: "135px" }}
       _hover={{ cursor: "pointer" }}
-      onClick={selectSong}
+      onClick={() => {
+        selectSong(song.name, playlistContext);
+      }}
       borderBottom="1px solid black"
       w="100%"
       mb="15px"
@@ -75,13 +77,13 @@ function ScrollPiece({
       opacity={selected ? 1 : 0.5}
       zIndex={10}
     >
-      <text
+      <Text
         className={
           selected ? "player1-reactive-selected" : "player1-reactive-unselected"
         }
       >
-        {song.title}
-      </text>
+        {song.name}
+      </Text>
     </Flex>
   );
 }

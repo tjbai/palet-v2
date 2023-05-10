@@ -5,11 +5,11 @@ import { RiSkipBackFill, RiSkipForwardFill } from "react-icons/ri";
 import { usePlayer } from "../Providers/PlayerProvider";
 import { useStyles } from "../Providers/StyleProvider";
 import ClickIcon from "../Util/ClickIcon";
-import { artistsToString } from "@/lib/util";
+import { artistsToString, msToTime } from "@/lib/util";
 
 export default function NowPlaying() {
   const { gradient } = useStyles();
-  const { nowPlaying } = usePlayer();
+  const { currentTrack } = usePlayer();
 
   return (
     <Flex
@@ -29,11 +29,15 @@ export default function NowPlaying() {
       }
       transition="color 2s ease-in-out"
       fontSize={{ base: "12px", md: "17px" }}
+      zIndex={10}
     >
       <Text fontWeight="bold">
-        NOW PLAYING: {nowPlaying?.title}
-        {nowPlaying?.artists
-          ? " by " + artistsToString(nowPlaying?.artists)
+        NOW PLAYING: {currentTrack?.name}
+        {currentTrack?.artists
+          ? " by " + artistsToString(currentTrack?.artists)
+          : ""}
+        {currentTrack?.durationMs
+          ? " (" + msToTime(currentTrack?.durationMs) + ")"
           : ""}
       </Text>
       <Controls />
@@ -44,7 +48,7 @@ export default function NowPlaying() {
 function Controls() {
   const { nextSong, prevSong } = usePlayer();
   return (
-    <HStack>
+    <HStack zIndex={20} onClick={() => console.log("yo")}>
       <ClickIcon as={RiSkipBackFill} onClick={prevSong} />
       <ClickIcon />
       <ClickIcon as={RiSkipForwardFill} onClick={nextSong} />

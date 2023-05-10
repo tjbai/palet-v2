@@ -2,27 +2,49 @@ import { useEffect, useState } from "react";
 
 /* Fetching entire playlists should go into this interface */
 export interface PlaylistContext {
-  id: string | number;
-  name?: string;
+  id: string | number | undefined;
+  name: string;
   index: number;
+  imageUrl?: string;
+  originUrl: string;
   songs: NowPlaying[];
-  coverUrl?: string;
 }
 
 export interface NowPlaying {
   id: string | number;
-  title: string;
+  name: string;
   artists: string[];
+  cdnPath: string;
+  durationMs: number;
+  kandiCount: number;
+  originUrl: string;
 }
 
 export default function usePlayerState() {
   const [playlistContext, setPlaylistContext] =
     useState<PlaylistContext | null>(null);
-  const [nowPlaying, setNowPlaying] = useState<NowPlaying | null>(null);
+  const [currentTrack, setCurrentTrack] = useState<NowPlaying | null>(null);
+  const [playerSrc, setPlayerSrc] = useState<string>();
+  const [playing, setPlaying] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!localStorage.getItem("lastListeningTo")) return;
+    const lastTrack = JSON.parse(localStorage.getItem("lastListeningTo")!);
+
+    // TODO: Make this propagate between loads (need to change how playlistContext is passed down)
+  }, []);
 
   useEffect(() => {
     if (!playlistContext) return;
-    setNowPlaying(playlistContext.songs[playlistContext.index]);
+    setCurrentTrack(playlistContext.songs[playlistContext.index]);
+    setPlayerSrc(
+      `${process.env.NEXT_PUBLIC_CDN_BASE_URL}/${
+        playlistContext.songs[playlistContext.index].cdnPath
+      }`
+    );
+    if (currentTrack) {
+      localStorage.setItem("lastListeningTo", JSON.stringify(currentTrack));
+    } else localStorage.removeItem("lastListeningTo");
   }, [playlistContext]);
 
   const nextSong = () => {
@@ -42,12 +64,23 @@ export default function usePlayerState() {
     });
   };
 
+  const selectSong = (name: string, givenContext: PlaylistContext) => {
+    if (currentTrack?.name === name) return;
+    const i = givenContext?.songs.findIndex((song) => song.name === name);
+    if (i === null || i === undefined) return;
+    setPlaylistContext({ ...givenContext, index: i });
+    setPlaying(true);
+  };
+
   return {
     playlistContext,
     setPlaylistContext,
-    nowPlaying,
-    setNowPlaying,
+    currentTrack,
+    setCurrentTrack,
     nextSong,
     prevSong,
+    selectSong,
+    playerSrc,
+    playing,
   };
 }

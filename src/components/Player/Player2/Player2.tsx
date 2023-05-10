@@ -12,20 +12,18 @@ export default function Player2({
   playlistContext: PlaylistContext;
 }) {
   const { setBackground } = useStyles();
-  const { nowPlaying } = usePlayer();
+  const { currentTrack } = usePlayer();
 
   useEffect(() => setBackground("player2"), []);
 
   useEffect(() => {
-    if (!nowPlaying) return;
+    if (!currentTrack) return;
 
     const timeout = setTimeout(() => {
-      const element = document.getElementById(`${nowPlaying.id}`);
+      const element = document.getElementById(`${currentTrack.id}`);
       element?.scrollIntoView({ behavior: "smooth" });
     }, 250);
-  }, [nowPlaying]);
-
-  console.log(playlistContext);
+  }, [currentTrack]);
 
   return (
     <Flex position="relative" top="130px" overflowY="scroll" zIndex={10}>
@@ -74,7 +72,7 @@ export default function Player2({
           display={{ base: "none", md: "flex" }}
         >
           <Image
-            src={playlistContext.coverUrl}
+            src={playlistContext.imageUrl}
             alt="Album Cover"
             objectFit="contain"
             m={0}
@@ -95,16 +93,12 @@ function ScrollPiece({
   index: number;
   playlistContext: PlaylistContext;
 }) {
-  const { nowPlaying, setPlaylistContext } = usePlayer();
-  const [selected, setSelected] = useState(nowPlaying?.id === song.id);
+  const { currentTrack, selectSong } = usePlayer();
+  const [selected, setSelected] = useState(currentTrack?.id === song.id);
 
   useEffect(() => {
-    setSelected(nowPlaying?.id === song.id);
-  }, [nowPlaying]);
-
-  const selectSong = () => {
-    setPlaylistContext({ ...playlistContext, index });
-  };
+    setSelected(currentTrack?.id === song.id);
+  }, [currentTrack]);
 
   return (
     <Flex
@@ -114,12 +108,12 @@ function ScrollPiece({
       w={{ base: "100%", md: "90%" }}
       mb="10px"
       _hover={{ cursor: "pointer" }}
-      onClick={selectSong}
+      onClick={() => selectSong(song.name, playlistContext)}
       color={selected ? "bright_pink" : "black"}
       pt={index ? "0px" : "10px"}
     >
       <Text fontSize="45px" lineHeight="45px">
-        {song.title}
+        {song.name}
       </Text>
     </Flex>
   );

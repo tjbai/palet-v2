@@ -7,8 +7,8 @@ export type Gradient = {
 };
 
 export type BackgroundImage =
-  | "images/landing-bg-v2.jpg"
-  | "images/player-bg-1.jpg"
+  | "./images/landing-bg-v2.avif"
+  | "./images/player-bg-1.avif"
   | "";
 
 export type BackgroundType = "landing" | "about" | "player1" | "player2";
@@ -34,13 +34,13 @@ export default function useStickyBackground() {
     let newGrad: Gradient, newBg: BackgroundImage;
     if (bgType === "landing") {
       newGrad = { position: "bottom", intensity: 20, exists: true };
-      newBg = "images/landing-bg-v2.jpg";
+      newBg = "./images/landing-bg-v2.avif";
     } else if (bgType === "about") {
       newGrad = { position: "top", intensity: 20, exists: true };
-      newBg = "images/landing-bg-v2.jpg";
+      newBg = "./images/landing-bg-v2.avif";
     } else if (bgType === "player1") {
       newGrad = { position: "top", intensity: 70, exists: true };
-      newBg = "images/player-bg-1.jpg";
+      newBg = "./images/player-bg-1.avif";
     }
     // Case: player2
     else {
