@@ -1,8 +1,10 @@
-export function artistsToString(artists: string[]) {
+export function artistsToString(artists: string[] | undefined) {
+  if (!artists) return "Unknown";
   return artists.join(", ");
 }
 
-export function msToTime(ms: number) {
+export function msToTime(ms: number | undefined) {
+  if (!ms) return "XX:XX";
   const totalSeconds = Math.floor(ms / 1000);
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;

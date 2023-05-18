@@ -26,7 +26,13 @@ export default function Player2({
   }, [currentTrack]);
 
   return (
-    <Flex position="relative" top="130px" overflowY="scroll" zIndex={10}>
+    <Flex
+      position="relative"
+      top="130px"
+      overflowY="scroll"
+      zIndex={3}
+      border="1px solid red"
+    >
       <Flex flex={1} direction="row" zIndex={-1} h="calc(100vh - 130px)">
         <Flex
           flex={1}
@@ -34,24 +40,11 @@ export default function Player2({
           h={{ base: "calc(100vh - 115px)", md: "calc(100vh - 130px)" }}
         >
           <Flex
-            position="fixed"
-            fontWeight="bold"
-            fontSize={{ base: "12px", md: "17px" }}
-            h={{ base: "30px", md: "50px" }}
-            w={{ base: "calc(100vw - 50px", md: "calc(50vw - 50px)" }}
-            align="center"
-            backgroundColor="bg"
-            zIndex={2}
-            m={0}
-          >
-            {playlistContext.name}
-          </Flex>
-          <Flex
             position="relative"
-            top="50px"
             direction="column"
             overflowY="scroll"
-            h="calc(100vh - 180px)"
+            h="calc(100vh - 130px)"
+            border="1px solid red"
             _hover={{ cursor: "pointer" }}
           >
             {playlistContext.songs.map((song, index) => (
@@ -108,7 +101,7 @@ function ScrollPiece({
       w={{ base: "100%", md: "90%" }}
       mb="10px"
       _hover={{ cursor: "pointer" }}
-      onClick={() => selectSong(song.name, playlistContext)}
+      onClick={() => selectSong(song.name)}
       color={selected ? "bright_pink" : "black"}
       pt={index ? "0px" : "10px"}
     >

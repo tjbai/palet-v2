@@ -3,7 +3,7 @@
 import { usePlayer } from "@/components/Providers/PlayerProvider";
 import { useStyles } from "@/components/Providers/StyleProvider";
 import { NowPlaying, PlaylistContext } from "@/lib/hooks/usePlayerState";
-import { Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import BelowNowPlayingWrapper from "../BelowNowPlayingWrapper";
 
@@ -21,7 +21,7 @@ export default function Player1({
     if (!currentTrack) return;
 
     const timeout = setTimeout(() => {
-      const element = document.getElementById(`${currentTrack.id}`);
+      const element = document.getElementById(`song-${currentTrack.id}`);
       element?.scrollIntoView({ behavior: "smooth" });
     }, 250);
 
@@ -29,7 +29,7 @@ export default function Player1({
   }, [currentTrack]);
 
   return (
-    <BelowNowPlayingWrapper height={80} padding={15}>
+    <BelowNowPlayingWrapper height={100} padding={15}>
       {playlistContext.songs.map((song, index) => (
         <ScrollPiece
           key={song.id}
@@ -58,8 +58,6 @@ function ScrollPiece({
     setSelected(currentTrack?.id === song.id);
   }, [currentTrack]);
 
-  // const selectSong = () => setPlaylistContext({ ...playlistContext, index });
-
   return (
     <Flex
       id={`${song.id}`}
@@ -68,15 +66,16 @@ function ScrollPiece({
       lineHeight={{ base: "40px", sm: "65px", md: "90px", lg: "135px" }}
       _hover={{ cursor: "pointer" }}
       onClick={() => {
-        selectSong(song.name, playlistContext);
+        selectSong(song.name);
       }}
       borderBottom="1px solid black"
-      w="100%"
+      w="calc(100vw - 50px)"
       mb="15px"
       pb="15px"
       opacity={selected ? 1 : 0.5}
       zIndex={10}
     >
+      <Box position="relative" top="-200px" id={`song-${song.id}`} />
       <Text
         className={
           selected ? "player1-reactive-selected" : "player1-reactive-unselected"

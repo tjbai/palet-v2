@@ -7,13 +7,7 @@ export default function BelowNowPlayingWrapper(props: {
   padding: number;
 }) {
   return (
-    <Flex
-      h={`${props.height}vh`}
-      position="relative"
-      w="100%"
-      m={0}
-      zIndex={10}
-    >
+    <Flex h={`${props.height}vh`} position="fixed" w="100%" m={0} zIndex={3}>
       <Flex
         position="relative"
         top={{ base: "115px", md: "130px" }}

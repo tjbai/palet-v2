@@ -35,7 +35,7 @@ export default function usePlayerState() {
   }, []);
 
   useEffect(() => {
-    if (!playlistContext) return;
+    if (!playlistContext || playlistContext.index === -1) return;
     setCurrentTrack(playlistContext.songs[playlistContext.index]);
     setPlayerSrc(
       `${process.env.NEXT_PUBLIC_CDN_BASE_URL}/${
@@ -48,7 +48,7 @@ export default function usePlayerState() {
   }, [playlistContext]);
 
   const nextSong = () => {
-    if (!playlistContext) return;
+    if (!playlistContext || playlistContext.index === -1) return;
     setPlaylistContext({
       ...playlistContext,
       index: (playlistContext.index + 1) % playlistContext.songs.length,
@@ -56,7 +56,7 @@ export default function usePlayerState() {
   };
 
   const prevSong = () => {
-    if (!playlistContext) return;
+    if (!playlistContext || playlistContext.index === -1) return;
     if (playlistContext.index === 0) return;
     setPlaylistContext({
       ...playlistContext,
@@ -64,12 +64,20 @@ export default function usePlayerState() {
     });
   };
 
-  const selectSong = (name: string, givenContext: PlaylistContext) => {
-    if (currentTrack?.name === name) return;
-    const i = givenContext?.songs.findIndex((song) => song.name === name);
+  const selectSong = (name: string) => {
+    if (!playlistContext || currentTrack?.name === name) return;
+    const i = playlistContext.songs.findIndex((song) => song.name === name);
     if (i === null || i === undefined) return;
-    setPlaylistContext({ ...givenContext, index: i });
+    setPlaylistContext({ ...playlistContext, index: i });
     setPlaying(true);
+  };
+
+  const toggle = () => {
+    if (!playlistContext) return;
+    if (playlistContext.index === -1) {
+      setPlaylistContext({ ...playlistContext, index: 0 });
+      setPlaying(true);
+    } else setPlaying((p) => !p);
   };
 
   return {
@@ -82,5 +90,7 @@ export default function usePlayerState() {
     selectSong,
     playerSrc,
     playing,
+    setPlaying,
+    toggle,
   };
 }

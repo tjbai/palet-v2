@@ -16,11 +16,14 @@ import ReactPlayer from "react-player";
 
 interface PlayerContext {
   playlistContext: PlaylistContext | null;
+  setPlaylistContext: Dispatch<SetStateAction<PlaylistContext | null>>;
   currentTrack: NowPlaying | null;
   nextSong: () => void;
   prevSong: () => void;
-  selectSong: (name: string, givenContext: PlaylistContext) => void;
+  selectSong: (name: string) => void;
   playing: boolean;
+  setPlaying: Dispatch<SetStateAction<boolean>>;
+  toggle: () => void;
 }
 
 const playerContext = createContext({} as PlayerContext);
@@ -35,23 +38,29 @@ export default function PlayerProvider(props: { children: ReactNode }) {
 
   const {
     playlistContext,
+    setPlaylistContext,
     currentTrack,
     nextSong,
     prevSong,
     selectSong,
     playerSrc,
     playing,
+    setPlaying,
+    toggle,
   } = usePlayerState();
 
   return (
     <playerContext.Provider
       value={{
         playlistContext,
+        setPlaylistContext,
         currentTrack,
         nextSong,
         prevSong,
         selectSong,
         playing,
+        setPlaying,
+        toggle,
       }}
     >
       {hasWindow ? (

@@ -1,5 +1,4 @@
-import Player1 from "@/components/Player/Player1";
-import Player2 from "@/components/Player/Player2";
+import PlayerController from "@/components/Player/PlayerController";
 import { PlaylistContext } from "@/lib/hooks/usePlayerState";
 import { supabase } from "@/lib/sb/supabaseClient";
 import { Database } from "@/types/supabase";
@@ -45,17 +44,19 @@ export default async function Page({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const playlistContext = await fetchRootPlaylist();
-  const playerType = searchParams?.type;
+  const typeSearchParam = searchParams?.type;
 
   if (!playlistContext) return <h1>Error fetching</h1>;
 
-  if (!playerType || playerType === "1" || Array.isArray(playerType)) {
-    return <Player1 playlistContext={playlistContext} />;
-  } else if (playerType === "2") {
-    return <Player2 playlistContext={playlistContext} />;
-  }
+  return (
+    <PlayerController
+      playlistContext={playlistContext}
+      typeSearchParam={typeSearchParam}
+    />
+  );
 }
 
+// // Example shape
 // async function fetchRootPlaylist() {
 //   await new Promise((resolve) => setTimeout(resolve, 1000));
 
