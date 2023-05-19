@@ -31,26 +31,13 @@ export default function Player1({
   return (
     <BelowNowPlayingWrapper height={100} padding={15}>
       {playlistContext.songs.map((song, index) => (
-        <ScrollPiece
-          key={song.id}
-          song={song}
-          index={index}
-          playlistContext={playlistContext}
-        />
+        <ScrollPiece key={song.id} song={song} index={index} />
       ))}
     </BelowNowPlayingWrapper>
   );
 }
 
-function ScrollPiece({
-  song,
-  index,
-  playlistContext,
-}: {
-  song: NowPlaying;
-  index: number;
-  playlistContext: PlaylistContext;
-}) {
+function ScrollPiece({ song, index }: { song: NowPlaying; index: number }) {
   const { currentTrack, selectSong } = usePlayer();
   const [selected, setSelected] = useState(currentTrack?.id === song.id);
 

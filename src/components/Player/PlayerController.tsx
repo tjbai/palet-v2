@@ -79,8 +79,9 @@ function PlayerControllerInner({
         <>
           <Player2 playlistContext={playlistContext} />
           <BottomGradientOverlay
-            start={{ red: 255, green: 255, blue: 255, opacity: 0.5 }}
+            start={{ red: 255, green: 255, blue: 255, opacity: 0.8 }}
             end={{ red: 255, green: 255, blue: 255, opacity: 0 }}
+            percentCover={30}
           />
         </>
       );

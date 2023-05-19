@@ -10,9 +10,11 @@ export interface RgbColor {
 export default function BottomGradientOverlay({
   start,
   end,
+  percentCover,
 }: {
   start: RgbColor;
   end: RgbColor;
+  percentCover?: number;
 }) {
   return (
     <Box
@@ -32,7 +34,9 @@ export default function BottomGradientOverlay({
         height="100%"
         background={`linear-gradient(to top, 
           rgba(${start.red},${start.green},${start.blue},${start.opacity}) 0%, 
-          rgba(${end.red},${end.green},${end.blue},${end.opacity}) 20%)`}
+          rgba(${end.red},${end.green},${end.blue},${end.opacity}) ${
+          percentCover ?? 20
+        }%)`}
       />
     </Box>
   );

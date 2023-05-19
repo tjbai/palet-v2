@@ -3,8 +3,9 @@
 import { usePlayer } from "@/components/Providers/PlayerProvider";
 import { useStyles } from "@/components/Providers/StyleProvider";
 import { NowPlaying, PlaylistContext } from "@/lib/hooks/usePlayerState";
-import { Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import BelowNowPlayingWrapper from "../BelowNowPlayingWrapper";
 
 export default function Player2({
   playlistContext,
@@ -20,72 +21,51 @@ export default function Player2({
     if (!currentTrack) return;
 
     const timeout = setTimeout(() => {
-      const element = document.getElementById(`${currentTrack.id}`);
+      const element = document.getElementById(`song-${currentTrack.id}`);
       element?.scrollIntoView({ behavior: "smooth" });
     }, 250);
   }, [currentTrack]);
 
   return (
-    <Flex
-      position="relative"
-      top="130px"
-      overflowY="scroll"
-      zIndex={3}
-      border="1px solid red"
-    >
-      <Flex flex={1} direction="row" zIndex={-1} h="calc(100vh - 130px)">
+    <BelowNowPlayingWrapper height={100} padding={0}>
+      <Flex
+        w="calc(100vw - 50px)"
+        direction={{ base: "column-reverse", md: "row" }}
+      >
         <Flex
           flex={1}
           direction="column"
-          h={{ base: "calc(100vh - 115px)", md: "calc(100vh - 130px)" }}
+          overflowY="scroll"
+          h="calc(100vh - 130px)"
         >
-          <Flex
-            position="relative"
-            direction="column"
-            overflowY="scroll"
-            h="calc(100vh - 130px)"
-            border="1px solid red"
-            _hover={{ cursor: "pointer" }}
-          >
-            {playlistContext.songs.map((song, index) => (
-              <ScrollPiece
-                key={song.id}
-                song={song}
-                index={index}
-                playlistContext={playlistContext}
-              />
-            ))}
-          </Flex>
+          {playlistContext.songs.map((song, index) => (
+            <ScrollPiece key={song.id} song={song} index={index} />
+          ))}
         </Flex>
         <Flex
           flex={1}
-          align="flex-start"
-          h="calc(100vh - 130px)"
-          overflowY="scroll"
           display={{ base: "none", md: "flex" }}
+          overflowY="scroll"
+          align="flex-start"
         >
-          <Image
-            src={playlistContext.imageUrl}
-            alt="Album Cover"
-            objectFit="contain"
-            m={0}
-            _hover={{ cursor: "pointer" }}
-          />
+          {playlistContext.imageUrl ? (
+            <Image
+              src={playlistContext.imageUrl}
+              alt="Playlist Cover"
+              objectFit="contain"
+              m={0}
+              pt="10px"
+            />
+          ) : (
+            <ReplacementCover />
+          )}
         </Flex>
       </Flex>
-    </Flex>
+    </BelowNowPlayingWrapper>
   );
 }
 
-function ScrollPiece({
-  song,
-  index,
-  playlistContext,
-}: {
-  song: NowPlaying;
-  index: number;
-  playlistContext: PlaylistContext;
-}) {
+function ScrollPiece({ song, index }: { song: NowPlaying; index: number }) {
   const { currentTrack, selectSong } = usePlayer();
   const [selected, setSelected] = useState(currentTrack?.id === song.id);
 
@@ -93,21 +73,55 @@ function ScrollPiece({
     setSelected(currentTrack?.id === song.id);
   }, [currentTrack]);
 
+  if (index === 0) {
+    return (
+      <Flex
+        id={`${song.id}`}
+        borderBottom="1px solid black"
+        mb={{ base: "5px", md: "10px" }}
+        pb={{ base: "5px", md: "10px" }}
+        pt={{ base: "5px", md: "10px" }}
+        w={{ base: "100%", md: "90%" }}
+        _hover={{ cursor: "pointer" }}
+        onClick={() => selectSong(song.name)}
+        color={selected ? "bright_pink" : "black"}
+      >
+        <Text fontSize={{ base: "30px", md: "45px" }} lineHeight="45px">
+          {song.name}
+        </Text>
+      </Flex>
+    );
+  }
+
   return (
     <Flex
       id={`${song.id}`}
       borderBottom="1px solid black"
-      pb="10px"
+      mb={{ base: "5px", md: "10px" }}
+      pb={{ base: "5px", md: "10px" }}
       w={{ base: "100%", md: "90%" }}
-      mb="10px"
       _hover={{ cursor: "pointer" }}
       onClick={() => selectSong(song.name)}
       color={selected ? "bright_pink" : "black"}
-      pt={index ? "0px" : "10px"}
     >
-      <Text fontSize="45px" lineHeight="45px">
+      <Box position="relative" top="-200px" id={`song-${song.id}`} />
+      <Text fontSize={{ base: "30px", md: "45px" }} lineHeight="45px">
         {song.name}
       </Text>
+    </Flex>
+  );
+}
+
+function ReplacementCover() {
+  return (
+    <Flex
+      flex={1}
+      align="center"
+      justify="center"
+      h="calc(100vh - 130px)"
+      pt="10px"
+    >
+      This playlist is still waiting for a cover
     </Flex>
   );
 }

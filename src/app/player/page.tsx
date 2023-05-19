@@ -3,10 +3,15 @@ import { PlaylistContext } from "@/lib/hooks/usePlayerState";
 import { supabase } from "@/lib/sb/supabaseClient";
 import { Database } from "@/types/supabase";
 
+/* 
+NOTE: This is the only place we use the supabase API clientside.
+We're gonna want to get rid of this and just make an endpoint for this...
+*/
 async function fetchRootPlaylist() {
   const { data, error } = await supabase
     .from("static_playlists")
-    .select("id, name, cdn_image_url, origin_url, static_tracks(*)");
+    .select("id, name, cdn_image_url, origin_url, static_tracks(*)")
+    .eq("name", "soho");
 
   if (error) {
     console.error(error);
@@ -55,44 +60,3 @@ export default async function Page({
     />
   );
 }
-
-// // Example shape
-// async function fetchRootPlaylist() {
-//   await new Promise((resolve) => setTimeout(resolve, 1000));
-
-//   return {
-//     id: "",
-//     index: 0,
-//     name: "RA Live: Moxie B2B Bradley Zero @ Waterworks 2022",
-//     songs: [
-//       { id: 0, title: "Passionfruit", artists: ["Drake"] },
-//       { id: 1, title: "I Don't Know How to Love", artists: ["The Drums"] },
-//       {
-//         id: 2,
-//         title: "Marienela (Que Pasa)",
-//         artists: ["HUGEL", "Merk & Kremont", "Lirico En La Casa"],
-//       },
-//       { id: 3, title: "COULD BE WRONG", artists: ["LOSTBOYJAY"] },
-//       { id: 4, title: "Profite - Kazy Lambist Remix", artists: ["Moi Je"] },
-//       { id: 5, title: "Lovers Rock", artists: ["TV Girl"] },
-//       {
-//         id: 6,
-//         title: `You're in My System - Dennis Quin Vocal Remix`,
-//         artists: [
-//           "Kerri Chandler",
-//           "Jerome Syndeham",
-//           "Troy Denari",
-//           "Dennis Quin",
-//         ],
-//       },
-//       {
-//         id: 7,
-//         title: "4EVA (feat. Pharrell Williams)",
-//         artists: ["KAYTRAMINE", "Amine", "KAYTRANADA", "Pharrell Williams"],
-//       },
-//       { id: 8, title: "DOGTOOTH", artists: ["Tyler the Creator"] },
-//       { id: 9, title: "I Feel Fantastic", artists: ["Riovaz"] },
-//     ],
-//     coverUrl: `${process.env.NEXT_PUBLIC_CDN_BASE_URL}/sohopalet.jpeg`,
-//   } as PlaylistContext;
-// }

@@ -5,9 +5,17 @@ export default function BelowNowPlayingWrapper(props: {
   children: ReactNode;
   height: number;
   padding: number;
+  showBorder?: boolean;
 }) {
   return (
-    <Flex h={`${props.height}vh`} position="fixed" w="100%" m={0} zIndex={3}>
+    <Flex
+      h={`${props.height}vh`}
+      position="fixed"
+      w="100%"
+      m={0}
+      zIndex={3}
+      border={props.showBorder ? "1px solid red" : "none"}
+    >
       <Flex
         position="relative"
         top={{ base: "115px", md: "130px" }}
