@@ -49,8 +49,6 @@ export default function PlayerProvider(props: { children: ReactNode }) {
     toggle,
   } = usePlayerState();
 
-  console.log(playerSrc);
-
   return (
     <playerContext.Provider
       value={{

@@ -14,6 +14,8 @@ import {
 import { Box, Flex, HStack } from "@chakra-ui/react";
 import BottomGradientOverlay from "./BottomGradientOverlay";
 import { useRouter } from "next/navigation";
+import { useStyles } from "../Providers/StyleProvider";
+import Background from "../Common/Background";
 
 type SearchParam = string | string[] | undefined;
 
@@ -50,6 +52,7 @@ export default function PlayerController({
       />
     </PlayerControllerWrapper>
   );
+  // return <Background>{null}</Background>;
 }
 
 function PlayerControllerWrapper({ children }: { children: ReactNode }) {
@@ -131,12 +134,7 @@ function PlayerCircle({
   circleState: number;
   setPlayerState: Dispatch<SetStateAction<number>>;
 }) {
-  const router = useRouter();
-  const switchPlayerState = () => {
-    // router.push(`/player/${playlistName}?type=${circleState}`);
-    setPlayerState(circleState);
-  };
-
+  const switchPlayerState = () => setPlayerState(circleState);
   return (
     <Box
       w="10px"

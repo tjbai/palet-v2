@@ -1,9 +1,11 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Image } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { useStyles } from "../Providers/StyleProvider";
 
 export default function Background({ children }: { children: ReactNode }) {
   const { gradient, backgroundImage } = useStyles();
+
+  console.log(backgroundImage);
 
   return (
     <Box
