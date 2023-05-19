@@ -3,24 +3,26 @@ import { PlaylistContext } from "@/lib/hooks/usePlayerState";
 import { supabase } from "@/lib/sb/supabaseClient";
 import { Database } from "@/types/supabase";
 
-// TODO: Eventually transition this route to discovery
-
 /* 
+NOTE 2: This is just a copy of the /player route's fetch function
+but matches to the "route alias" path param in the url.
+
 NOTE: This is the only place we use the supabase API clientside.
 We're gonna want to get rid of this and just make an endpoint for this...
 */
-async function fetchRootPlaylist() {
+async function fetchPlaylist(name: string): Promise<PlaylistContext | null> {
   const { data, error } = await supabase
     .from("static_playlists")
     .select("id, name, cdn_image_url, origin_url, static_tracks(*)")
-    .eq("name", "soho");
+    .eq("route_alias", name);
 
-  if (error) {
+  if (error || !data.length) {
     console.error(error);
     return null;
   }
 
   const playlist = data[0];
+  console.log(playlist);
   return {
     id: playlist.id,
     name: playlist.name,
@@ -41,25 +43,22 @@ async function fetchRootPlaylist() {
   } as PlaylistContext;
 }
 
-/*
-Fetches playlist metadata and context here.
-When user interacts in the client component, it updates the context provider.
-*/
 export default async function Page({
+  params,
   searchParams,
 }: {
+  params: { playlistName: string };
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const playlistContext = await fetchRootPlaylist();
+  const playlistContext = await fetchPlaylist(params.playlistName);
   const typeSearchParam = searchParams?.type;
 
   if (!playlistContext) return <h1>Error fetching</h1>;
 
-  // return (
-  //   <PlayerController
-  //     playlistContext={playlistContext}
-  //     typeSearchParam={typeSearchParam}
-  //   />
-  // );
-  return <div>hello</div>;
+  return (
+    <PlayerController
+      playlistContext={playlistContext}
+      typeSearchParam={typeSearchParam}
+    />
+  );
 }

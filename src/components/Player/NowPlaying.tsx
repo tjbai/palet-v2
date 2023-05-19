@@ -56,7 +56,12 @@ function CurrentTrackDisplay() {
       <Text fontWeight="bold">
         <Highlight
           query={playlistContext?.name}
-          styles={{ border: "1px solid black", p: "1", borderRadius: "20px" }}
+          styles={{
+            border: "1px solid black",
+            px: "2",
+            py: "1",
+            borderRadius: "20px",
+          }}
         >
           {"Now Playing: " +
             currentTrack?.name! +
@@ -74,7 +79,12 @@ function CurrentTrackDisplay() {
       <Text fontWeight="bold" _hover={{ cursor: "pointer" }} onClick={toggle}>
         <Highlight
           query={playlistContext?.name}
-          styles={{ border: "1px solid black", p: "1", borderRadius: "20px" }}
+          styles={{
+            border: "1px solid black",
+            px: "2",
+            py: "1",
+            borderRadius: "20px",
+          }}
         >
           {"Start listening to " + playlistContext?.name}
         </Highlight>

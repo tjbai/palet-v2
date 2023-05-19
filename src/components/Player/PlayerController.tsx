@@ -133,7 +133,7 @@ function PlayerCircle({
 }) {
   const router = useRouter();
   const switchPlayerState = () => {
-    router.push(`/player?type=${circleState}`);
+    // router.push(`/player/${playlistName}?type=${circleState}`);
     setPlayerState(circleState);
   };
 
