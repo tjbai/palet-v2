@@ -14,7 +14,6 @@ type Selections = "artists" | "listeners" | "kandi";
 
 function MainSection() {
   const [selection, setSelection] = useState<Selections>("listeners");
-
   const { setBackground } = useStyles();
   useEffect(() => setBackground("about"), []);
 

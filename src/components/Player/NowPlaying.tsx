@@ -1,23 +1,20 @@
 "use client";
 
+import { artistsToString, msToTime } from "@/lib/util";
 import { Box, Flex, HStack, Highlight, Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import {
+  RiPauseFill,
+  RiPlayFill,
   RiSkipBackFill,
   RiSkipForwardFill,
-  RiPlayFill,
-  RiPauseFill,
 } from "react-icons/ri";
 import { usePlayer } from "../Providers/PlayerProvider";
 import { useStyles } from "../Providers/StyleProvider";
 import ClickIcon from "../Util/ClickIcon";
-import { artistsToString, msToTime } from "@/lib/util";
-import { useEffect, useState } from "react";
-import { progress } from "framer-motion";
-import { FaToggleOff } from "react-icons/fa";
 
 export default function NowPlaying() {
   const { gradient } = useStyles();
-  const { currentTrack } = usePlayer();
 
   return (
     <Flex
@@ -30,10 +27,10 @@ export default function NowPlaying() {
       justify="space-between"
       bg={gradient.exists ? "transparent" : "bg"}
       color={
-        gradient.position === "top" || !gradient.exists ? "black" : "white"
+        !gradient.exists || gradient.position === "top" ? "black" : "white"
       }
       borderColor={
-        gradient.position === "top" || !gradient.exists ? "black" : "white"
+        !gradient.exists || gradient.position === "top" ? "black" : "white"
       }
       transition="color 2s ease-in-out"
       fontSize={{ base: "12px", md: "17px" }}
@@ -50,7 +47,7 @@ function CurrentTrackDisplay() {
   const { playlistContext, currentTrack, toggle } = usePlayer();
 
   if (!playlistContext?.name) {
-    return <h1>Error...</h1>;
+    return <h1>Loading...</h1>;
   } else if (playlistContext?.index !== -1) {
     return (
       <Text fontWeight="bold">
@@ -105,15 +102,18 @@ function Controls() {
   );
 }
 
-// FIXME: this shi doesn't really work
-// this is some of the worst code ive written in my life
+/*
+This shit doesn't really work and is some of the worst code I've written in my life.
+The BIGGEST issue is that the circle will start scrolling BEFORE music has actually been loaded,
+resulting in a big delay / off-sync on devices with poor service.
+*/
 function TimestampIndicator() {
   const { playing, currentTrack, toggle } = usePlayer();
   const [offset, setOffset] = useState(0);
   const [prevTrack, setPrevTrack] = useState<any>(null);
   const [intervalId, setIntervalId] = useState<any>();
 
-  // TODO: i have no idea what i'm doing
+  // I have no idea what I'm doing.
   useEffect(() => {
     if (!intervalId) return;
     return () => clearInterval(intervalId);
@@ -137,7 +137,6 @@ function TimestampIndicator() {
     const startOffset = currentTrack === prevTrack ? offset : 0;
     const startTime = Date.now();
     const id = setInterval(() => {
-      console.log(id);
       const elapsed = Date.now() - startTime;
       const progress = elapsed / currentTrack?.durationMs!; // percentage crossage
       const additionalOffset = progress * (window.innerWidth - 50);

@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export type Gradient = {
   exists: boolean;
-  position: "bottom" | "top";
+  position: "bottom" | "top" | null;
   intensity: number;
 };
 
@@ -13,23 +13,40 @@ export type BackgroundImage =
 
 export type BackgroundType = "landing" | "about" | "player1" | "player2";
 
-export default function useStickyBackground() {
-  const [gradient, setGradient] = useState<Gradient>(
-    localStorage.getItem("gradient")
-      ? JSON.parse(localStorage.getItem("gradient")!)
-      : {
-          position: "bottom",
-          intensity: 20,
-          exists: true,
-        }
-  );
-  const [backgroundImage, setBackgroundImage] = useState<BackgroundImage>(
-    localStorage.getItem("backgroundImage")
-      ? JSON.parse(localStorage.getItem("backgroundImage")!)
-      : "images/landing-bg-v2.jpg"
-  );
+const DEFAULT_GRADIENT = {
+  exists: true,
+  position: "bottom",
+  intensity: 20,
+} as Gradient;
+const DEFAULT_BACKGROUND = "" as BackgroundImage;
 
-  // TODO: Make this all happen server-side
+/*
+Note: This is a really hacky way to get certain backgrounds to persist on different pages.
+FIXME: Create a BackgroundController that does all this server-side
+ */
+export default function useStickyBackground() {
+  const [gradient, setGradient] = useState<Gradient>(DEFAULT_GRADIENT);
+  const [backgroundImage, setBackgroundImage] =
+    useState<BackgroundImage>(DEFAULT_BACKGROUND);
+
+  useEffect(() => {
+    /* Load background and gradient presets from localStorage */
+    setGradient(
+      localStorage.getItem("gradient")
+        ? JSON.parse(localStorage.getItem("gradient")!)
+        : {
+            position: "bottom",
+            intensity: 20,
+            exists: true,
+          }
+    );
+    setBackgroundImage(
+      localStorage.getItem("backgroundImage")
+        ? JSON.parse(localStorage.getItem("backgroundImage")!)
+        : "images/landing-bg-v2.jpg"
+    );
+  }, []);
+
   const setBackground = (bgType: BackgroundType) => {
     let newGrad: Gradient, newBg: BackgroundImage;
     if (bgType === "landing") {
@@ -41,11 +58,9 @@ export default function useStickyBackground() {
     } else if (bgType === "player1") {
       newGrad = { position: "top", intensity: 70, exists: true };
       newBg = "/images/player-bg-1.avif";
-    }
-    // Case: player2
-    else {
-      newGrad = { ...gradient, exists: false };
-      newBg = "";
+    } else {
+      newGrad = DEFAULT_GRADIENT;
+      newBg = DEFAULT_BACKGROUND;
     }
 
     setGradient(newGrad);

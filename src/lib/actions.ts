@@ -1,5 +1,9 @@
 "use server";
 
+/* 
+NOTE: Nothing in this file is in use until Next server actions are out of alpha.
+*/
+
 import { v4 as uuidv4 } from "uuid";
 import prisma from "../../prisma";
 

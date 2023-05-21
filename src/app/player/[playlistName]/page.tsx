@@ -1,7 +1,7 @@
 import PlayerController from "@/components/Player/PlayerController";
 import { PlaylistContext } from "@/lib/hooks/usePlayerState";
-import { supabase } from "@/lib/sb/supabaseClient";
-import { Database } from "@/types/supabase";
+import { supabase } from "@/lib/supabase/supabaseClient";
+import { Database } from "@/lib/types/supabase";
 
 /* 
 NOTE 2: This is just a copy of the /player route's fetch function
@@ -22,7 +22,6 @@ async function fetchPlaylist(name: string): Promise<PlaylistContext | null> {
   }
 
   const playlist = data[0];
-  console.log(playlist);
   return {
     id: playlist.id,
     name: playlist.name,

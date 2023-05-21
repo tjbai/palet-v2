@@ -10,7 +10,7 @@ body {
     1px -1px 0 #000,
     -1px 1px 0 #000,
      1px 1px 0 #000;
-  color: white
+  color: white;
 }
 
 .player1-reactive-unselected {
@@ -19,6 +19,6 @@ body {
    1px -1px 0 #000,
    -1px 1px 0 #000,
     1px 1px 0 #000;
-  color: transparent
+  color: transparent;
 }
 

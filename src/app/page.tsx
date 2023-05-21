@@ -1,3 +1,4 @@
+import Background from "@/components/Common/Background";
 import Landing from "@/components/Landing";
 import { Metadata } from "next";
 
@@ -13,6 +14,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default function Home({ params }: { params: any }) {
   return <Landing />;
 }

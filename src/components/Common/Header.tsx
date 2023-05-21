@@ -9,6 +9,7 @@ import { FaTiktok as TikTok } from "react-icons/fa";
 import { GrInstagram as Instagram, GrSpotify as Spotify } from "react-icons/gr";
 import { useModal } from "../Providers/ModalProvider";
 import { useStyles } from "../Providers/StyleProvider";
+import { UserButton } from "@clerk/nextjs";
 
 export default function Header() {
   const { gradient } = useStyles();
@@ -73,7 +74,7 @@ export default function Header() {
             fontSize={{ base: "12px", md: "15px" }}
             mr={5}
             _hover={{ cursor: "pointer" }}
-            onClick={() => setJoinModal(true)}
+            onClick={() => router.push("/player")}
             px={2}
             border="1px solid"
             borderRadius="20px"
