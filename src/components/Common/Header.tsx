@@ -14,7 +14,6 @@ import { useStyles } from "../Providers/StyleProvider";
 export default function Header() {
   const { gradient } = useStyles();
   const [gb, setGb] = useState(gradient.position === "bottom");
-  const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => setGb(gradient.position === "bottom"), [gradient]);
@@ -50,6 +49,7 @@ export default function Header() {
 
 function PaletLogo() {
   const { gradient } = useStyles();
+  const router = useRouter();
   return (
     <Flex direction="row" align="center">
       <Text>
@@ -99,7 +99,6 @@ function Promotional() {
         Join
       </Text>
       <Text
-        // onClick={() => trackClickthrough("to_events")}
         borderColor="white"
         fontSize={{ base: "12px", md: "15px" }}
         border="1px solid"

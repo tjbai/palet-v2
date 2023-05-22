@@ -17,9 +17,9 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const prismaRes = await prisma.static_playlists.findUnique({
+    const prismaRes = await prisma.static_playlists.findUniqueOrThrow({
       where: {
-        route_alias: routeAlias,
+        route_alias: routeAlias, // typescript seems to take issue with this line...
       },
       include: {
         playlists_tracks: {

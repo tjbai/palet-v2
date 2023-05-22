@@ -17,7 +17,7 @@ export default authMiddleware({
     return fetchHeaders(req);
   },
   afterAuth: () => {},
-  publicRoutes: ["/", "/api/generatedPresignedUrl"],
+  publicRoutes: ["/"],
 });
 
 export const config = {

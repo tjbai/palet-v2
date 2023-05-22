@@ -1,7 +1,5 @@
 import PlayerController from "@/components/Player/PlayerController";
 import { PlaylistContext } from "@/lib/hooks/usePlayerState";
-import { supabase } from "@/lib/supabase/supabaseClient";
-import { Database } from "@/lib/types/supabase";
 import axios from "axios";
 import { headers } from "next/dist/client/components/headers";
 

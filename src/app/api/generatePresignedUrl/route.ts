@@ -2,10 +2,6 @@ import { getSignedUrl } from "@aws-sdk/cloudfront-signer";
 import { NextRequest, NextResponse } from "next/server";
 import querystring from "querystring";
 
-export async function GET() {
-  return NextResponse.json({ hello: "Next.js" });
-}
-
 interface RequestBody {
   audioFilePath: string;
 }

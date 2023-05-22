@@ -123,16 +123,6 @@ def send_to_db(pname, pobj, metadata_gen):
         })
 
     print(songs)
-    
-    # data = json.dumps({'playlist': {
-    #     'name': pname, 
-    #     'track_count': pobj.tracks.total,
-    #     'origin_url': f'https://open.spotify.com/playlist/{pobj.uri.split(":")[-1]}',
-    # }, 'songs': songs})
-    # url = 'https://hhxrnscvjkseuojixcxe.supabase.co/rest/v1/rpc/add_playlist_with_songs_safe'
-    # headers = {'Content-Type': 'application/json', 'apikey': SERVICE_KEY, 'Authorization': f'Bearer {SERVICE_KEY}'}
-    # response = requests.post(url, headers=headers, data=data)
-    # print(response.status_code)
 
 def find_spotify_image_src(pobj):
     print(pobj.images[0].url)

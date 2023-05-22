@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useModal } from "../Providers/ModalProvider";
 import { useStyles } from "../Providers/StyleProvider";
-import { User } from "next-auth";
 
 export default function Landing() {
   const searchParams = useSearchParams();
