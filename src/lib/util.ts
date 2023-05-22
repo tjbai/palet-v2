@@ -24,3 +24,18 @@ export function hashString(str: string): number {
   }
   return hash;
 }
+
+export function bi2n(
+  num: bigint | undefined | null
+): number | undefined | null {
+  if (num === undefined || num === null) return num;
+  return Number(BigInt(num));
+}
+
+export function convertBigInts(obj: any) {
+  return JSON.parse(
+    JSON.stringify(obj, (_, value) =>
+      typeof value === "bigint" ? value.toString() : value
+    )
+  );
+}

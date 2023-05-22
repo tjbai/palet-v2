@@ -6,13 +6,13 @@ export async function GET() {
   return NextResponse.json({ hello: "Next.js" });
 }
 
-interface PresignedUrlRequest {
+interface RequestBody {
   audioFilePath: string;
 }
 
 // took me way too long to figure this out
 export async function POST(request: NextRequest) {
-  const data: PresignedUrlRequest = await request.json();
+  const data: RequestBody = await request.json();
   const { audioFilePath } = data;
 
   if (!audioFilePath) {

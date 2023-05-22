@@ -2,44 +2,67 @@ import PlayerController from "@/components/Player/PlayerController";
 import { PlaylistContext } from "@/lib/hooks/usePlayerState";
 import { supabase } from "@/lib/supabase/supabaseClient";
 import { Database } from "@/lib/types/supabase";
+import axios from "axios";
+import { headers } from "next/dist/client/components/headers";
 
 /* 
+NOTE 3: Good template for future prisma api's
+
 NOTE 2: This is just a copy of the /player route's fetch function
 but matches to the "route alias" path param in the url.
 
 NOTE: This is the only place we use the supabase API clientside.
 We're gonna want to get rid of this and just make an endpoint for this...
 */
-async function fetchPlaylist(name: string): Promise<PlaylistContext | null> {
-  const { data, error } = await supabase
-    .from("static_playlists")
-    .select("id, name, cdn_image_url, origin_url, static_tracks(*)")
-    .eq("route_alias", name);
+async function fetchPlaylist(
+  routeAlias: string
+): Promise<PlaylistContext | null> {
+  const headersList = headers();
+  const url = headersList.get("x-url") || "";
+  const base = new URL(url).origin;
 
-  if (error || !data.length) {
+  const { data } = await axios.post(`${base}/api/playlist`, {
+    routeAlias,
+  });
+  const { playlistContext, error } = data;
+
+  console.log(playlistContext);
+
+  if (error) {
     console.error(error);
     return null;
   }
+  return playlistContext;
 
-  const playlist = data[0];
-  return {
-    id: playlist.id,
-    name: playlist.name,
-    originUrl: playlist.origin_url,
-    imageUrl: playlist.cdn_image_url,
-    index: -1,
-    songs: (
-      playlist.static_tracks as Database["public"]["Tables"]["static_tracks"]["Row"][]
-    )?.map((track) => ({
-      id: track.id,
-      name: track.name,
-      artists: track.artists,
-      cdnPath: track.cdn_path,
-      durationMs: track.duration_ms,
-      kandiCount: track.kandi_count,
-      originUrl: track.origin_url,
-    })),
-  } as PlaylistContext;
+  // const { data, error } = await supabase
+  //   .from("static_playlists")
+  //   .select("id, name, cdn_image_url, origin_url, static_tracks(*)")
+  //   .eq("route_alias", name);
+
+  // if (error || !data.length) {
+  //   console.error(error);
+  //   return null;
+  // }
+
+  // const playlist = data[0];
+  // return {
+  //   id: playlist.id,
+  //   name: playlist.name,
+  //   originUrl: playlist.origin_url,
+  //   imageUrl: playlist.cdn_image_url,
+  //   index: -1,
+  //   songs: (
+  //     playlist.static_tracks as Database["public"]["Tables"]["static_tracks"]["Row"][]
+  //   )?.map((track) => ({
+  //     id: track.id,
+  //     name: track.name,
+  //     artists: track.artists,
+  //     cdnPath: track.cdn_path,
+  //     durationMs: track.duration_ms,
+  //     kandiCount: track.kandi_count,
+  //     originUrl: track.origin_url,
+  //   })),
+  // } as PlaylistContext;
 }
 
 export default async function Page({
