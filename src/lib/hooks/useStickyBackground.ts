@@ -55,8 +55,8 @@ export default function useStickyBackground() {
       newGrad = { position: "top", intensity: 70, exists: true };
       newBg = "/images/player-bg-1.avif";
     } else if (bgType === "player2") {
-      newGrad = DEFAULT_GRADIENT;
-      newBg = DEFAULT_BACKGROUND;
+      newGrad = { position: "top", intensity: 0, exists: false };
+      newBg = "";
     } else {
       newGrad = DEFAULT_GRADIENT;
       newBg = DEFAULT_BACKGROUND;

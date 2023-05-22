@@ -1,17 +1,11 @@
 "use client";
 
 import { artistsToString, msToTime } from "@/lib/util";
-import { Box, Flex, HStack, Highlight, Text } from "@chakra-ui/react";
+import { Box, Flex, Highlight, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import {
-  RiPauseFill,
-  RiPlayFill,
-  RiSkipBackFill,
-  RiSkipForwardFill,
-} from "react-icons/ri";
 import { usePlayer } from "../Providers/PlayerProvider";
 import { useStyles } from "../Providers/StyleProvider";
-import ClickIcon from "../Util/ClickIcon";
+import Controls from "./Controls";
 
 export default function NowPlaying() {
   const { gradient } = useStyles();
@@ -37,7 +31,9 @@ export default function NowPlaying() {
       zIndex={10}
     >
       <CurrentTrackDisplay />
-      <Controls />
+      <Flex display={{ base: "none", md: "flex" }}>
+        <Controls />
+      </Flex>
       <TimestampIndicatorV2 />
     </Flex>
   );
@@ -53,7 +49,6 @@ function CurrentTrackDisplay() {
       <Text
         fontWeight="bold"
         whiteSpace="nowrap"
-        textOverflow="ellipsis"
         overflowX="auto"
         mr={2}
         lineHeight="50px"
@@ -97,18 +92,6 @@ function CurrentTrackDisplay() {
       </Text>
     );
   }
-}
-
-function Controls() {
-  const { nextSong, prevSong, playing, toggle } = usePlayer();
-
-  return (
-    <HStack zIndex={20}>
-      <ClickIcon as={RiSkipBackFill} onClick={prevSong} />
-      <ClickIcon as={playing ? RiPauseFill : RiPlayFill} onClick={toggle} />
-      <ClickIcon as={RiSkipForwardFill} onClick={nextSong} />
-    </HStack>
-  );
 }
 
 /*

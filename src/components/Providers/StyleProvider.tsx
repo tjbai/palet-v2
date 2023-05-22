@@ -1,3 +1,5 @@
+"use client";
+
 import useStickyBackground, {
   BackgroundImage,
   BackgroundType,

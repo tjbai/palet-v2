@@ -1,9 +1,7 @@
 "use client";
 
 import { PlaylistContext } from "@/lib/hooks/usePlayerState";
-import Player1 from "./Player1";
-import Player2 from "./Player2";
-import { usePlayer } from "../Providers/PlayerProvider";
+import { Box, Flex, HStack } from "@chakra-ui/react";
 import {
   Dispatch,
   ReactNode,
@@ -11,11 +9,11 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Box, Flex, HStack } from "@chakra-ui/react";
+import { usePlayer } from "../Providers/PlayerProvider";
 import BottomGradientOverlay from "./BottomGradientOverlay";
-import { useRouter } from "next/navigation";
-import { useStyles } from "../Providers/StyleProvider";
-import Background from "../Common/Background";
+import Player1 from "./Player1";
+import Player2 from "./Player2";
+import Controls from "./Controls";
 
 type SearchParam = string | string[] | undefined;
 
@@ -52,7 +50,6 @@ export default function PlayerController({
       />
     </PlayerControllerWrapper>
   );
-  // return <Background>{null}</Background>;
 }
 
 function PlayerControllerWrapper({ children }: { children: ReactNode }) {
@@ -93,6 +90,16 @@ function PlayerControllerInner({
   }
 }
 
+/*
+Should probably make this more clear, but PlayerSwitcher also takes on 
+Controls functionality at smaller screen sizes.
+
+There's lowkey some really hidden things going on here to make this
+work at different resolutions but we can always refactor that.
+
+Just note that the Controls, ClickIcon, and NowPlaying
+components are ALL coupled with the same logic.
+*/
 function PlayerSwitcher({
   playerState,
   setPlayerState,
@@ -101,15 +108,18 @@ function PlayerSwitcher({
   setPlayerState: Dispatch<SetStateAction<number>>;
 }) {
   return (
-    <Box
+    <Flex
       position="fixed"
       bottom="20px"
       left="50%"
       transform={"translateX(-50%)"}
       bg=""
       zIndex={5}
+      w="100%"
+      align="center"
+      justify="center"
     >
-      <HStack>
+      <HStack flex={1} align="center" justify="center">
         <PlayerCircle
           circleState={1}
           playerState={playerState}
@@ -120,8 +130,16 @@ function PlayerSwitcher({
           playerState={playerState}
           setPlayerState={setPlayerState}
         />
+        <Flex w="20%" display={{ base: "flex", md: "none" }} />
+        <Flex
+          display={{ base: "flex", md: "none" }}
+          align="center"
+          justify="center"
+        >
+          <Controls />
+        </Flex>
       </HStack>
-    </Box>
+    </Flex>
   );
 }
 
@@ -137,8 +155,9 @@ function PlayerCircle({
   const switchPlayerState = () => setPlayerState(circleState);
   return (
     <Box
-      w="10px"
-      h="10px"
+      w={{ base: "20px", md: "10px" }}
+      h={{ base: "20px", md: "10px" }}
+      mr={{ base: 2, md: 2 }}
       bg={playerState === circleState ? "black" : "transparent"}
       border="1px solid black"
       borderRadius="100%"

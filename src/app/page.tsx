@@ -1,5 +1,5 @@
-import Background from "@/components/Common/Background";
 import Landing from "@/components/Landing";
+import { currentUser } from "@clerk/nextjs";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
