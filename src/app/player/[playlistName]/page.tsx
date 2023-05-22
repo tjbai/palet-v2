@@ -26,43 +26,11 @@ async function fetchPlaylist(
   });
   const { playlistContext, error } = data;
 
-  console.log(playlistContext);
-
   if (error) {
     console.error(error);
     return null;
   }
   return playlistContext;
-
-  // const { data, error } = await supabase
-  //   .from("static_playlists")
-  //   .select("id, name, cdn_image_url, origin_url, static_tracks(*)")
-  //   .eq("route_alias", name);
-
-  // if (error || !data.length) {
-  //   console.error(error);
-  //   return null;
-  // }
-
-  // const playlist = data[0];
-  // return {
-  //   id: playlist.id,
-  //   name: playlist.name,
-  //   originUrl: playlist.origin_url,
-  //   imageUrl: playlist.cdn_image_url,
-  //   index: -1,
-  //   songs: (
-  //     playlist.static_tracks as Database["public"]["Tables"]["static_tracks"]["Row"][]
-  //   )?.map((track) => ({
-  //     id: track.id,
-  //     name: track.name,
-  //     artists: track.artists,
-  //     cdnPath: track.cdn_path,
-  //     durationMs: track.duration_ms,
-  //     kandiCount: track.kandi_count,
-  //     originUrl: track.origin_url,
-  //   })),
-  // } as PlaylistContext;
 }
 
 export default async function Page({
