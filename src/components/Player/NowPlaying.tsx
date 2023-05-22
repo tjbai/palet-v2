@@ -38,19 +38,26 @@ export default function NowPlaying() {
     >
       <CurrentTrackDisplay />
       <Controls />
-      <TimestampIndicator />
+      <TimestampIndicatorV2 />
     </Flex>
   );
 }
 
 function CurrentTrackDisplay() {
-  const { playlistContext, currentTrack, toggle } = usePlayer();
+  const { playlistContext, currentTrack, toggle, playTime } = usePlayer();
 
   if (!playlistContext?.name) {
     return <h1>Loading...</h1>;
   } else if (playlistContext?.index !== -1) {
     return (
-      <Text fontWeight="bold">
+      <Text
+        fontWeight="bold"
+        whiteSpace="nowrap"
+        textOverflow="ellipsis"
+        overflowX="auto"
+        mr={2}
+        lineHeight="50px"
+      >
         <Highlight
           query={playlistContext?.name}
           styles={{
@@ -65,6 +72,8 @@ function CurrentTrackDisplay() {
             " by " +
             artistsToString(currentTrack?.artists) +
             " (" +
+            msToTime(playTime * 1000) +
+            "/" +
             msToTime(currentTrack?.durationMs) +
             ") from " +
             playlistContext?.name}
@@ -103,6 +112,36 @@ function Controls() {
 }
 
 /*
+This version should work. 
+*/
+function TimestampIndicatorV2() {
+  const [offset, setOffset] = useState(0);
+  const { playTime, currentTrack } = usePlayer();
+
+  useEffect(() => {
+    if (!currentTrack) return;
+    const elapsedPercentage = (playTime * 1000) / currentTrack.durationMs;
+    const newOffset = elapsedPercentage * (window.innerWidth - 50);
+    setOffset(newOffset);
+  }, [playTime]);
+
+  return (
+    <Box
+      position="absolute"
+      transform={`translateX(${offset}px)`}
+      transition="1s linear transform"
+      top={{ base: "40px", md: "52.5px" }}
+      w={{ base: "7px", md: "10px" }}
+      h={{ base: "7px", md: "10px" }}
+      bg="black"
+      borderRadius="100%"
+    />
+  );
+}
+
+/*
+Update May 21: Keeping this here for the memories.
+
 This shit doesn't really work and is some of the worst code I've written in my life.
 The BIGGEST issue is that the circle will start scrolling BEFORE music has actually been loaded,
 resulting in a big delay / off-sync on devices with poor service.

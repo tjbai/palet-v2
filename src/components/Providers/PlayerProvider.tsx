@@ -13,6 +13,7 @@ import {
   useState,
 } from "react";
 import ReactPlayer from "react-player";
+import { OnProgressProps } from "react-player/base";
 
 interface PlayerContext {
   playlistContext: PlaylistContext | null;
@@ -24,17 +25,24 @@ interface PlayerContext {
   playing: boolean;
   setPlaying: Dispatch<SetStateAction<boolean>>;
   toggle: () => void;
+  playTime: number;
 }
 
 const playerContext = createContext({} as PlayerContext);
 
 export default function PlayerProvider(props: { children: ReactNode }) {
   const [hasWindow, setHasWindow] = useState(false);
+  const [playTime, setPlaytime] = useState(0);
   const playerRef = useRef<ReactPlayer>(null);
 
   useEffect(() => {
     if (typeof window !== undefined) setHasWindow(true);
   }, []);
+
+  const handleProgress = (progress: OnProgressProps) => {
+    const { playedSeconds } = progress;
+    setPlaytime(playedSeconds);
+  };
 
   const {
     playlistContext,
@@ -61,6 +69,7 @@ export default function PlayerProvider(props: { children: ReactNode }) {
         playing,
         setPlaying,
         toggle,
+        playTime,
       }}
     >
       {hasWindow ? (
@@ -70,6 +79,7 @@ export default function PlayerProvider(props: { children: ReactNode }) {
             url={playerSrc}
             playing={playing}
             onEnded={nextSong}
+            onProgress={handleProgress}
           />
         </div>
       ) : null}

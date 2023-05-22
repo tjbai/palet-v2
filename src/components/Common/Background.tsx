@@ -28,8 +28,6 @@ component for every screen's background.
 export default function Background({ children }: { children: ReactNode }) {
   const { gradient, backgroundImage } = useStyles();
 
-  console.log(backgroundImage);
-
   return (
     <Box
       backgroundImage={backgroundImage}

@@ -15,10 +15,10 @@ export type BackgroundType = "landing" | "about" | "player1" | "player2";
 
 const DEFAULT_GRADIENT = {
   exists: true,
-  position: "bottom",
-  intensity: 20,
+  position: "top",
+  intensity: 70,
 } as Gradient;
-const DEFAULT_BACKGROUND = "" as BackgroundImage;
+const DEFAULT_BACKGROUND = "/images/player-bg-1.avif" as BackgroundImage;
 
 /*
 Note: This is a really hacky way to get certain backgrounds to persist on different pages.
@@ -34,16 +34,12 @@ export default function useStickyBackground() {
     setGradient(
       localStorage.getItem("gradient")
         ? JSON.parse(localStorage.getItem("gradient")!)
-        : {
-            position: "bottom",
-            intensity: 20,
-            exists: true,
-          }
+        : DEFAULT_GRADIENT
     );
     setBackgroundImage(
       localStorage.getItem("backgroundImage")
         ? JSON.parse(localStorage.getItem("backgroundImage")!)
-        : "images/landing-bg-v2.jpg"
+        : DEFAULT_BACKGROUND
     );
   }, []);
 
@@ -58,6 +54,9 @@ export default function useStickyBackground() {
     } else if (bgType === "player1") {
       newGrad = { position: "top", intensity: 70, exists: true };
       newBg = "/images/player-bg-1.avif";
+    } else if (bgType === "player2") {
+      newGrad = DEFAULT_GRADIENT;
+      newBg = DEFAULT_BACKGROUND;
     } else {
       newGrad = DEFAULT_GRADIENT;
       newBg = DEFAULT_BACKGROUND;

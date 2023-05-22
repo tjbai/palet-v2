@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 /* Fetching entire playlists should go into this interface */
@@ -26,25 +27,27 @@ export default function usePlayerState() {
   const [currentTrack, setCurrentTrack] = useState<NowPlaying | null>(null);
   const [playerSrc, setPlayerSrc] = useState<string>();
   const [playing, setPlaying] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // TODO: Store last playing song between reloads
+  useEffect(() => {}, []);
 
   useEffect(() => {
-    if (!localStorage.getItem("lastListeningTo")) return;
-    const lastTrack = JSON.parse(localStorage.getItem("lastListeningTo")!);
+    const updatePlayerState = async () => {
+      if (!playlistContext || playlistContext.index === -1) return;
+      const newTrack = playlistContext.songs[playlistContext.index];
+      setCurrentTrack(newTrack);
+      setLoading(true);
+      const { data } = await axios.post("/api/generatePresignedUrl", {
+        audioFilePath: newTrack.cdnPath,
+      });
+      const { signedUrl, error } = data;
+      if (error) alert(error);
+      else setPlayerSrc(signedUrl);
+      setLoading(false);
+    };
 
-    // TODO: Make this propagate between loads (need to change how playlistContext is passed down)
-  }, []);
-
-  useEffect(() => {
-    if (!playlistContext || playlistContext.index === -1) return;
-    setCurrentTrack(playlistContext.songs[playlistContext.index]);
-    setPlayerSrc(
-      `${process.env.NEXT_PUBLIC_CDN_BASE_URL}/${
-        playlistContext.songs[playlistContext.index].cdnPath
-      }`
-    );
-    if (currentTrack) {
-      localStorage.setItem("lastListeningTo", JSON.stringify(currentTrack));
-    } else localStorage.removeItem("lastListeningTo");
+    updatePlayerState();
   }, [playlistContext]);
 
   const nextSong = () => {
