@@ -1,7 +1,9 @@
 import PlayerController from "@/components/Player/PlayerController";
 import { PlaylistContext } from "@/lib/hooks/usePlayerState";
-import axios from "axios";
-import { headers } from "next/dist/client/components/headers";
+import { bi2n } from "@/lib/util";
+import { Prisma, PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 /* 
 NOTE 3: Good template for future prisma api's
@@ -15,20 +17,45 @@ We're gonna want to get rid of this and just make an endpoint for this...
 async function fetchPlaylist(
   routeAlias: string
 ): Promise<PlaylistContext | null> {
-  const headersList = headers();
-  const url = headersList.get("x-url") || "";
-  const base = new URL(url).origin;
+  try {
+    const prismaRes = await prisma.static_playlists.findUniqueOrThrow({
+      where: {
+        route_alias: routeAlias, // typescript seems to take issue with this line...
+      },
+      include: {
+        playlists_tracks: {
+          include: {
+            static_tracks: true,
+          },
+        },
+      },
+    });
 
-  const { data } = await axios.post(`${base}/api/playlist`, {
-    routeAlias,
-  });
-  const { playlistContext, error } = data;
+    const responseObject = {
+      id: bi2n(prismaRes?.id),
+      name: prismaRes?.name,
+      index: -1,
+      imageUrl: prismaRes?.cdn_image_url,
+      originUrl: prismaRes?.origin_url,
+      songs: prismaRes?.playlists_tracks.map((pt) => ({
+        id: bi2n(pt.static_tracks.id),
+        name: pt.static_tracks.name,
+        artists: pt.static_tracks.artists,
+        cdnPath: pt.static_tracks.cdn_path,
+        durationMs: bi2n(pt.static_tracks.duration_ms),
+        kandiCount: bi2n(pt.static_tracks.kandi_count),
+        originUrl: pt.static_tracks.origin_url,
+      })),
+    } as PlaylistContext;
 
-  if (error) {
-    console.log("error fetch playlistcontext: ", error);
+    return responseObject;
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      console.log(e.code);
+    }
+
     return null;
   }
-  return playlistContext;
 }
 
 export default async function Page({

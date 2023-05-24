@@ -21,8 +21,7 @@ export default authMiddleware({
     auth: AuthObject & {
       isPublicRoute: boolean;
     },
-    req: NextRequest,
-    evt: NextFetchEvent
+    req: NextRequest
   ) => {
     if (!auth.userId && !auth.isPublicRoute) {
       const signInUrl = new URL("/sign-in", req.url);
@@ -31,8 +30,7 @@ export default authMiddleware({
     }
     return NextResponse.next();
   },
-  publicRoutes: ["/", "/api/webhooks/users", "/api(.*)"], // FIXME: fix this lol
-  // debug: true,
+  publicRoutes: ["/", "/api/webhooks(.*)"],
 });
 
 export const config = {

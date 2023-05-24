@@ -1,13 +1,8 @@
-import { bi2n, convertBigInts } from "@/lib/util";
-import { Prisma, PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { PlaylistContext } from "./../../../lib/hooks/usePlayerState";
 
 interface RequestBody {
   routeAlias: string;
 }
-
-const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   const data: RequestBody = await request.json();
@@ -17,6 +12,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Need to pass in playlist route name" });
   }
 
+  // Unnecessary because we have SSSR
+
+  /*
   try {
     const prismaRes = await prisma.static_playlists.findUniqueOrThrow({
       where: {
@@ -57,4 +55,5 @@ export async function POST(request: NextRequest) {
     }
     return NextResponse.json({ error: e });
   }
+  */
 }
