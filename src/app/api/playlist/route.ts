@@ -1,12 +1,13 @@
 import { bi2n, convertBigInts } from "@/lib/util";
-import { PlaylistContext } from "./../../../lib/hooks/usePlayerState";
-import prisma from "@/prisma";
-import { Prisma } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { PlaylistContext } from "./../../../lib/hooks/usePlayerState";
 
 interface RequestBody {
   routeAlias: string;
 }
+
+const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   const data: RequestBody = await request.json();

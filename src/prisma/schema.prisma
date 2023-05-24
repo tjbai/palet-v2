@@ -13,6 +13,17 @@ model emails {
   email      String?   @unique
 }
 
+model donations {
+  user_id  String
+  track_id BigInt
+  amount   Int
+
+  lastDonationDate DateTime      @default(now())
+  track            static_tracks @relation(fields: [track_id], references: [id])
+
+  @@id([user_id, track_id])
+}
+
 model playlists_tracks {
   track_id         BigInt           @default(autoincrement())
   playlist_id      BigInt
@@ -44,6 +55,7 @@ model static_tracks {
   kandi_count      BigInt?            @default(0)
   origin_url       String?
   playlists_tracks playlists_tracks[]
+  donations        donations[]
 }
 
 model users {

@@ -25,7 +25,7 @@ async function fetchPlaylist(
   const { playlistContext, error } = data;
 
   if (error) {
-    console.error(error);
+    console.log("error fetch playlistcontext: ", error);
     return null;
   }
   return playlistContext;

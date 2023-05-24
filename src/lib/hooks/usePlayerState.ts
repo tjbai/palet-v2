@@ -29,8 +29,7 @@ export default function usePlayerState() {
   const [playing, setPlaying] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // TODO: Store last playing song between reloads
-  useEffect(() => {}, []);
+  useEffect(() => {}, []); // TODO: Store last playing song between reloads
 
   useEffect(() => {
     const updatePlayerState = async () => {
@@ -38,7 +37,7 @@ export default function usePlayerState() {
       const newTrack = playlistContext.songs[playlistContext.index];
       setCurrentTrack(newTrack);
       setLoading(true);
-      const { data } = await axios.post("/api/generatePresignedUrl", {
+      const { data } = await axios.post("/api/track/generatePresignedUrl", {
         audioFilePath: newTrack.cdnPath,
       });
       const { signedUrl, error } = data;

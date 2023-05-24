@@ -6,7 +6,7 @@ import {
   RiSkipForwardFill,
 } from "react-icons/ri";
 import { usePlayer } from "../Providers/PlayerProvider";
-import ClickIcon from "../Util/ClickIcon";
+import ClickIcon from "../Common/ClickIcon";
 
 export default function Controls() {
   const { nextSong, prevSong, playing, toggle } = usePlayer();

@@ -1,5 +1,6 @@
 import { authMiddleware } from "@clerk/nextjs";
-import { NextRequest, NextResponse } from "next/server";
+import { AuthObject } from "@clerk/nextjs/dist/server";
+import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 
 function fetchHeaders(request: NextRequest) {
   const reqHeaders = new Headers(request.headers);
@@ -13,11 +14,25 @@ function fetchHeaders(request: NextRequest) {
 }
 
 export default authMiddleware({
-  beforeAuth: (req) => {
-    return fetchHeaders(req);
+  beforeAuth: (auth: NextRequest, evt: NextFetchEvent) => {
+    return fetchHeaders(auth);
   },
-  afterAuth: () => {},
-  publicRoutes: ["/"],
+  afterAuth: (
+    auth: AuthObject & {
+      isPublicRoute: boolean;
+    },
+    req: NextRequest,
+    evt: NextFetchEvent
+  ) => {
+    if (!auth.userId && !auth.isPublicRoute) {
+      const signInUrl = new URL("/sign-in", req.url);
+      signInUrl.searchParams.set("redirect_url", req.url);
+      return NextResponse.redirect(signInUrl);
+    }
+    return NextResponse.next();
+  },
+  publicRoutes: ["/", "/api(.*)"], // FIXME: fix this lol
+  debug: true,
 });
 
 export const config = {

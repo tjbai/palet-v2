@@ -39,7 +39,13 @@ export default function Header() {
           {pathname === "/" || pathname === "about" ? (
             <Promotional />
           ) : (
-            <UserButton />
+            <UserButton
+              afterSignOutUrl={
+                typeof window !== "undefined"
+                  ? `${window.location.origin}/profile`
+                  : undefined
+              }
+            />
           )}
         </Flex>
       </Flex>

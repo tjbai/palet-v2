@@ -1,9 +1,17 @@
 import { Flex } from "@chakra-ui/react";
 
-export default function CustomToast({ message }: { message: string }) {
+export default function CustomToast({
+  description,
+  bgColor,
+  fontColor,
+}: {
+  description?: string;
+  bgColor?: string;
+  fontColor?: string;
+}) {
   return (
-    <Flex bg="darkbg" color="white" align="center" justify="center">
-      {message}
+    <Flex maxW="400px" bg={bgColor} color={fontColor}>
+      {description}
     </Flex>
   );
 }

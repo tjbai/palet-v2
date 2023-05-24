@@ -1,7 +1,7 @@
 "use client";
 
 import { PlaylistContext } from "@/lib/hooks/usePlayerState";
-import { Box, Flex, HStack } from "@chakra-ui/react";
+import { Box, Flex, HStack, useToast } from "@chakra-ui/react";
 import {
   Dispatch,
   ReactNode,
@@ -14,6 +14,8 @@ import BottomGradientOverlay from "./BottomGradientOverlay";
 import Player1 from "./Player1";
 import Player2 from "./Player2";
 import Controls from "./Controls";
+import useKandi from "@/lib/hooks/useKandi";
+import CustomToast from "../Common/CustomToast";
 
 type SearchParam = string | string[] | undefined;
 
@@ -26,16 +28,35 @@ export default function PlayerController({
 }) {
   const { setPlaylistContext } = usePlayer();
   const [playerState, setPlayerState] = useState<number>(1);
+  const { handleDonation } = useKandi();
+  const toast = useToast();
 
   const searchParamToPlayerState = (type: SearchParam) => {
-    if (!type || type === "1" || Array.isArray(type)) return 1;
-    else if (type === "2") return 2;
-    return 1; // default for now
+    if (type === "2") return 2;
+    else return 1; // default to this case for now
   };
 
   useEffect(() => {
     setPlaylistContext(playlistContext!);
     setPlayerState(searchParamToPlayerState(typeSearchParam));
+
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.code === "Space") {
+        e.preventDefault();
+        handleDonation();
+
+        // TODO: Change this to be a more satisfying visual indicator
+        toast({
+          position: "bottom",
+          duration: 1000,
+          description: "Received donation request!",
+          status: "info",
+        });
+      }
+    };
+
+    document.addEventListener("keydown", handleKeydown);
+    return () => document.removeEventListener("keydown", handleKeydown);
   }, []);
 
   return (
