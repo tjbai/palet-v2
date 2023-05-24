@@ -31,8 +31,8 @@ export default authMiddleware({
     }
     return NextResponse.next();
   },
-  publicRoutes: ["/", "/api(.*)"], // FIXME: fix this lol
-  debug: true,
+  publicRoutes: ["/", "/api/webhooks/users", "/api(.*)"], // FIXME: fix this lol
+  // debug: true,
 });
 
 export const config = {

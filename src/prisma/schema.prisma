@@ -13,6 +13,14 @@ model emails {
   email      String?   @unique
 }
 
+model users {
+  clerk_id      String   @id
+  created_at    DateTime @default(now())
+  first_name    String?
+  last_name     String?
+  kandi_balance Int
+}
+
 model donations {
   user_id  String
   track_id BigInt
@@ -56,11 +64,4 @@ model static_tracks {
   origin_url       String?
   playlists_tracks playlists_tracks[]
   donations        donations[]
-}
-
-model users {
-  id            String    @id @db.Uuid
-  created_at    DateTime? @default(now()) @db.Timestamptz(6)
-  email         String?   @unique
-  password_hash String?
 }
