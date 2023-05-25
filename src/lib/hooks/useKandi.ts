@@ -4,13 +4,11 @@ import { useToast } from "@chakra-ui/react";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { QueryClient, useMutation } from "react-query";
-import { User } from "../../lib/types";
-
-const queryClient = new QueryClient();
+import { useQueryClient } from "react-query";
 
 export default function useKandi() {
   const [donationAmount, setDonationAmount] = useState(0);
+  const queryClient = useQueryClient();
   const { currentTrack } = usePlayer();
   const { user } = useUser();
   const toast = useToast();
@@ -19,19 +17,6 @@ export default function useKandi() {
     setDonationAmount((previous) => Math.min(previous + 1, MAX_KANDI_DONATION));
   };
 
-  /* 
-  Let D represent the current donation amount, 
-  D' the outstanding donations, and M the limit.
-
-  Case 1: D < M, D + D' <= M. 
-  We should notify the user that they successfully donated D' kandi.
-
-  Case 2: D < M, D + D' > M.
-  We should notify the user that they donated D + D' - M kandi.
-
-  Case 3: D > M
-  We should notify the user that they have reached their donation limit.
-  */
   const sendDonation = async (amount: number) => {
     if (!user || !currentTrack) return;
 
@@ -67,7 +52,7 @@ export default function useKandi() {
       });
     }
 
-    queryClient.invalidateQueries("user"); // refetch kandi balacne
+    queryClient.invalidateQueries("user"); // refetch kandi balance
   };
 
   // Open donation window
@@ -77,7 +62,7 @@ export default function useKandi() {
         sendDonation(donationAmount);
         setDonationAmount(0);
       }
-    }, 500);
+    }, 400);
 
     return () => {
       clearTimeout(timer);

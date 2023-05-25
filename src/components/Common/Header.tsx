@@ -9,11 +9,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaTiktok as TikTok } from "react-icons/fa";
 import { GrInstagram as Instagram, GrSpotify as Spotify } from "react-icons/gr";
-import { isError, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { useStyles } from "../Providers/StyleProvider";
-import { User } from "../../lib/types";
 import Kandi from "./Kandi";
-import error from "next/error";
 
 const fetchUser = async () => {
   const { data } = await axios.get("/api/user");
@@ -70,7 +68,7 @@ function HeaderInner() {
                 <Text mr={2} fontWeight="bold">
                   {userData?.kandi_balance}
                 </Text>
-                <Kandi />
+                <Kandi size={25} />
               </Flex>
             ) : null}
             <UserButton

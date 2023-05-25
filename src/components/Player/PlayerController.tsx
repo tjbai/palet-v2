@@ -57,7 +57,11 @@ export default function PlayerController({
             display: "flex",
             justifyContent: "flex-end",
           },
-          render: () => <Kandi />,
+          render: () => (
+            <Flex fontSize="30px">
+              <Kandi size={40} />
+            </Flex>
+          ),
         });
       }
     };

@@ -48,8 +48,6 @@ async function fetchPlaylist(
       })),
     } as PlaylistContext;
 
-    console.log(responseObject);
-
     return responseObject;
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
