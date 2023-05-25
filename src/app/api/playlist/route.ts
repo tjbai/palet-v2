@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Need to pass in playlist route name" });
   }
 
-  // Unnecessary because we have SSSR
+  // Unnecessary because we have SSR
 
   /*
   try {

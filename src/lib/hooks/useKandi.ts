@@ -4,21 +4,10 @@ import { useToast } from "@chakra-ui/react";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import CustomToast from "@/components/Common/CustomToast";
+import { QueryClient, useMutation } from "react-query";
+import { User } from "../../lib/types";
 
-/*
-Desired flow:
-
-User spams spacebar. These donations are aggregated and after a certain
-window elapses a post request is made to /api/track/donateKandi
-There should be an immediate visual confirmation that the spacebar has been
-pressed, but after the request/response loop has completed, a toast
-appears on the screen with the resultant behavior. 
-
-After making a donation, the local donationAmount variable should 
-be reset to 0. We need to be careful here to prevent data races
-because setState() is not a synchronous operation...
-*/
+const queryClient = new QueryClient();
 
 export default function useKandi() {
   const [donationAmount, setDonationAmount] = useState(0);
@@ -45,46 +34,50 @@ export default function useKandi() {
   */
   const sendDonation = async (amount: number) => {
     if (!user || !currentTrack) return;
-    console.log(user.id);
-    console.log(currentTrack.id);
 
-    try {
-      const { data } = await axios.post("/api/track/donateKandi", {
-        donationAmount: amount,
-        userId: user.id,
-        trackId: currentTrack.id,
+    const { data } = await axios.post("/api/track/donateKandi", {
+      donationAmount: amount,
+      trackId: currentTrack.id,
+    });
+
+    const { capExceeded, outOfKandi, additionalKandi, error, remainingKandi } =
+      data;
+    if (error) throw new Error(error);
+
+    if (capExceeded) {
+      toast({
+        position: "bottom",
+        duration: 3000,
+        description: `Maximum donation limit reached.`,
+        status: "warning",
       });
-
-      const { capExceeded, additionalKandi, error } = data;
-      if (error) throw new Error(error); // this could be a really boneheaded loc
-
-      if (capExceeded) {
-        toast({
-          position: "bottom",
-          duration: 3000,
-          description: `Maximum donation limit reached`,
-          status: "warning",
-        });
-      } else {
-        toast({
-          position: "bottom",
-          duration: 3000,
-          description: `Donated ${additionalKandi} kandi!`,
-          status: "success",
-        });
-      }
-    } catch (e) {
-      console.error(e);
+    } else if (outOfKandi) {
+      toast({
+        position: "bottom",
+        duration: 3000,
+        description: `Out of Kandi.`,
+        status: "warning",
+      });
+    } else {
+      toast({
+        position: "bottom",
+        duration: 3000,
+        description: `Donated ${additionalKandi} kandi!`,
+        status: "success",
+      });
     }
+
+    queryClient.invalidateQueries("user"); // refetch kandi balacne
   };
 
+  // Open donation window
   useEffect(() => {
     const timer = setTimeout(() => {
       if (donationAmount > 0) {
         sendDonation(donationAmount);
         setDonationAmount(0);
       }
-    }, 1000);
+    }, 500);
 
     return () => {
       clearTimeout(timer);

@@ -1,9 +1,7 @@
 "use client";
 
-import usePlayerState, {
-  NowPlaying,
-  PlaylistContext,
-} from "@/lib/hooks/usePlayerState";
+import usePlayerState from "@/lib/hooks/usePlayerState";
+import { PlaylistContext, NowPlaying } from "@/lib/types";
 import {
   Dispatch,
   ReactNode,
@@ -28,6 +26,7 @@ interface PlayerContext {
   setPlaying: Dispatch<SetStateAction<boolean>>;
   toggle: () => void;
   playTime: number;
+  playerLoading: boolean;
 }
 
 const playerContext = createContext({} as PlayerContext);
@@ -57,6 +56,7 @@ export default function PlayerProvider(props: { children: ReactNode }) {
     playing,
     setPlaying,
     toggle,
+    loading: playerLoading,
   } = usePlayerState();
 
   return (
@@ -72,6 +72,7 @@ export default function PlayerProvider(props: { children: ReactNode }) {
         setPlaying,
         toggle,
         playTime,
+        playerLoading,
       }}
     >
       {hasWindow ? (

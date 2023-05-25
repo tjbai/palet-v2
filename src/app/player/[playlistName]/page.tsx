@@ -1,5 +1,5 @@
 import PlayerController from "@/components/Player/PlayerController";
-import { PlaylistContext } from "@/lib/hooks/usePlayerState";
+import { PlaylistContext } from "@/lib/types";
 import { bi2n } from "@/lib/util";
 import { Prisma, PrismaClient } from "@prisma/client";
 
@@ -48,11 +48,13 @@ async function fetchPlaylist(
       })),
     } as PlaylistContext;
 
+    console.log(responseObject);
+
     return responseObject;
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       console.log(e.code);
-    }
+    } else console.error(e);
 
     return null;
   }

@@ -4,17 +4,25 @@ import styleConstants from "@/lib/chakra/styleConstants";
 import { Link as NextLink } from "@chakra-ui/next-js";
 import { Link as ChakraLink, Flex, Icon, Text } from "@chakra-ui/react";
 import { UserButton } from "@clerk/nextjs";
+import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
-import router from "next/router";
 import { useEffect, useState } from "react";
 import { FaTiktok as TikTok } from "react-icons/fa";
 import { GrInstagram as Instagram, GrSpotify as Spotify } from "react-icons/gr";
+import { isError, useQuery } from "react-query";
 import { useStyles } from "../Providers/StyleProvider";
+import { User } from "../../lib/types";
+import Kandi from "./Kandi";
+import error from "next/error";
+
+const fetchUser = async () => {
+  const { data } = await axios.get("/api/user");
+  return data.user;
+};
 
 export default function Header() {
   const { gradient } = useStyles();
   const [gb, setGb] = useState(gradient.position === "bottom");
-  const pathname = usePathname();
 
   useEffect(() => setGb(gradient.position === "bottom"), [gradient]);
 
@@ -28,17 +36,43 @@ export default function Header() {
       bg={gradient.exists ? "transparent" : "bg"}
       transition="color 2s ease-in-out"
     >
-      <Flex
-        w="100%"
-        justify="space-between"
-        align="center"
-        fontSize={{ base: "20px", md: "30px" }}
-      >
-        <PaletLogo />
-        <Flex align="center" fontSize={{ base: "17px", md: "22px" }}>
-          {pathname === "/" || pathname === "about" ? (
-            <Promotional />
-          ) : (
+      <HeaderInner />
+    </Flex>
+  );
+}
+
+function HeaderInner() {
+  const pathname = usePathname();
+  const {
+    data: userData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery("user", fetchUser);
+
+  if (isError) console.error(error);
+
+  return (
+    <Flex
+      w="100%"
+      justify="space-between"
+      align="center"
+      fontSize={{ base: "20px", md: "30px" }}
+    >
+      <PaletLogo />
+      <Flex align="center" fontSize={{ base: "17px", md: "22px" }}>
+        {pathname === "/" || pathname === "/about" ? (
+          <Promotional />
+        ) : (
+          <Flex align="center" justify="center">
+            {!isLoading && !isError ? (
+              <Flex fontSize="17px" align="center" justify="center">
+                <Text mr={2} fontWeight="bold">
+                  {userData?.kandi_balance}
+                </Text>
+                <Kandi />
+              </Flex>
+            ) : null}
             <UserButton
               afterSignOutUrl={
                 typeof window !== "undefined"
@@ -46,8 +80,8 @@ export default function Header() {
                   : undefined
               }
             />
-          )}
-        </Flex>
+          </Flex>
+        )}
       </Flex>
     </Flex>
   );

@@ -14,20 +14,21 @@ model emails {
 }
 
 model users {
-  clerk_id      String   @id
-  created_at    DateTime @default(now())
+  clerk_id      String      @id
+  created_at    DateTime    @default(now())
   first_name    String?
   last_name     String?
   kandi_balance Int
+  donations     donations[]
 }
 
 model donations {
-  user_id  String
-  track_id BigInt
-  amount   Int
-
+  user_id          String
+  track_id         BigInt
+  amount           Int
   lastDonationDate DateTime      @default(now())
   track            static_tracks @relation(fields: [track_id], references: [id])
+  users            users         @relation(fields: [user_id], references: [clerk_id], onDelete: Cascade, onUpdate: NoAction)
 
   @@id([user_id, track_id])
 }
@@ -62,6 +63,6 @@ model static_tracks {
   duration_ms      BigInt?
   kandi_count      BigInt?            @default(0)
   origin_url       String?
-  playlists_tracks playlists_tracks[]
   donations        donations[]
+  playlists_tracks playlists_tracks[]
 }

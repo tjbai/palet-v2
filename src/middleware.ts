@@ -30,7 +30,7 @@ export default authMiddleware({
     }
     return NextResponse.next();
   },
-  publicRoutes: ["/", "/api/webhooks(.*)"],
+  publicRoutes: ["/", "/api/webhooks(.*)", "/api(.*)"],
 });
 
 export const config = {

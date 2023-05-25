@@ -2,10 +2,10 @@
 
 import { usePlayer } from "@/components/Providers/PlayerProvider";
 import { useStyles } from "@/components/Providers/StyleProvider";
-import { NowPlaying, PlaylistContext } from "@/lib/hooks/usePlayerState";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import BelowNowPlayingWrapper from "../BelowNowPlayingWrapper";
+import { PlaylistContext, NowPlaying } from "@/lib/types";
 
 export default function Player1({
   playlistContext,
@@ -30,7 +30,7 @@ export default function Player1({
 
   return (
     <BelowNowPlayingWrapper height={100} padding={15}>
-      {playlistContext.songs.map((song, index) => (
+      {playlistContext.songs.map((song: NowPlaying, index: number) => (
         <ScrollPiece key={song.id} song={song} index={index} />
       ))}
     </BelowNowPlayingWrapper>

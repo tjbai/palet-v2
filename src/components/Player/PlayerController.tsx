@@ -1,6 +1,7 @@
 "use client";
 
-import { PlaylistContext } from "@/lib/hooks/usePlayerState";
+import useKandi from "@/lib/hooks/useKandi";
+import { PlaylistContext } from "@/lib/types";
 import { Box, Flex, HStack, useToast } from "@chakra-ui/react";
 import {
   Dispatch,
@@ -11,11 +12,10 @@ import {
 } from "react";
 import { usePlayer } from "../Providers/PlayerProvider";
 import BottomGradientOverlay from "./BottomGradientOverlay";
+import Controls from "./Controls";
 import Player1 from "./Player1";
 import Player2 from "./Player2";
-import Controls from "./Controls";
-import useKandi from "@/lib/hooks/useKandi";
-import CustomToast from "../Common/CustomToast";
+import Kandi from "../Common/Kandi";
 
 type SearchParam = string | string[] | undefined;
 
@@ -47,10 +47,17 @@ export default function PlayerController({
 
         // TODO: Change this to be a more satisfying visual indicator
         toast({
-          position: "bottom",
+          position: "bottom-right",
           duration: 1000,
           description: "Received donation request!",
-          status: "info",
+          containerStyle: {
+            padding: "0px",
+            width: "fit-content",
+            alignItems: "flex-end",
+            display: "flex",
+            justifyContent: "flex-end",
+          },
+          render: () => <Kandi />,
         });
       }
     };
