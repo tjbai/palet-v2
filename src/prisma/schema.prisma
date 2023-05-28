@@ -14,7 +14,7 @@ model emails {
 }
 
 model users {
-  clerk_id      String      @id
+  clerk_id      String      @id @unique
   created_at    DateTime    @default(now())
   first_name    String?
   last_name     String?
