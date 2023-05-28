@@ -2,10 +2,10 @@
 
 import { usePlayer } from "@/components/Providers/PlayerProvider";
 import { useStyles } from "@/components/Providers/StyleProvider";
-import { NowPlaying, PlaylistContext } from "@/lib/hooks/usePlayerState";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import BelowNowPlayingWrapper from "../BelowNowPlayingWrapper";
+import { PlaylistContext, NowPlaying } from "@/lib/types";
 
 export default function Player2({
   playlistContext,

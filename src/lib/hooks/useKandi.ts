@@ -1,10 +1,10 @@
-import { MAX_KANDI_DONATION } from "@/app/api/track/donateKandi/route";
 import { usePlayer } from "@/components/Providers/PlayerProvider";
 import { useToast } from "@chakra-ui/react";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
+import { MAX_KANDI_DONATION } from "../constants";
 
 export default function useKandi() {
   const [donationAmount, setDonationAmount] = useState(0);

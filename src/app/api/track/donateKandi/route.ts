@@ -1,8 +1,7 @@
+import { MAX_KANDI_DONATION } from "@/lib/constants";
 import { currentUser } from "@clerk/nextjs";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-
-export const MAX_KANDI_DONATION = 5;
 
 interface RequestBody {
   donationAmount: number;
