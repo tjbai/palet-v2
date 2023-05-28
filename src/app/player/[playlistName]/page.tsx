@@ -7,15 +7,17 @@ import { Prisma, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-/* 
-NOTE 3: Good template for future prisma api's
+export const revalidate = 60; // revalidate every minute
 
-NOTE 2: This is just a copy of the /player route's fetch function
-but matches to the "route alias" path param in the url.
+// Enables ISR
+export async function generateStaticParams() {
+  const playlists = await prisma.static_playlists.findMany();
+  const playlistNames = playlists.map((playlist) => ({
+    playlistName: playlist.route_alias,
+  }));
+  return playlistNames;
+}
 
-NOTE: This is the only place we use the supabase API clientside.
-We're gonna want to get rid of this and just make an endpoint for this...
-*/
 async function fetchPlaylist(
   routeAlias: string
 ): Promise<PlaylistContext | null> {
@@ -69,7 +71,8 @@ export default async function Page({
   params: { playlistName: string };
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const playlistContext = await fetchPlaylist(params.playlistName);
+  const { playlistName } = params;
+  const playlistContext = await fetchPlaylist(playlistName);
   const typeSearchParam = searchParams?.type;
 
   if (!playlistContext)

@@ -1,23 +1,22 @@
 "use client";
 
 import { PlaylistPreview } from "@/lib/types";
+import { msToTime } from "@/lib/util";
 import {
   Box,
   Flex,
   HStack,
   Icon,
-  Image,
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FaMusic } from "react-icons/fa";
 import BelowNowPlayingWrapper from "../Player/BelowNowPlayingWrapper";
 import NowPlaying from "../Player/NowPlaying";
 import { useStyles } from "../Providers/StyleProvider";
-import { msToTime } from "@/lib/util";
-// import Image from "next/image";
 
 export default function Discovery({
   playlistPreviews,
@@ -97,7 +96,7 @@ function Recommended({
   );
 }
 
-// TODO: Use next/image optimized Image component
+// TODO: set blurDataURL
 function ResponsivePlaylistRow({
   playlistPreviews,
   scrollOffset,
@@ -175,10 +174,12 @@ function Preview({ playlist }: { playlist: PlaylistPreview }) {
         <Image
           src={playlist.imageUrl}
           alt={playlist.name}
-          width={`${boxSize}px`}
-          height={`${boxSize}px`}
-          minW={`${boxSize}px`}
-          minH={`${boxSize}px`}
+          // width={`${boxSize}px`}
+          // height={`${boxSize}px`}
+          // minW={`${boxSize}px`}
+          // minH={`${boxSize}px`}
+          width={boxSize}
+          height={boxSize}
         />
       ) : (
         <Flex
