@@ -3,12 +3,6 @@ import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 const prisma = new PrismaClient();
 const DEFAULT_STARTING_KANDI = 100;
 
