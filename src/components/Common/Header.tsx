@@ -65,10 +65,7 @@ function HeaderInner() {
           <Flex align="center" justify="center">
             {!isLoading && !isError ? (
               <Flex fontSize="17px" align="center" justify="center">
-                <Text mr={2} fontWeight="bold">
-                  {userData?.kandi_balance}
-                </Text>
-                <Kandi size={25} />
+                <Text mr={3}>{userData?.kandi_balance} Kandi</Text>
               </Flex>
             ) : null}
             <UserButton

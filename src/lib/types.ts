@@ -7,6 +7,17 @@ export interface PlaylistContext {
   songs: NowPlaying[];
 }
 
+export interface PlaylistPreview {
+  id: string | number | undefined;
+  name: string;
+  imageUrl: string | null;
+  originUrl: string | null;
+  routeAlias: string;
+  trackCount: number;
+  kandiCount: number;
+  totalDuration: number;
+}
+
 export interface NowPlaying {
   id: string | number;
   name: string;

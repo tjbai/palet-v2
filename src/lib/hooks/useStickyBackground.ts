@@ -11,7 +11,12 @@ export type BackgroundImage =
   | "/images/player-bg-1.avif"
   | "";
 
-export type BackgroundType = "landing" | "about" | "player1" | "player2";
+export type BackgroundType =
+  | "landing"
+  | "about"
+  | "player1"
+  | "player2"
+  | "discovery";
 
 const DEFAULT_GRADIENT = {
   exists: true,
@@ -54,7 +59,7 @@ export default function useStickyBackground() {
     } else if (bgType === "player1") {
       newGrad = { position: "top", intensity: 70, exists: true };
       newBg = "/images/player-bg-1.avif";
-    } else if (bgType === "player2") {
+    } else if (bgType === "player2" || bgType === "discovery") {
       newGrad = { position: "top", intensity: 0, exists: false };
       newBg = "";
     } else {

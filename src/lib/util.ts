@@ -9,6 +9,14 @@ export function msToTime(ms: number | undefined) {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   const paddedSeconds = seconds.toString().padStart(2, "0");
+
+  if (minutes >= 60) {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    const paddedMinutes = remainingMinutes.toString().padStart(2, "0");
+    return `${hours}:${paddedMinutes}:${paddedSeconds}`;
+  }
+
   return `${minutes}:${paddedSeconds}`;
 }
 
@@ -25,10 +33,8 @@ export function hashString(str: string): number {
   return hash;
 }
 
-export function bi2n(
-  num: bigint | undefined | null
-): number | undefined | null {
-  if (num === undefined || num === null) return num;
+export function bi2n(num: bigint | undefined | null): number | undefined {
+  if (num === undefined || num === null) return undefined;
   return Number(BigInt(num));
 }
 

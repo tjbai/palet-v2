@@ -25,6 +25,7 @@ export default function usePlayerState() {
       const { signedUrl, error } = data;
       if (error) alert(error);
       else setPlayerSrc(signedUrl);
+      setPlayerSrc(newTrack.cdnPath);
       setLoading(false);
 
       localStorage.setItem("lastSong", newTrack.name);
@@ -33,7 +34,6 @@ export default function usePlayerState() {
   }, [playlistContext]);
 
   const nextSong = () => {
-    console.log(playlistContext);
     if (!playlistContext || playlistContext.index === -1) return;
     setPlaylistContext({
       ...playlistContext,

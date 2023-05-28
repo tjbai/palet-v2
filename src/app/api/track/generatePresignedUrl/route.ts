@@ -1,4 +1,5 @@
 import { getSignedUrl } from "@aws-sdk/cloudfront-signer";
+import { url } from "inspector";
 import { NextRequest, NextResponse } from "next/server";
 import querystring from "querystring";
 
@@ -16,9 +17,10 @@ export async function POST(request: NextRequest) {
   }
 
   // create path
-  const encodedAudioFilePath = querystring.escape(audioFilePath);
-  const cdnDomain = process.env.NEXT_PUBLIC_CDN_BASE_URL;
-  const url = `${cdnDomain}/${encodedAudioFilePath}`;
+  // const encodedAudioFilePath = querystring.escape(audioFilePath);
+  // const cdnDomain = process.env.NEXT_PUBLIC_CDN_BASE_URL;
+  // const url = `${cdnDomain}/${encodedAudioFilePath}`;
+  const url = audioFilePath;
 
   // grab keys
   const { privateKeyEncoded } = JSON.parse(

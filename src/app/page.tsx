@@ -1,5 +1,6 @@
+import Discovery from "@/components/Discovery";
 import Landing from "@/components/Landing";
-import { currentUser } from "@clerk/nextjs";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,6 +15,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home({ params }: { params: any }) {
+export default async function Page({}: {}) {
   return <Landing />;
 }

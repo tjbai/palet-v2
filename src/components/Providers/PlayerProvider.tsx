@@ -34,16 +34,8 @@ const playerContext = createContext({} as PlayerContext);
 export default function PlayerProvider(props: { children: ReactNode }) {
   const [hasWindow, setHasWindow] = useState(false);
   const [playTime, setPlaytime] = useState(0);
+  const [player, setPlayer] = useState<JSX.Element | null>(null);
   const playerRef = useRef<ReactPlayer>(null);
-
-  useEffect(() => {
-    if (typeof window !== undefined) setHasWindow(true);
-  }, []);
-
-  const handleProgress = (progress: OnProgressProps) => {
-    const { playedSeconds } = progress;
-    setPlaytime(playedSeconds);
-  };
 
   const {
     playlistContext,
@@ -58,6 +50,32 @@ export default function PlayerProvider(props: { children: ReactNode }) {
     toggle,
     loading: playerLoading,
   } = usePlayerState();
+
+  useEffect(() => {
+    if (typeof window !== undefined) setHasWindow(true);
+  }, []);
+
+  useEffect(() => {
+    if (!playerSrc) setPlayer(null);
+    else {
+      const newPlayer = (
+        <ReactPlayer
+          ref={playerRef}
+          url={playerSrc}
+          playing={playing}
+          onEnded={nextSong}
+          onProgress={handleProgress}
+        />
+      );
+      console.log("making new player");
+      setPlayer(newPlayer);
+    }
+  }, [playerSrc, playing]);
+
+  const handleProgress = (progress: OnProgressProps) => {
+    const { playedSeconds } = progress;
+    setPlaytime(playedSeconds);
+  };
 
   return (
     <playerContext.Provider
@@ -75,17 +93,7 @@ export default function PlayerProvider(props: { children: ReactNode }) {
         playerLoading,
       }}
     >
-      {hasWindow ? (
-        <div style={{ display: "none" }}>
-          <ReactPlayer
-            ref={playerRef}
-            url={playerSrc}
-            playing={playing}
-            onEnded={nextSong}
-            onProgress={handleProgress}
-          />
-        </div>
-      ) : null}
+      {hasWindow ? <div style={{ display: "none" }}>{player}</div> : null}
       {props.children}
     </playerContext.Provider>
   );

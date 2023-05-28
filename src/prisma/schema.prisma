@@ -49,8 +49,8 @@ model static_playlists {
   name             String             @unique
   cdn_image_url    String?
   origin_url       String?
-  track_count      Int?               @db.SmallInt
-  route_alias      String?            @unique
+  track_count      Int                @db.SmallInt
+  route_alias      String             @unique
   playlists_tracks playlists_tracks[]
 }
 

@@ -1,4 +1,6 @@
+import BelowNowPlayingWrapper from "@/components/Player/BelowNowPlayingWrapper";
 import PlayerController from "@/components/Player/PlayerController";
+import styleConstants from "@/lib/chakra/styleConstants";
 import { PlaylistContext } from "@/lib/types";
 import { bi2n } from "@/lib/util";
 import { Prisma, PrismaClient } from "@prisma/client";
@@ -34,7 +36,7 @@ async function fetchPlaylist(
     const responseObject = {
       id: bi2n(prismaRes?.id),
       name: prismaRes?.name,
-      index: -1,
+      index: 0, // don't know if this is smart, but solves duplication issue
       imageUrl: prismaRes?.cdn_image_url,
       originUrl: prismaRes?.origin_url,
       songs: prismaRes?.playlists_tracks.map((pt) => ({
@@ -48,10 +50,12 @@ async function fetchPlaylist(
       })),
     } as PlaylistContext;
 
+    console.log("response: ", responseObject);
+
     return responseObject;
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      console.log(e.code);
+      console.log("prisma error code: ", e.code);
     } else console.error(e);
 
     return null;
@@ -68,7 +72,24 @@ export default async function Page({
   const playlistContext = await fetchPlaylist(params.playlistName);
   const typeSearchParam = searchParams?.type;
 
-  if (!playlistContext) return <h1>Error fetching</h1>;
+  if (!playlistContext)
+    return (
+      <div
+        style={{ display: "flex", height: "100vh", border: "1px solid green" }}
+      >
+        <h1
+          style={{
+            position: "relative",
+            top: `${
+              styleConstants.headerHeight + styleConstants.nowPlayingHeight
+            }px`,
+            border: "1px solid red",
+          }}
+        >
+          Error fetching
+        </h1>
+      </div>
+    );
 
   return (
     <PlayerController

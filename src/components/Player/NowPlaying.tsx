@@ -43,7 +43,7 @@ function CurrentTrackDisplay() {
   const { playlistContext, currentTrack, toggle, playTime } = usePlayer();
 
   if (!playlistContext?.name) {
-    return <h1>Loading...</h1>;
+    return <Text fontWeight="bold">Select to start listening</Text>;
   } else if (playlistContext?.index !== -1) {
     return (
       <Text
@@ -100,6 +100,7 @@ This version should work.
 function TimestampIndicatorV2() {
   const [offset, setOffset] = useState(0);
   const { playTime, currentTrack } = usePlayer();
+  const { gradient } = useStyles();
 
   useEffect(() => {
     if (!currentTrack) return;
@@ -116,7 +117,7 @@ function TimestampIndicatorV2() {
       top={{ base: "40px", md: "52.5px" }}
       w={{ base: "7px", md: "10px" }}
       h={{ base: "7px", md: "10px" }}
-      bg="black"
+      bg={!gradient.exists || gradient.position === "top" ? "black" : "white"}
       borderRadius="100%"
     />
   );
