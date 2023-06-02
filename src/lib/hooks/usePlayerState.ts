@@ -35,6 +35,7 @@ export default function usePlayerState() {
 
   const nextSong = () => {
     if (!playlistContext || playlistContext.index === -1) return;
+    console.log("this fires");
     setPlaylistContext({
       ...playlistContext,
       index: (playlistContext.index + 1) % playlistContext.songs.length,

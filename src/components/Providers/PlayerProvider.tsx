@@ -67,7 +67,6 @@ export default function PlayerProvider(props: { children: ReactNode }) {
           onProgress={handleProgress}
         />
       );
-      console.log("making new player");
       setPlayer(newPlayer);
     }
   }, [playerSrc, playing]);
