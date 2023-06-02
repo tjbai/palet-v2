@@ -11,7 +11,6 @@ import { FaTiktok as TikTok } from "react-icons/fa";
 import { GrInstagram as Instagram, GrSpotify as Spotify } from "react-icons/gr";
 import { useQuery } from "react-query";
 import { useStyles } from "../Providers/StyleProvider";
-import Kandi from "./Kandi";
 
 const fetchUser = async () => {
   const { data } = await axios.get("/api/user");
@@ -31,7 +30,7 @@ export default function Header() {
       position="fixed"
       zIndex={5}
       color={!gb || !gradient.exists ? "black" : "white"}
-      bg={gradient.exists ? "transparent" : "bg"}
+      bg="transparent"
       transition="color 2s ease-in-out"
     >
       <HeaderInner />
@@ -65,7 +64,9 @@ function HeaderInner() {
           <Flex align="center" justify="center">
             {!isLoading && !isError ? (
               <Flex fontSize="17px" align="center" justify="center">
-                <Text mr={3}>{userData?.kandi_balance} Kandi</Text>
+                {userData ? (
+                  <Text mr={3}>{userData.kandi_balance} Kandi</Text>
+                ) : null}
               </Flex>
             ) : null}
             <UserButton

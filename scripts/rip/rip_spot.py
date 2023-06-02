@@ -81,6 +81,7 @@ def upload_to_pg(pname, playlist_object, metadata_generator):
                 "artists": mdata["artists"],
                 "cdn_path": f"{distro_name}/{urllib.parse.quote(create_object_name(mdata))}",
                 "origin_url": mdata["spotify_url"],
+                "sc_origin": False,
             }
         )
 

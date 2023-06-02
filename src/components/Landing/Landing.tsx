@@ -1,22 +1,15 @@
 "use client";
 
 import { Button, Flex, Text } from "@chakra-ui/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useModal } from "../Providers/ModalProvider";
 import { useStyles } from "../Providers/StyleProvider";
 
 export default function Landing() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const ref = searchParams.get("ref");
   const { setBackground } = useStyles();
 
   useEffect(() => {
-    async function logRef(ref: string) {
-      router.push("/");
-    }
-    if (ref) logRef(ref);
     setBackground("landing");
   }, []);
 

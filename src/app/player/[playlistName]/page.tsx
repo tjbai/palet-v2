@@ -1,26 +1,30 @@
-import BelowNowPlayingWrapper from "@/components/Player/BelowNowPlayingWrapper";
+import BelowNowPlayingError from "@/components/Common/BelowNowPlayingError";
 import PlayerController from "@/components/Player/PlayerController";
 import styleConstants from "@/lib/chakra/styleConstants";
 import { PlaylistContext } from "@/lib/types";
 import { bi2n } from "@/lib/util";
 import { Prisma, PrismaClient } from "@prisma/client";
+import error from "next/error";
 
 const prisma = new PrismaClient();
 
-export const revalidate = 60; // revalidate every minute
+export const revalidate = 60; // revalidate ISR every minute
 
 // Enables ISR
-export async function generateStaticParams() {
-  const playlists = await prisma.static_playlists.findMany();
-  const playlistNames = playlists.map((playlist) => ({
-    playlistName: playlist.route_alias,
-  }));
-  return playlistNames;
+// export async function generateStaticParams() {
+//   const playlists = await prisma.static_playlists.findMany();
+//   const playlistNames = playlists.map((playlist) => ({
+//     playlistName: playlist.route_alias,
+//   }));
+//   return playlistNames;
+// }
+
+interface FetchReturnObject {
+  playlistContext?: PlaylistContext;
+  error?: string;
 }
 
-async function fetchPlaylist(
-  routeAlias: string
-): Promise<PlaylistContext | null> {
+async function fetchPlaylist(routeAlias: string): Promise<FetchReturnObject> {
   try {
     const prismaRes = await prisma.static_playlists.findUniqueOrThrow({
       where: {
@@ -52,15 +56,12 @@ async function fetchPlaylist(
       })),
     } as PlaylistContext;
 
-    console.log("response: ", responseObject);
-
-    return responseObject;
+    return { playlistContext: responseObject };
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       console.log("prisma error code: ", e.code);
     } else console.error(e);
-
-    return null;
+    return { error: e as string };
   }
 }
 
@@ -72,31 +73,14 @@ export default async function Page({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const { playlistName } = params;
-  const playlistContext = await fetchPlaylist(playlistName);
+  const { playlistContext, error } = await fetchPlaylist(playlistName);
   const typeSearchParam = searchParams?.type;
 
-  if (!playlistContext)
-    return (
-      <div
-        style={{ display: "flex", height: "100vh", border: "1px solid green" }}
-      >
-        <h1
-          style={{
-            position: "relative",
-            top: `${
-              styleConstants.headerHeight + styleConstants.nowPlayingHeight
-            }px`,
-            border: "1px solid red",
-          }}
-        >
-          Error fetching
-        </h1>
-      </div>
-    );
+  if (error) return <BelowNowPlayingError error={error} />;
 
   return (
     <PlayerController
-      playlistContext={playlistContext}
+      playlistContext={playlistContext!}
       typeSearchParam={typeSearchParam}
     />
   );

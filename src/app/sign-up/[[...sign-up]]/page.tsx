@@ -3,7 +3,7 @@
 import styleConstants from "@/lib/chakra/styleConstants";
 import { Flex } from "@chakra-ui/react";
 import { SignUp } from "@clerk/nextjs";
-import React from "react"; // ts yells without this in the imports for some reason
+import React from "react";
 
 export default function Page() {
   return (
@@ -14,12 +14,7 @@ export default function Page() {
       align="center"
       justify="center"
     >
-      <SignUp
-        path="sign-up"
-        routing="path"
-        signInUrl="/sign-in"
-        redirectUrl="/player"
-      />
+      <SignUp />
     </Flex>
   );
 }

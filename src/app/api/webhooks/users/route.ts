@@ -9,6 +9,7 @@ const DEFAULT_STARTING_KANDI = 100;
 export async function POST(request: Request) {
   try {
     const rawbody = await request.text();
+    console.log("inbound request: ", rawbody);
     const headers = Object.fromEntries(request.headers.entries());
     const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET as string);
     let event: WebhookEvent | null = null;

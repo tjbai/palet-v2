@@ -4,22 +4,7 @@ import { Box } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { useStyles } from "../Providers/StyleProvider";
 import "./index.css";
-
-/*
-Example implementation using middleware headers. 
-*/
-
-// export default function Background({ children }: { children: ReactNode }) {
-//   const headersList = headers();
-//   const url = headersList.get("x-url") || "";
-//   const pathname = new URL(url).pathname;
-
-//   if (pathname === "/" || pathname === "")
-//     return <div className="backgroundImage">{children}</div>;
-//   else if (pathname === "/about")
-//     return <div className="backgroundImage bg--about">{children}</div>;
-//   else return <div className="backgroundImage">{children}</div>;
-// }
+import Image from "next/image";
 
 /*
 Someday this will either be a server component or we just won't have one big "controller"
