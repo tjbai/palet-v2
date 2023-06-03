@@ -41,7 +41,7 @@ function IntroSection() {
           mb={2}
           textAlign={{ base: "center", sm: "start" }}
         >
-          More than just music.
+          just music.
         </Text>
         <Flex
           w="fit-content"
