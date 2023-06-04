@@ -174,10 +174,6 @@ function Preview({ playlist }: { playlist: PlaylistPreview }) {
         <Image
           src={playlist.imageUrl}
           alt={playlist.name}
-          // width={`${boxSize}px`}
-          // height={`${boxSize}px`}
-          // minW={`${boxSize}px`}
-          // minH={`${boxSize}px`}
           width={boxSize}
           height={boxSize}
         />
@@ -185,7 +181,7 @@ function Preview({ playlist }: { playlist: PlaylistPreview }) {
         <Flex
           width={boxSize}
           height={boxSize}
-          bg="grey"
+          bg="lightgrey"
           align="center"
           justify="center"
         >

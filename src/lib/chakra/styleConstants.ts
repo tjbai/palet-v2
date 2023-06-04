@@ -1,5 +1,5 @@
 const styleConstants = {
-  headerHeight: "70px",
+  headerHeight: "60px",
   nowPlayingHeight: { base: "45px", md: "60px" },
   globalMargins: "50px",
 };

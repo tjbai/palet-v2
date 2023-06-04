@@ -14,16 +14,18 @@ export type BackgroundImage =
 export type BackgroundType =
   | "landing"
   | "about"
+  | "player0"
   | "player1"
   | "player2"
   | "discovery";
 
 const DEFAULT_GRADIENT = {
-  exists: true,
+  exists: false,
   position: "top",
   intensity: 70,
 } as Gradient;
-const DEFAULT_BACKGROUND = "/images/player-bg-1.avif" as BackgroundImage;
+
+const DEFAULT_BACKGROUND = "" as BackgroundImage;
 
 /*
 Note: This is a really hacky way to get certain backgrounds to persist on different pages.
@@ -59,7 +61,11 @@ export default function useStickyBackground() {
     } else if (bgType === "player1") {
       newGrad = { position: "top", intensity: 70, exists: true };
       newBg = "/images/player-bg-1.avif";
-    } else if (bgType === "player2" || bgType === "discovery") {
+    } else if (
+      bgType === "player2" ||
+      bgType === "discovery" ||
+      bgType === "player0"
+    ) {
       newGrad = { position: "top", intensity: 0, exists: false };
       newBg = "";
     } else {

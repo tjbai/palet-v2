@@ -4,7 +4,7 @@ export function artistsToString(artists: string[] | undefined) {
 }
 
 export function msToTime(ms: number | undefined) {
-  if (!ms) return "0:00";
+  if (!ms) return "00:00";
   const totalSeconds = Math.floor(ms / 1000);
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
@@ -17,6 +17,7 @@ export function msToTime(ms: number | undefined) {
     return `${hours}:${paddedMinutes}:${paddedSeconds}`;
   }
 
+  if (minutes < 10) return `0${minutes}:${paddedSeconds}`;
   return `${minutes}:${paddedSeconds}`;
 }
 
