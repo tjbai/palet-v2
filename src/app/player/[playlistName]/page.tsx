@@ -1,10 +1,8 @@
 import BelowNowPlayingError from "@/components/Common/BelowNowPlayingError";
 import PlayerController from "@/components/Player/PlayerController";
-import styleConstants from "@/lib/chakra/styleConstants";
 import { PlaylistContext } from "@/lib/types";
 import { bi2n } from "@/lib/util";
 import { Prisma, PrismaClient } from "@prisma/client";
-import error from "next/error";
 
 const prisma = new PrismaClient();
 
@@ -42,7 +40,7 @@ async function fetchPlaylist(routeAlias: string): Promise<FetchReturnObject> {
     const responseObject = {
       id: bi2n(prismaRes?.id),
       name: prismaRes?.name,
-      index: 0, // don't know if this is smart, but solves duplication issue
+      index: -1, // don't know if this is smart, but solves duplication issue
       imageUrl: prismaRes?.cdn_image_url,
       originUrl: prismaRes?.origin_url,
       songs: prismaRes?.playlists_tracks.map((pt) => ({

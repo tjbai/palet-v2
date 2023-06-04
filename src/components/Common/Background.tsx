@@ -16,7 +16,7 @@ export default function Background({ children }: { children: ReactNode }) {
   return (
     <Box
       backgroundImage={backgroundImage}
-      backgroundColor="#dcdcdc"
+      backgroundColor="#f0eded"
       backgroundSize="cover"
       backgroundPosition="center center"
       backgroundAttachment="fixed"

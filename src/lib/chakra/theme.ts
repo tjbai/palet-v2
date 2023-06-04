@@ -16,7 +16,7 @@ const theme = extendTheme({
   colors: {
     hl: "#f97470",
     bright_pink: "#FD0089",
-    bg: "#dcdcdc",
+    bg: "#f0eded",
     orange: "#E96034",
     purple: "#A463FF",
     dark_purple: "#7e4ac7",

@@ -6,6 +6,7 @@ import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import BelowNowPlayingWrapper from "../BelowNowPlayingWrapper";
 import { PlaylistContext, NowPlaying } from "@/lib/types";
+import styleConstants from "@/lib/chakra/styleConstants";
 
 export default function Player2({
   playlistContext,
@@ -24,6 +25,8 @@ export default function Player2({
       const element = document.getElementById(`song-${currentTrack.id}`);
       element?.scrollIntoView({ behavior: "smooth" });
     }, 250);
+
+    return () => clearTimeout(timeout);
   }, [currentTrack]);
 
   return (
