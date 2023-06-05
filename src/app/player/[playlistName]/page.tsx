@@ -8,13 +8,13 @@ import prisma from "../../../../prisma";
 export const revalidate = 60; // revalidate ISR every minute
 
 // Enables ISR
-// export async function generateStaticParams() {
-//   const playlists = await prisma.static_playlists.findMany();
-//   const playlistNames = playlists.map((playlist) => ({
-//     playlistName: playlist.route_alias,
-//   }));
-//   return playlistNames;
-// }
+export async function generateStaticParams() {
+  const playlists = await prisma.static_playlists.findMany();
+  const playlistNames = playlists.map((playlist) => ({
+    playlistName: playlist.route_alias,
+  }));
+  return playlistNames;
+}
 
 interface FetchReturnObject {
   playlistContext?: PlaylistContext;
