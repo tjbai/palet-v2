@@ -33,8 +33,8 @@ export default function InteractiveControls() {
         </Flex>
       </Flex>
       <Flex flex={2} pt="20px" pl="15px" maxW="40%" direction="column">
-        <KandiButton />
         <Speaker />
+        <KandiButton />
       </Flex>
     </Flex>
   );
@@ -59,7 +59,7 @@ const Speaker = () => {
       p="15px"
       boxShadow={SECTION_SHADOW}
       borderRadius="15px"
-      mt="20px"
+      mb="20px"
     >
       {Array.from({ length: rows }).map((_, r) => (
         <HStack key={r} spacing="3px">
