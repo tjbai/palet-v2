@@ -5,7 +5,7 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { isError, useQuery } from "react-query";
+import { useQuery } from "react-query";
 
 export default function VerticalTrackDisplay() {
   const { playlistContext, currentTrack, playTime } = usePlayer();
@@ -121,6 +121,7 @@ function PlaylistDashboard() {
         <Text
           _hover={{ cursor: "pointer" }}
           fontWeight={displayMode === "browse" ? "bold" : "regular"}
+          color={displayMode === "browse" ? "white" : "grey"}
           onClick={() => setDisplayMode("browse")}
         >
           Browse
@@ -129,6 +130,7 @@ function PlaylistDashboard() {
           _hover={{ cursor: "pointer" }}
           ml={2}
           fontWeight={displayMode === "waveform" ? "bold" : "regular"}
+          color={displayMode === "waveform" ? "white" : "grey"}
           onClick={() => setDisplayMode("waveform")}
         >
           Waveform
