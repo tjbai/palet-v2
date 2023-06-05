@@ -3,8 +3,7 @@ import PlayerController from "@/components/Player/PlayerController";
 import { PlaylistContext } from "@/lib/types";
 import { bi2n } from "@/lib/util";
 import { Prisma, PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../../../../prisma";
 
 export const revalidate = 60; // revalidate ISR every minute
 

@@ -1,6 +1,7 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PlaylistContext, NowPlaying } from "../types";
+import WaveSurfer from "wavesurfer.js";
 
 export default function usePlayerState() {
   const [playlistContext, setPlaylistContext] =

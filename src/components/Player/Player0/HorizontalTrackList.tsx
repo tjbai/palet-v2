@@ -1,7 +1,8 @@
 import { usePlayer } from "@/components/Providers/PlayerProvider";
 import { artistsToString, msToTime } from "@/lib/util";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { isArrayLiteralExpression } from "typescript";
 
 /*
 Some real fuck shit going on here to get this nicely aligned column
@@ -68,6 +69,7 @@ export default function HorizontalDisplay() {
           >
             {msToTime(s.durationMs)}
           </Flex>
+
           <Flex
             w="200px"
             ml="10px"
@@ -80,12 +82,22 @@ export default function HorizontalDisplay() {
               },
             }}
           >
-            {artistsToString(s.artists)}
+            <Text>{artistsToString(s.artists)}</Text>
           </Flex>
+          {/* 
+          <Flex
+            w="200px"
+            ml="10px"
+            borderRight="1px solid white"
+            whiteSpace="nowrap"
+            overflowX="auto"
+          >
+            {artistsToString(s.artists)}
+          </Flex> */}
           <Flex ml="10px" w="calc(100% - 320px)" justify="space-between">
             <Flex
               whiteSpace="nowrap"
-              w="100%"
+              w="fit-content"
               overflowX="auto"
               css={{
                 "::-webkit-scrollbar": {
@@ -95,6 +107,12 @@ export default function HorizontalDisplay() {
             >
               {s.name}
             </Flex>
+            <Flex
+              flex={1}
+              borderBottom="1px solid grey"
+              height="13px"
+              ml="5px"
+            />
             <Box color="orange" ml="10px" mr="10px">
               {s.kandiCount}
             </Box>

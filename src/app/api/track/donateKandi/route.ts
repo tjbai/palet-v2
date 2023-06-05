@@ -2,6 +2,7 @@ import { MAX_KANDI_DONATION } from "@/lib/constants";
 import { currentUser } from "@clerk/nextjs";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "../../../../../prisma";
 
 interface RequestBody {
   donationAmount: number;
@@ -9,7 +10,6 @@ interface RequestBody {
 }
 
 export async function POST(request: NextRequest) {
-  const prisma = new PrismaClient();
   const data: RequestBody = await request.json();
   const { donationAmount, trackId } = data;
 

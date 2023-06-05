@@ -2,8 +2,7 @@ import Discovery from "@/components/Discovery";
 import { PlaylistPreview } from "@/lib/types";
 import { bi2n } from "@/lib/util";
 import { Prisma, PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../../../prisma";
 
 async function fetchPlaylists(): Promise<PlaylistPreview[]> {
   const playlists = await prisma.static_playlists.findMany({
