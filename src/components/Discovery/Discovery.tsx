@@ -145,7 +145,7 @@ function Preview({ playlist }: { playlist: PlaylistPreview }) {
       minH={`${boxSize}px`}
       transition="transform 0.25s"
       _hover={{ cursor: "pointer" }}
-      onClick={() => router.push(`/player/${playlist.routeAlias}`)}
+      onClick={() => router.push(`/player/?crate=${playlist.routeAlias}`)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       position="relative"

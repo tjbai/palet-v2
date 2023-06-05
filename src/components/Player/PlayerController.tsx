@@ -19,14 +19,16 @@ import Player0 from "./Player0";
 import Player1 from "./Player1";
 import Player2 from "./Player2";
 
-type SearchParam = string | string[] | undefined;
+export type SearchParam = string | string[] | undefined;
 
 export default function PlayerController({
   playlistContext,
-  typeSearchParam,
+  type,
+  crate,
 }: {
   playlistContext: PlaylistContext;
-  typeSearchParam: SearchParam;
+  type: SearchParam;
+  crate: SearchParam;
 }) {
   const { setPlaylistContext } = usePlayer();
   const [playerState, setPlayerState] = useState<number>(0);
@@ -44,8 +46,8 @@ export default function PlayerController({
   }, [playerState]);
 
   useEffect(() => {
-    setPlaylistContext(playlistContext!);
-    setPlayerState(searchParamToPlayerState(typeSearchParam));
+    setPlaylistContext(playlistContext);
+    setPlayerState(searchParamToPlayerState(type));
 
     const handleKeydown = (e: KeyboardEvent) => {
       if (e.code === "Space") {

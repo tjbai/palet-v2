@@ -143,7 +143,7 @@ function PlaylistDashboard() {
             key={p.id}
             color={playlistContext?.id === p.id ? "purple" : "white"}
             _hover={{ cursor: "pointer", color: "purple" }}
-            onClick={() => router.push(`/player/${p.routeAlias}`)}
+            onClick={() => router.push(`/player?crate=${p.routeAlias}`)}
           >
             {p.name}
           </Flex>
