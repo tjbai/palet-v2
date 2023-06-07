@@ -11,7 +11,7 @@ import styleConstants from "@/lib/chakra/styleConstants";
 export default function Player2({
   playlistContext,
 }: {
-  playlistContext: PlaylistContext;
+  playlistContext: PlaylistContext | null;
 }) {
   const { setBackground } = useStyles();
   const { currentTrack } = usePlayer();
@@ -41,7 +41,7 @@ export default function Player2({
           overflowY="scroll"
           h="calc(100vh - 130px)"
         >
-          {playlistContext.songs.map((song, index) => (
+          {playlistContext?.songs.map((song, index) => (
             <ScrollPiece key={song.id} song={song} index={index} />
           ))}
         </Flex>
@@ -51,17 +51,17 @@ export default function Player2({
           overflowY="scroll"
           align="flex-start"
         >
-          {playlistContext.imageUrl ? (
+          {playlistContext?.imageUrl ? (
             <Image
-              src={playlistContext.imageUrl}
+              src={playlistContext?.imageUrl}
               alt="Playlist Cover"
               objectFit="contain"
               m={0}
               pt="10px"
             />
-          ) : (
+          ) : playlistContext ? (
             <ReplacementCover />
-          )}
+          ) : null}
         </Flex>
       </Flex>
     </BelowNowPlayingWrapper>

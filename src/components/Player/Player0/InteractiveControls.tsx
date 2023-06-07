@@ -1,4 +1,5 @@
 import { usePlayer } from "@/components/Providers/PlayerProvider";
+import useKandi from "@/lib/hooks/useKandi";
 import {
   Box,
   Button,
@@ -215,32 +216,42 @@ const ModularButtonGeneric = ({
   );
 };
 
-const KandiButton = () => (
-  <Button flex={1} borderRadius="6.38744e+10px" h="100%" variant="tactile">
-    <Flex flex={1} align="center" justify="center">
-      <Flex
-        height="45px"
-        width="45px"
-        borderRadius="50%"
-        bg="orange"
-        boxShadow="inset 2px 2px 3px rgba(0,0,0,0.3)"
-        align="center"
-        justify="center"
-      >
+const KandiButton = () => {
+  const { handleDonation } = useKandi();
+
+  return (
+    <Button
+      flex={1}
+      borderRadius="6.38744e+10px"
+      h="100%"
+      variant="tactile"
+      onClick={handleDonation}
+    >
+      <Flex flex={1} align="center" justify="center">
         <Flex
-          height="20px"
-          width="20px"
-          bg="white"
+          height="45px"
+          width="45px"
           borderRadius="50%"
+          bg="orange"
+          boxShadow="inset 2px 2px 3px rgba(0,0,0,0.3)"
           align="center"
           justify="center"
-          color="orange"
-          fontSize="10px"
-          boxShadow="0px 4px 4px rgba(0,0,0,0.1)"
         >
-          K
+          <Flex
+            height="20px"
+            width="20px"
+            bg="white"
+            borderRadius="50%"
+            align="center"
+            justify="center"
+            color="orange"
+            fontSize="10px"
+            boxShadow="0px 4px 4px rgba(0,0,0,0.1)"
+          >
+            K
+          </Flex>
         </Flex>
       </Flex>
-    </Flex>
-  </Button>
-);
+    </Button>
+  );
+};

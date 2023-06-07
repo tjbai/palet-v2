@@ -18,6 +18,8 @@ import { OnProgressProps } from "react-player/base";
 interface PlayerContext {
   playlistContext: PlaylistContext | null;
   setPlaylistContext: Dispatch<SetStateAction<PlaylistContext | null>>;
+  browsePlaylistContext: PlaylistContext | null;
+  setBrowsePlaylistContext: Dispatch<SetStateAction<PlaylistContext | null>>;
   currentTrack: NowPlaying | null;
   nextSong: () => void;
   prevSong: () => void;
@@ -27,6 +29,10 @@ interface PlayerContext {
   toggle: () => void;
   playTime: number;
   playerLoading: boolean;
+  nextMode: () => void;
+  prevMode: () => void;
+  playerDisplayMode: number;
+  setMode: (mode: number) => void;
 }
 
 const playerContext = createContext({} as PlayerContext);
@@ -49,6 +55,12 @@ export default function PlayerProvider(props: { children: ReactNode }) {
     setPlaying,
     toggle,
     loading: playerLoading,
+    browsePlaylistContext,
+    setBrowsePlaylistContext,
+    nextMode,
+    prevMode,
+    playerDisplayMode,
+    setMode,
   } = usePlayerState();
 
   useEffect(() => {
@@ -81,6 +93,8 @@ export default function PlayerProvider(props: { children: ReactNode }) {
       value={{
         playlistContext,
         setPlaylistContext,
+        browsePlaylistContext,
+        setBrowsePlaylistContext,
         currentTrack,
         nextSong,
         prevSong,
@@ -90,6 +104,10 @@ export default function PlayerProvider(props: { children: ReactNode }) {
         toggle,
         playTime,
         playerLoading,
+        nextMode,
+        prevMode,
+        playerDisplayMode,
+        setMode,
       }}
     >
       {hasWindow ? <div style={{ display: "none" }}>{player}</div> : null}

@@ -10,7 +10,7 @@ import { PlaylistContext, NowPlaying } from "@/lib/types";
 export default function Player1({
   playlistContext,
 }: {
-  playlistContext: PlaylistContext;
+  playlistContext: PlaylistContext | null;
 }) {
   const { setBackground } = useStyles();
   const { currentTrack } = usePlayer();
@@ -30,7 +30,7 @@ export default function Player1({
 
   return (
     <BelowNowPlayingWrapper height={100} padding={15}>
-      {playlistContext.songs.map((song: NowPlaying, index: number) => (
+      {playlistContext?.songs.map((song: NowPlaying, index: number) => (
         <ScrollPiece key={song.id} song={song} index={index} />
       ))}
     </BelowNowPlayingWrapper>

@@ -1,15 +1,18 @@
 import { usePlayer } from "@/components/Providers/PlayerProvider";
+import usePlaylistBrowser from "@/lib/hooks/usePlaylistBrowser";
 import { PlaylistPreview } from "@/lib/types";
 import { artistsToString, msToTime } from "@/lib/util";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 export default function VerticalTrackDisplay() {
-  const { playlistContext, currentTrack, playTime } = usePlayer();
+  const { playlistContext, currentTrack, playTime, browsePlaylistContext } =
+    usePlayer();
   const [offset, setOffset] = useState(0);
+  const { browse } = usePlaylistBrowser();
 
   useEffect(() => {
     if (!currentTrack) return;
@@ -29,24 +32,32 @@ export default function VerticalTrackDisplay() {
       maxW="40%"
       direction="column"
       overflow="hidden"
-      pt="15px"
+      pt="5px"
       pl="15px"
       overflowY="scroll"
       boxShadow="inset -5px -5px 20px rgba(255,255,255,0.4)"
     >
-      <Text color="white" mb="10px" noOfLines={1} zIndex={10} bg="black">
-        {playlistContext?.index !== -1
-          ? "Now Playing: " +
-            currentTrack?.name! +
-            " by " +
-            artistsToString(currentTrack?.artists) +
-            " (" +
-            msToTime(playTime * 1000) +
-            "/" +
-            msToTime(currentTrack?.durationMs) +
-            ") from " +
-            playlistContext?.name
-          : "Select to start listening to..."}
+      <Text
+        color="white"
+        mb="10px"
+        mt={currentTrack ? "10px" : "0px"}
+        noOfLines={1}
+        zIndex={10}
+        bg="transparent"
+      >
+        {playlistContext
+          ? playlistContext.index !== -1
+            ? "Now Playing: " +
+              currentTrack?.name! +
+              " by " +
+              artistsToString(currentTrack?.artists) +
+              " (" +
+              msToTime(playTime * 1000) +
+              "/" +
+              msToTime(currentTrack?.durationMs) +
+              ") from: "
+            : ""
+          : ""}
       </Text>
       <Text
         fontSize="190px"
@@ -56,37 +67,52 @@ export default function VerticalTrackDisplay() {
         color="dark_purple"
         position="relative"
         left="-15px"
+        _hover={{ cursor: "pointer" }}
+        onClick={() =>
+          browse(
+            currentTrack
+              ? playlistContext!.routeAlias
+              : browsePlaylistContext!.routeAlias
+          )
+        }
       >
-        {playlistContext?.name.padEnd(10, " ").toUpperCase()}
+        {currentTrack
+          ? playlistContext?.name.padEnd(10, " ").toUpperCase()
+          : browsePlaylistContext?.name.padEnd(10, " ").toUpperCase()}
       </Text>
-      <Flex w="calc(100% - 15px)" border="0.5px solid white" mt="10px" h="0px">
-        <Box
-          h="12px"
-          w="12px"
-          borderRadius="50%"
-          bg="purple"
-          position="relative"
-          top="-6px"
-          left="-5px"
-          transform={`translateX(${offset}px)`}
-          transition="1s linear transform"
-        />
-      </Flex>
-      <Flex justify="space-between" color="white" mr="15px" mt="5px">
-        <Text>{msToTime(playTime * 1000)}</Text>
-        <Text>{msToTime(currentTrack?.durationMs)}</Text>
-      </Flex>
 
-      <PlaylistDashboard />
+      <Flex direction="column">
+        <Flex
+          w="calc(100% - 15px)"
+          border="0.5px solid white"
+          mt="10px"
+          h="0px"
+        >
+          <Box
+            h="12px"
+            w="12px"
+            borderRadius="50%"
+            bg="purple"
+            position="relative"
+            top="-6px"
+            left="-5px"
+            transform={`translateX(${offset}px)`}
+            transition="1s linear transform"
+          />
+        </Flex>
+        <Flex justify="space-between" color="white" mr="15px" mt="5px">
+          <Text>{msToTime(playTime * 1000)}</Text>
+          <Text>{msToTime(currentTrack?.durationMs)}</Text>
+        </Flex>
+        <PlaylistDashboard />
+      </Flex>
     </Flex>
   );
 }
 
-type DisplayMode = "browse" | "waveform";
-
 function PlaylistDashboard() {
-  const { playlistContext } = usePlayer();
-  const router = useRouter();
+  const { browsePlaylistContext } = usePlayer();
+  const { browse } = usePlaylistBrowser();
   const [displayMode, setDisplayMode] = useState("browse");
 
   const fetchPlaylists = async () => {
@@ -141,9 +167,9 @@ function PlaylistDashboard() {
         playlistPreviews!.map((p) => (
           <Flex
             key={p.id}
-            color={playlistContext?.id === p.id ? "purple" : "white"}
+            color={browsePlaylistContext?.id === p.id ? "purple" : "white"}
             _hover={{ cursor: "pointer", color: "purple" }}
-            onClick={() => router.push(`/player?crate=${p.routeAlias}`)}
+            onClick={() => browse(p.routeAlias)}
           >
             {p.name}
           </Flex>

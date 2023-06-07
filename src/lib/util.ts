@@ -1,3 +1,5 @@
+import { SearchParam } from "@/components/Player/PlayerController";
+
 export function artistsToString(artists: string[] | undefined) {
   if (!artists) return "Unknown";
   return artists.join(", ");
@@ -45,4 +47,10 @@ export function convertBigInts(obj: any) {
       typeof value === "bigint" ? value.toString() : value
     )
   );
+}
+
+export function searchParamToPlayerState(type: SearchParam) {
+  if (type === "1") return 1;
+  if (type === "2") return 2;
+  else return 0;
 }

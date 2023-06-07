@@ -2,14 +2,11 @@
 
 import useKandi from "@/lib/hooks/useKandi";
 import { PlaylistContext } from "@/lib/types";
+import { searchParamToPlayerState } from "@/lib/util";
 import { Box, Flex, HStack, useToast } from "@chakra-ui/react";
-import {
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import axios from "axios";
+import { ReactNode, Suspense, useEffect } from "react";
+import { QueryFunctionContext, useQuery } from "react-query";
 import Kandi from "../Common/Kandi";
 import { usePlayer } from "../Providers/PlayerProvider";
 import BottomGradientOverlay from "./BottomGradientOverlay";
@@ -30,31 +27,53 @@ export default function PlayerController({
   type: SearchParam;
   crate: SearchParam;
 }) {
-  const { setPlaylistContext } = usePlayer();
-  const [playerState, setPlayerState] = useState<number>(0);
+  const {
+    setPlaylistContext,
+    setBrowsePlaylistContext,
+    setMode,
+    prevMode,
+    nextMode,
+  } = usePlayer();
   const { handleDonation } = useKandi();
   const toast = useToast();
 
-  const searchParamToPlayerState = (type: SearchParam) => {
-    if (type === "1") return 1;
-    if (type === "2") return 2;
-    else return 0;
+  const fetchPlaylistSongs = async ({
+    queryKey,
+  }: QueryFunctionContext<SearchParam[], any>) => {
+    console.log("revalidating");
+    const [_, routeAlias] = queryKey;
+
+    if (!routeAlias) return null;
+
+    const { data } = await axios.post("/api/track/getForPlaylist", {
+      routeAlias,
+    });
+
+    if (data.error) return null;
+    return data.playlistContext;
   };
 
+  const { data: browsePlaylistData } = useQuery(
+    ["browsePlaylistContext", crate],
+    fetchPlaylistSongs,
+    {
+      initialData: playlistContext,
+    }
+  );
+
   useEffect(() => {
-    console.log(playerState);
-  }, [playerState]);
+    setBrowsePlaylistContext(browsePlaylistData);
+  }, [browsePlaylistData]);
 
   useEffect(() => {
     setPlaylistContext(playlistContext);
-    setPlayerState(searchParamToPlayerState(type));
+    setMode(searchParamToPlayerState(type));
 
     const handleKeydown = (e: KeyboardEvent) => {
       if (e.code === "Space") {
         e.preventDefault();
         handleDonation();
 
-        // TODO: Change this to be a more satisfying visual indicator
         toast({
           position: "bottom-right",
           duration: 1000,
@@ -72,21 +91,13 @@ export default function PlayerController({
             </Flex>
           ),
         });
+      } else if (e.code === "ArrowLeft") {
+        e.preventDefault();
+        prevMode();
+      } else if (e.code === "ArrowRight") {
+        e.preventDefault();
+        nextMode();
       }
-
-      // FIXME: This doesn't work for some reason...
-      // else if (e.code === "ArrowLeft") {
-      //   e.preventDefault();
-      //   console.log(playerState);
-      //   if (playerState === 0) setPlayerState(2);
-      //   else setPlayerState((p) => p - 1);
-      // } else if (e.code === "ArrowRight") {
-      //   e.preventDefault();
-      //   console.log(playerState);
-      //   if (playerState === 2) {
-      //     setPlayerState(0);
-      //   } else setPlayerState((p) => p + 1);
-      // }
     };
 
     document.addEventListener("keydown", handleKeydown);
@@ -95,14 +106,10 @@ export default function PlayerController({
 
   return (
     <PlayerControllerWrapper>
-      <PlayerControllerInner
-        playlistContext={playlistContext}
-        playerState={playerState}
-      />
-      <PlayerSwitcher
-        playerState={playerState}
-        setPlayerState={setPlayerState}
-      />
+      <PlayerControllerInner playlistContext={playlistContext} />
+      <Suspense fallback={null}>
+        <PlayerSwitcher />
+      </Suspense>
     </PlayerControllerWrapper>
   );
 }
@@ -113,12 +120,12 @@ function PlayerControllerWrapper({ children }: { children: ReactNode }) {
 
 function PlayerControllerInner({
   playlistContext,
-  playerState,
 }: {
   playlistContext: PlaylistContext;
-  playerState: number;
 }) {
-  switch (playerState) {
+  const { playerDisplayMode } = usePlayer();
+
+  switch (playerDisplayMode) {
     case 0:
       return <Player0 playlistContext={playlistContext} />;
     case 1:
@@ -159,13 +166,8 @@ work at different resolutions but we can always refactor that.
 Just note that the Controls, ClickIcon, and NowPlaying
 components are ALL coupled with the same logic.
 */
-function PlayerSwitcher({
-  playerState,
-  setPlayerState,
-}: {
-  playerState: number;
-  setPlayerState: Dispatch<SetStateAction<number>>;
-}) {
+
+function PlayerSwitcher() {
   return (
     <Flex
       position="fixed"
@@ -179,21 +181,9 @@ function PlayerSwitcher({
       justify="center"
     >
       <HStack flex={1} align="center" justify="center">
-        <PlayerCircle
-          circleState={0}
-          playerState={playerState}
-          setPlayerState={setPlayerState}
-        />
-        <PlayerCircle
-          circleState={1}
-          playerState={playerState}
-          setPlayerState={setPlayerState}
-        />
-        <PlayerCircle
-          circleState={2}
-          playerState={playerState}
-          setPlayerState={setPlayerState}
-        />
+        <PlayerCircle circleState={0} />
+        <PlayerCircle circleState={1} />
+        <PlayerCircle circleState={2} />
         <Flex w="20%" display={{ base: "flex", md: "none" }} />
         <Flex
           display={{ base: "flex", md: "none" }}
@@ -207,25 +197,18 @@ function PlayerSwitcher({
   );
 }
 
-function PlayerCircle({
-  playerState,
-  circleState,
-  setPlayerState,
-}: {
-  playerState: number;
-  circleState: number;
-  setPlayerState: Dispatch<SetStateAction<number>>;
-}) {
-  const switchPlayerState = () => setPlayerState(circleState);
+function PlayerCircle({ circleState }: { circleState: number }) {
+  const { setMode, playerDisplayMode } = usePlayer();
+
   return (
     <Box
       w={{ base: "20px", md: "10px" }}
       h={{ base: "20px", md: "10px" }}
-      bg={playerState === circleState ? "black" : "transparent"}
+      bg={playerDisplayMode === circleState ? "black" : "transparent"}
       border="1px solid black"
       borderRadius="100%"
       _hover={{ cursor: "pointer" }}
-      onClick={switchPlayerState}
+      onClick={() => setMode(circleState)}
     />
   );
 }

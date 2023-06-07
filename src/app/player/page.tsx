@@ -59,6 +59,7 @@ async function fetchPlaylist(
         kandiCount: bi2n(pt.static_tracks.kandi_count),
         originUrl: pt.static_tracks.origin_url,
       })),
+      routeAlias: prismaRes.route_alias,
     } as PlaylistContext;
 
     return { playlistContext: responseObject };
@@ -78,7 +79,7 @@ export default async function Page({
   const { type, crate } = searchParams;
   const { playlistContext, error } = await fetchPlaylist(crate);
 
-  if (error) return <BelowNowPlayingError error={error} />;
+  if (error) return <BelowNowPlayingError error={JSON.stringify(error)} />;
 
   return (
     <PlayerController

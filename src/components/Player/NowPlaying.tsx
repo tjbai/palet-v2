@@ -46,21 +46,13 @@ function CurrentTrackDisplay() {
     return <Text fontWeight="bold">Select to start listening</Text>;
   } else if (playlistContext?.index !== -1) {
     return (
-      <Text
-        fontWeight="bold"
-        whiteSpace="nowrap"
-        overflowX="auto"
-        mr={2}
-        lineHeight="50px"
-      >
-        <Highlight
-          query={playlistContext?.name}
-          styles={{
-            border: "1px solid black",
-            px: "2",
-            py: "1",
-            borderRadius: "20px",
-          }}
+      <Flex direction="row" align="center">
+        <Text
+          fontWeight="bold"
+          whiteSpace="nowrap"
+          overflowX="auto"
+          mr={2}
+          lineHeight="50px"
         >
           {"Now Playing: " +
             currentTrack?.name! +
@@ -70,10 +62,27 @@ function CurrentTrackDisplay() {
             msToTime(playTime * 1000) +
             "/" +
             msToTime(currentTrack?.durationMs) +
-            ") from " +
-            playlistContext?.name}
-        </Highlight>
-      </Text>
+            ") from "}
+        </Text>
+        <Text
+          fontWeight="bold"
+          whiteSpace="nowrap"
+          overflowX="auto"
+          lineHeight="100px"
+        >
+          <Highlight
+            query={playlistContext?.name}
+            styles={{
+              border: "1px solid black",
+              px: "2",
+              py: "1",
+              borderRadius: "20px",
+            }}
+          >
+            {playlistContext?.name}
+          </Highlight>
+        </Text>
+      </Flex>
     );
   } else {
     return (

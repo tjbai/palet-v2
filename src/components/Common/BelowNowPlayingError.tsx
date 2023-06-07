@@ -8,7 +8,7 @@ export default function BelowNowPlayingError({ error }: { error: string }) {
   const { gradient } = useStyles();
 
   return (
-    <BelowNowPlayingWrapper height={100} padding={15} showBorder>
+    <BelowNowPlayingWrapper height={100} padding={15}>
       <Box
         color={
           !gradient.exists || gradient.position === "top" ? "black" : "white"

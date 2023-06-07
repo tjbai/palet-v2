@@ -5,6 +5,7 @@ export interface PlaylistContext {
   imageUrl?: string;
   originUrl: string;
   songs: NowPlaying[];
+  routeAlias: string;
 }
 
 export interface PlaylistPreview {
