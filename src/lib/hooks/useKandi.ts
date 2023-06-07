@@ -20,6 +20,8 @@ export default function useKandi() {
   const sendDonation = async (amount: number) => {
     if (!user || !currentTrack) return;
 
+    console.log("this fires");
+
     const { data } = await axios.post("/api/track/donateKandi", {
       donationAmount: amount,
       trackId: currentTrack.id,
@@ -35,6 +37,7 @@ export default function useKandi() {
         duration: 3000,
         description: `Maximum donation limit reached.`,
         status: "warning",
+        colorScheme: "red",
       });
     } else if (outOfKandi) {
       toast({
@@ -42,6 +45,7 @@ export default function useKandi() {
         duration: 3000,
         description: `Out of Kandi.`,
         status: "warning",
+        colorScheme: "red",
       });
     } else {
       toast({
@@ -49,6 +53,7 @@ export default function useKandi() {
         duration: 3000,
         description: `Donated ${additionalKandi} kandi!`,
         status: "success",
+        colorScheme: "red",
       });
     }
 

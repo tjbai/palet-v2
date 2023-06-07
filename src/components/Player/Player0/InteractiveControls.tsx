@@ -1,3 +1,4 @@
+import Kandi from "@/components/Common/Kandi";
 import { usePlayer } from "@/components/Providers/PlayerProvider";
 import useKandi from "@/lib/hooks/useKandi";
 import {
@@ -218,6 +219,28 @@ const ModularButtonGeneric = ({
 
 const KandiButton = () => {
   const { handleDonation } = useKandi();
+  const toast = useToast();
+
+  const handleClick = () => {
+    handleDonation();
+    toast({
+      position: "bottom-right",
+      duration: 1000,
+      description: "Received donation request!",
+      containerStyle: {
+        padding: "0px",
+        width: "fit-content",
+        alignItems: "flex-end",
+        display: "flex",
+        justifyContent: "flex-end",
+      },
+      render: () => (
+        <Flex fontSize="30px">
+          <Kandi size={40} />
+        </Flex>
+      ),
+    });
+  };
 
   return (
     <Button
@@ -225,7 +248,7 @@ const KandiButton = () => {
       borderRadius="6.38744e+10px"
       h="100%"
       variant="tactile"
-      onClick={handleDonation}
+      onClick={handleClick}
     >
       <Flex flex={1} align="center" justify="center">
         <Flex
