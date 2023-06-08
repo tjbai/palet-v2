@@ -53,11 +53,12 @@ export default function useKandi() {
         duration: 3000,
         description: `Donated ${additionalKandi} kandi!`,
         status: "success",
-        colorScheme: "red",
+        colorScheme: "blue",
       });
     }
 
-    queryClient.invalidateQueries("user"); // refetch kandi balance
+    queryClient.invalidateQueries("user");
+    queryClient.invalidateQueries("browsePlaylistContext");
   };
 
   // Open donation window

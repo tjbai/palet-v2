@@ -57,6 +57,10 @@ export async function POST(request: NextRequest) {
           where: { clerk_id: userId },
           data: { kandi_balance: { decrement: additionalKandi } },
         }),
+        prisma.static_tracks.update({
+          where: { id: trackId },
+          data: { kandi_count: { increment: additionalKandi } },
+        }),
       ]);
     }
   } else {
@@ -77,6 +81,10 @@ export async function POST(request: NextRequest) {
       prisma.users.update({
         where: { clerk_id: userId },
         data: { kandi_balance: { decrement: additionalKandi } },
+      }),
+      prisma.static_tracks.update({
+        where: { id: trackId },
+        data: { kandi_count: { increment: additionalKandi } },
       }),
     ]);
   }

@@ -114,7 +114,7 @@ export default function TrackListController() {
         ))
       ) : (
         <Text ml="10px" mt="10px">
-          No mix selected...
+          No mix selected
         </Text>
       )}
     </Flex>

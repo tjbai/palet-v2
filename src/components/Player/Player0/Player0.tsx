@@ -7,7 +7,6 @@ import { Flex } from "@chakra-ui/react";
 import { useEffect } from "react";
 import HorizontalTrackList from "./HorizontalTrackList";
 import InteractiveControls from "./InteractiveControls";
-import VerticalDisplay from "./VerticalTrackDisplay";
 import VerticalTrackDisplay from "./VerticalTrackDisplay";
 
 export const dynamic = "force-dynamic"; // idk
