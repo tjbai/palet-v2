@@ -6,6 +6,8 @@ export interface PlaylistContext {
   originUrl: string;
   songs: NowPlaying[];
   routeAlias: string;
+  shuffledOrder: number[];
+  shuffledIndex: number;
 }
 
 export interface PlaylistPreview {

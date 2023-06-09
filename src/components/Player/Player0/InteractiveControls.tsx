@@ -11,13 +11,14 @@ import {
   color,
   useToast,
 } from "@chakra-ui/react";
-import { MouseEventHandler, ReactNode } from "react";
+import { MouseEventHandler, ReactNode, useEffect } from "react";
 import {
   RiSkipBackFill,
   RiPlayFill,
   RiSkipForwardFill,
   RiRepeatFill,
   RiPauseFill,
+  RiShuffleFill,
 } from "react-icons/ri";
 
 const SECTION_SHADOW =
@@ -102,7 +103,8 @@ const DiscoveryModeSwitcherButtons = () => {
 };
 
 const GeneralControlButtons = () => {
-  const { prevSong, toggle, nextSong, playing } = usePlayer();
+  const { prevSong, toggle, nextSong, playing, shuffled, toggleShuffle } =
+    usePlayer();
 
   return (
     <HStack
@@ -124,8 +126,11 @@ const GeneralControlButtons = () => {
       <SmallButtonGeneric color="#B8CCE0" onClick={nextSong}>
         <Icon as={RiSkipForwardFill} />
       </SmallButtonGeneric>
-      <SmallButtonGeneric color="#B8CCE0">
-        <Icon as={RiRepeatFill} />
+      <SmallButtonGeneric
+        color={!shuffled ? "#B8CCE0" : "orange"}
+        onClick={toggleShuffle}
+      >
+        <Icon as={RiShuffleFill} />
       </SmallButtonGeneric>
     </HStack>
   );

@@ -1,5 +1,5 @@
 import axios from "axios";
-import router, { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { NowPlaying, PlaylistContext } from "../types";
 
@@ -16,6 +16,7 @@ export default function usePlayerState() {
   const [playing, setPlaying] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [playerDisplayMode, setPlayerDisplayMode] = useState(0);
+  const [shuffled, setShuffled] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -47,19 +48,52 @@ export default function usePlayerState() {
 
   const nextSong = () => {
     if (!playlistContext || playlistContext.index === -1) return;
-    setPlaylistContext({
-      ...playlistContext,
-      index: (playlistContext.index + 1) % playlistContext.songs.length,
-    });
+    if (shuffled) {
+      const newShuffledIndex =
+        (playlistContext.shuffledIndex + 1) % playlistContext.songs.length;
+      const newSongIndex = playlistContext.shuffledOrder[newShuffledIndex];
+      setPlaylistContext({
+        ...playlistContext,
+        index: newSongIndex,
+        shuffledIndex: newShuffledIndex,
+      });
+    } else {
+      const newSongIndex =
+        (playlistContext.index + 1) % playlistContext.songs.length;
+      const newShuffledIndex =
+        playlistContext.shuffledOrder.indexOf(newSongIndex);
+      setPlaylistContext({
+        ...playlistContext,
+        index: newSongIndex,
+        shuffledIndex: newShuffledIndex,
+      });
+    }
   };
 
   const prevSong = () => {
     if (!playlistContext || playlistContext.index === -1) return;
-    if (playlistContext.index === 0) return;
-    setPlaylistContext({
-      ...playlistContext,
-      index: playlistContext.index - 1,
-    });
+    if (playlistContext.index === 0 && !shuffled) return;
+    if (shuffled) {
+      const newShuffledIndex =
+        playlistContext.shuffledIndex === 0
+          ? playlistContext.songs.length - 1
+          : playlistContext.shuffledIndex - 1;
+      const newSongIndex = playlistContext.shuffledOrder[newShuffledIndex];
+      setPlaylistContext({
+        ...playlistContext,
+        index: newSongIndex,
+        shuffledIndex: newShuffledIndex,
+      });
+    } else {
+      const newSongIndex = playlistContext.index - 1;
+      const newShuffledIndex =
+        playlistContext.shuffledOrder.indexOf(newSongIndex);
+      setPlaylistContext({
+        ...playlistContext,
+        index: newSongIndex,
+        shuffledIndex: newShuffledIndex,
+      });
+    }
   };
 
   const selectSong = (name: string) => {
@@ -69,12 +103,14 @@ export default function usePlayerState() {
         (song) => song.name === name
       );
       if (i === null || i === undefined) return;
-      setPlaylistContext({ ...browsePlaylistContext, index: i });
+      const shuffledIndex = browsePlaylistContext.shuffledOrder.indexOf(i);
+      setPlaylistContext({ ...browsePlaylistContext, index: i, shuffledIndex });
     } else {
       if (!playlistContext || currentTrack?.name === name) return;
       const i = playlistContext.songs.findIndex((song) => song.name === name);
       if (i === null || i === undefined) return;
-      setPlaylistContext({ ...playlistContext, index: i });
+      const shuffledIndex = playlistContext.shuffledOrder.indexOf(i);
+      setPlaylistContext({ ...playlistContext, index: i, shuffledIndex });
     }
     setPlaying(true);
   };
@@ -91,6 +127,10 @@ export default function usePlayerState() {
     } else {
       setPlaying((p) => !p);
     }
+  };
+
+  const toggleShuffle = () => {
+    setShuffled((p) => !p);
   };
 
   /* Honestly, this section probably doesn't belong here */
@@ -141,5 +181,7 @@ export default function usePlayerState() {
     prevMode,
     playerDisplayMode,
     setMode,
+    toggleShuffle,
+    shuffled,
   };
 }

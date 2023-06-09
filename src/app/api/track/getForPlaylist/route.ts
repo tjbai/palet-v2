@@ -1,8 +1,6 @@
-import { PlaylistContext } from "@/lib/types";
-import { bi2n, convertBigInts } from "@/lib/util";
+import getPlaylistContext from "@/lib/services/getPlaylistContext";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "../../../../../prisma";
 
 interface RequestBody {
   routeAlias: string;
@@ -17,40 +15,8 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const prismaRes = await prisma.static_playlists.findUniqueOrThrow({
-      where: {
-        route_alias: routeAlias,
-      },
-      include: {
-        playlists_tracks: {
-          include: {
-            static_tracks: true,
-          },
-        },
-      },
-    });
-
-    const responseObject = {
-      id: bi2n(prismaRes?.id),
-      name: prismaRes?.name,
-      index: -1,
-      imageUrl: prismaRes?.cdn_image_url,
-      originUrl: prismaRes?.origin_url,
-      songs: prismaRes?.playlists_tracks.map((pt) => ({
-        id: bi2n(pt.static_tracks.id),
-        name: pt.static_tracks.name,
-        artists: pt.static_tracks.artists,
-        cdnPath: pt.static_tracks.cdn_path,
-        durationMs: bi2n(pt.static_tracks.duration_ms),
-        kandiCount: bi2n(pt.static_tracks.kandi_count),
-        originUrl: pt.static_tracks.origin_url,
-      })),
-      routeAlias: prismaRes.route_alias,
-    } as PlaylistContext;
-
-    return NextResponse.json({
-      playlistContext: convertBigInts(responseObject),
-    });
+    const playlistContext = await getPlaylistContext(routeAlias);
+    return NextResponse.json({ playlistContext });
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       console.log(e.code);

@@ -33,6 +33,8 @@ interface PlayerContext {
   prevMode: () => void;
   playerDisplayMode: number;
   setMode: (mode: number) => void;
+  shuffled: boolean;
+  toggleShuffle: () => void;
 }
 
 const playerContext = createContext({} as PlayerContext);
@@ -61,6 +63,8 @@ export default function PlayerProvider(props: { children: ReactNode }) {
     prevMode,
     playerDisplayMode,
     setMode,
+    toggleShuffle,
+    shuffled,
   } = usePlayerState();
 
   useEffect(() => {
@@ -108,6 +112,8 @@ export default function PlayerProvider(props: { children: ReactNode }) {
         prevMode,
         playerDisplayMode,
         setMode,
+        shuffled,
+        toggleShuffle,
       }}
     >
       {hasWindow ? <div style={{ display: "none" }}>{player}</div> : null}

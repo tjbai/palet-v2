@@ -63,7 +63,7 @@ export default function TrackListController() {
               align="center"
               justify="center"
             >
-              {i < 10 ? "0" + i : i}
+              {i + 1 < 10 ? "0" + (i + 1) : i + 1}
             </Flex>
             <Flex
               align="center"

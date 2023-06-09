@@ -54,3 +54,12 @@ export function searchParamToPlayerState(type: SearchParam) {
   if (type === "2") return 2;
   else return 0;
 }
+
+export function fisherYates(n: number): number[] {
+  const array = Array.from({ length: n }, (_, index) => index);
+  for (let i = n - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * i + 1);
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
