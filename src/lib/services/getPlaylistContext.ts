@@ -4,13 +4,15 @@ import { PlaylistContext } from "../types";
 import { bi2n, fisherYates } from "../util";
 
 export default function getPlaylistContext(
-  routeAlias: string
-): Promise<PlaylistContext> {
+  routeAlias: string | null
+): Promise<PlaylistContext | null> {
   return new Promise(async (resolve, reject) => {
+    if (!routeAlias) resolve(null);
+
     try {
       const prismaRes = await prisma.static_playlists.findUniqueOrThrow({
         where: {
-          route_alias: routeAlias,
+          route_alias: routeAlias!,
         },
         include: {
           playlists_tracks: {
@@ -45,6 +47,7 @@ export default function getPlaylistContext(
 
       resolve(playlistContext);
     } catch (error) {
+      console.error(error);
       reject(error);
     }
   });
