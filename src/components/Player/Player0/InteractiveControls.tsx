@@ -17,6 +17,7 @@ import {
   RiPlayFill,
   RiSkipForwardFill,
   RiRepeatFill,
+  RiPauseFill,
 } from "react-icons/ri";
 
 const SECTION_SHADOW =
@@ -101,7 +102,7 @@ const DiscoveryModeSwitcherButtons = () => {
 };
 
 const GeneralControlButtons = () => {
-  const { prevSong, toggle, nextSong } = usePlayer();
+  const { prevSong, toggle, nextSong, playing } = usePlayer();
 
   return (
     <HStack
@@ -118,7 +119,7 @@ const GeneralControlButtons = () => {
         <Icon as={RiSkipBackFill} />
       </SmallButtonGeneric>
       <SmallButtonGeneric color="orange" onClick={toggle}>
-        <Icon as={RiPlayFill} />
+        <Icon as={playing ? RiPauseFill : RiPlayFill} />
       </SmallButtonGeneric>
       <SmallButtonGeneric color="#B8CCE0" onClick={nextSong}>
         <Icon as={RiSkipForwardFill} />

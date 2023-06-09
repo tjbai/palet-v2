@@ -54,10 +54,11 @@ export default function TrackListController() {
             onClick={() => selectSong(s.name)}
             color={currentTrack?.id === s.id ? "orange" : "white"}
             mt="5px"
+            borderColor={currentTrack?.id === s.id ? "orange" : "white"}
           >
             <Box position="relative" top="-200px" id={`song-${s.id}`} />
             <Flex
-              borderRight="1px solid white"
+              borderRight="1px solid"
               w="40px"
               align="center"
               justify="center"
@@ -68,7 +69,7 @@ export default function TrackListController() {
               align="center"
               justify="center"
               w="60px"
-              borderRight="1px solid white"
+              borderRight="1px solid"
             >
               {msToTime(s.durationMs)}
             </Flex>
@@ -76,7 +77,7 @@ export default function TrackListController() {
             <Flex
               w="200px"
               ml="10px"
-              borderRight="1px solid white"
+              borderRight="1px solid"
               whiteSpace="nowrap"
               overflowX="auto"
               css={{
