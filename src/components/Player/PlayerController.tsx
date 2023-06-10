@@ -1,22 +1,42 @@
 "use client";
 
-import useKandi from "@/lib/hooks/useKandi";
-import { PlaylistContext } from "@/lib/types";
+import {
+  fetchPlaylistPreviews,
+  fetchPlaylistSongs,
+} from "@/lib/services/clientPlaylist";
+import { PlaylistContext, PlaylistPreview } from "@/lib/types";
 import { searchParamToPlayerState } from "@/lib/util";
-import { Box, Flex, HStack, useToast } from "@chakra-ui/react";
-import axios from "axios";
-import { ReactNode, Suspense, useEffect } from "react";
-import { QueryFunctionContext, useQuery } from "react-query";
-import Kandi from "../Common/Kandi";
+import { Box, Flex, HStack } from "@chakra-ui/react";
+import {
+  ReactNode,
+  Suspense,
+  createContext,
+  useContext,
+  useEffect,
+} from "react";
+import { useQuery } from "react-query";
+import DiscoverModal from "../Modals/DiscoverModal";
 import { usePlayer } from "../Providers/PlayerProvider";
 import BottomGradientOverlay from "./BottomGradientOverlay";
 import Controls from "./Controls";
+import KeyEvents from "./KeyEvents";
 import NowPlaying from "./NowPlaying";
 import Player0 from "./Player0";
 import Player1 from "./Player1";
 import Player2 from "./Player2";
 
 export type SearchParam = string | string[] | undefined;
+
+interface PlaylistPreviewContext {
+  playlistPreviews: PlaylistPreview[] | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  error: any;
+}
+
+const playlistPreviewContext = createContext({} as PlaylistPreviewContext);
+
+export const usePlaylistPreviews = () => useContext(playlistPreviewContext);
 
 export default function PlayerController({
   playlistContext,
@@ -27,31 +47,7 @@ export default function PlayerController({
   type: SearchParam;
   crate: SearchParam;
 }) {
-  const {
-    setPlaylistContext,
-    setBrowsePlaylistContext,
-    setMode,
-    prevMode,
-    nextMode,
-  } = usePlayer();
-  const { handleDonation } = useKandi();
-  const toast = useToast();
-
-  const fetchPlaylistSongs = async ({
-    queryKey,
-  }: QueryFunctionContext<SearchParam[], any>) => {
-    console.log("revalidating");
-    const [_, routeAlias] = queryKey;
-
-    if (!routeAlias) return null;
-
-    const { data } = await axios.post("/api/track/getForPlaylist", {
-      routeAlias,
-    });
-
-    if (data.error) return null;
-    return data.playlistContext;
-  };
+  const { setPlaylistContext, setBrowsePlaylistContext, setMode } = usePlayer();
 
   const { data: browsePlaylistData } = useQuery(
     ["browsePlaylistContext", crate],
@@ -61,56 +57,35 @@ export default function PlayerController({
     }
   );
 
-  useEffect(() => {
-    setBrowsePlaylistContext(browsePlaylistData);
-  }, [browsePlaylistData]);
+  const {
+    data: playlistPreviews,
+    isLoading,
+    isError,
+    error,
+  } = useQuery("playlistPreviews", fetchPlaylistPreviews);
 
   useEffect(() => {
     setPlaylistContext(playlistContext);
     setMode(searchParamToPlayerState(type));
-
-    const handleKeydown = (e: KeyboardEvent) => {
-      if (e.code === "Space") {
-        e.preventDefault();
-        handleDonation();
-
-        toast({
-          position: "bottom-right",
-          duration: 1000,
-          description: "Received donation request!",
-          containerStyle: {
-            padding: "0px",
-            width: "fit-content",
-            alignItems: "flex-end",
-            display: "flex",
-            justifyContent: "flex-end",
-          },
-          render: () => (
-            <Flex fontSize="30px">
-              <Kandi size={40} />
-            </Flex>
-          ),
-        });
-      } else if (e.code === "ArrowLeft") {
-        e.preventDefault();
-        prevMode();
-      } else if (e.code === "ArrowRight") {
-        e.preventDefault();
-        nextMode();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeydown);
-    return () => document.removeEventListener("keydown", handleKeydown);
   }, []);
 
+  useEffect(() => {
+    setBrowsePlaylistContext(browsePlaylistData);
+  }, [browsePlaylistData]);
+
   return (
-    <PlayerControllerWrapper>
-      <PlayerControllerInner playlistContext={playlistContext} />
-      <Suspense fallback={null}>
-        <PlayerSwitcher />
-      </Suspense>
-    </PlayerControllerWrapper>
+    <playlistPreviewContext.Provider
+      value={{ playlistPreviews, isLoading, isError, error }}
+    >
+      <KeyEvents />
+      <PlayerControllerWrapper>
+        <DiscoverModal />
+        <PlayerControllerInner playlistContext={playlistContext} />
+        <Suspense fallback={null}>
+          <PlayerSwitcher />
+        </Suspense>
+      </PlayerControllerWrapper>
+    </playlistPreviewContext.Provider>
   );
 }
 

@@ -1,6 +1,6 @@
 import Background from "@/components/Common/Background";
 import Header from "@/components/Common/Header";
-import JoinModal from "@/components/Common/JoinModal";
+import JoinModal from "@/components/Modals/JoinModal";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
 import Providers from "./Providers";

@@ -4,9 +4,11 @@ import { PlaylistPreview } from "@/lib/types";
 import { artistsToString, msToTime } from "@/lib/util";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import axios from "axios";
+import error from "next/error";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { isError, useQuery, useQueryClient } from "react-query";
+import { usePlaylistPreviews } from "../PlayerController";
 
 export default function VerticalTrackDisplay() {
   const { playlistContext, currentTrack, playTime, browsePlaylistContext } =
@@ -113,19 +115,8 @@ export default function VerticalTrackDisplay() {
 function PlaylistDashboard() {
   const { browsePlaylistContext } = usePlayer();
   const { browse } = usePlaylistBrowser();
+  const { isLoading, isError, error, playlistPreviews } = usePlaylistPreviews();
   const [displayMode, setDisplayMode] = useState("browse");
-
-  const fetchPlaylists = async () => {
-    const { data } = await axios.get("/api/playlist");
-    return data.playlistPreviews as PlaylistPreview[];
-  };
-
-  const {
-    data: playlistPreviews,
-    isLoading,
-    isError,
-    error,
-  } = useQuery("playlists", fetchPlaylists);
 
   if (isLoading) return <Text color="white">Loading...</Text>;
   if (isError)

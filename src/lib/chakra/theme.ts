@@ -8,10 +8,12 @@ import "@fontsource/share-tech-mono";
 import "@fontsource/vt323";
 
 import Button from "./Button";
+import Modal from "./Modal";
 
 const theme = extendTheme({
   components: {
     Button,
+    Modal,
   },
   colors: {
     hl: "#f97470",

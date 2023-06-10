@@ -2,12 +2,13 @@
 
 import { useStyles } from "@/components/Providers/StyleProvider";
 import styleConstants from "@/lib/chakra/styleConstants";
-import { PlaylistContext } from "@/lib/types";
+import { PlaylistContext, PlaylistPreview } from "@/lib/types";
 import { Flex } from "@chakra-ui/react";
 import { useEffect } from "react";
 import HorizontalTrackList from "./HorizontalTrackList";
 import InteractiveControls from "./InteractiveControls";
 import VerticalTrackDisplay from "./VerticalTrackDisplay";
+import { UseQueryResult } from "react-query";
 
 export const dynamic = "force-dynamic"; // idk
 

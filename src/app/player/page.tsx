@@ -1,12 +1,7 @@
 import BelowNowPlayingError from "@/components/Common/BelowNowPlayingError";
-import PlayerController, {
-  SearchParam,
-} from "@/components/Player/PlayerController";
+import PlayerController from "@/components/Player/PlayerController";
+import { fetchPlaylistContext } from "@/lib/services/serverPlaylist";
 import { PlaylistContext } from "@/lib/types";
-import { bi2n } from "@/lib/util";
-import { Prisma } from "@prisma/client";
-import prisma from "../../../prisma";
-import getPlaylistContext from "@/lib/services/getPlaylistContext";
 
 export const revalidate = 60; // revalidate ISR every minute
 
@@ -32,7 +27,7 @@ export default async function Page({
   const { type, crate } = searchParams;
 
   try {
-    const playlistContext = await getPlaylistContext(crate as string);
+    const playlistContext = await fetchPlaylistContext(crate as string);
     return (
       <PlayerController
         playlistContext={playlistContext!}

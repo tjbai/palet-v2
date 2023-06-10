@@ -1,4 +1,4 @@
-import getPlaylistContext from "@/lib/services/getPlaylistContext";
+import { fetchPlaylistContext } from "@/lib/services/serverPlaylist";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const playlistContext = await getPlaylistContext(routeAlias);
+    const playlistContext = await fetchPlaylistContext(routeAlias);
     return NextResponse.json({ playlistContext });
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {

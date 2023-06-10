@@ -19,6 +19,7 @@ export interface PlaylistPreview {
   trackCount: number;
   kandiCount: number;
   totalDuration: number;
+  description: string | null;
 }
 
 export interface NowPlaying {

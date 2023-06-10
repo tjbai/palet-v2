@@ -9,7 +9,7 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { useModal } from "../Providers/ModalProvider";
 
 export default function JoinModal() {
