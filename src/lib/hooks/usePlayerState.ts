@@ -7,6 +7,7 @@ import { PlayerQueryParams } from "./../types";
 import useQueryParams from "./useQueryParams";
 import { isEqual } from "lodash";
 import { clearInterval } from "timers";
+import { isEqualsGreaterThanToken } from "typescript";
 
 const MODE_LOWER_BOUND = 0;
 const MODE_UPPER_BOUND = 2;
@@ -34,6 +35,25 @@ export default function usePlayerState() {
   const { setQueryParams } = useQueryParams<PlayerQueryParams>();
 
   const updatePlayerState = async () => {
+    if (!playlistContext || playlistContext.index === -1) return;
+
+    const newTrack = playlistContext.songs[playlistContext.index];
+    setCurrentTrack(newTrack);
+    setLoading(true);
+
+    const { data } = await axios.post("/api/track/generatePresignedUrl", {
+      audioFilePath: newTrack.cdnPath,
+    });
+    const { signedUrl, error } = data;
+
+    if (error) alert(error);
+    else setPlayerSrc(signedUrl);
+
+    setLoading(false);
+    localStorage.setItem("lastSong", newTrack.name);
+  };
+
+  const updatePlayerStateV2 = async (playlistContext: PlaylistContext) => {
     if (!playlistContext || playlistContext.index === -1) return;
 
     const newTrack = playlistContext.songs[playlistContext.index];
@@ -109,20 +129,31 @@ export default function usePlayerState() {
   const selectSong = (name: string) => {
     if (isEqual(playlistContext, browsePlaylistContext)) {
       if (!browsePlaylistContext || currentTrack?.name === name) return;
-      const i = browsePlaylistContext.songs.findIndex(
+
+      const index = browsePlaylistContext.songs.findIndex(
         (song) => song.name === name
       );
-      if (i === null || i === undefined) return;
-      const shuffledIndex = browsePlaylistContext.shuffledOrder.indexOf(i);
-      setPlaylistContext({ ...browsePlaylistContext, index: i, shuffledIndex });
+      if (index === null || index === undefined) return;
+      const shuffledIndex = browsePlaylistContext.shuffledOrder.indexOf(index);
+
+      setPlaylistContext({ ...browsePlaylistContext, index, shuffledIndex });
+      setPlaying((p) => true);
     } else {
       if (!playlistContext || currentTrack?.name === name) return;
-      const i = playlistContext.songs.findIndex((song) => song.name === name);
-      if (i === null || i === undefined) return;
-      const shuffledIndex = playlistContext.shuffledOrder.indexOf(i);
-      setPlaylistContext({ ...playlistContext, index: i, shuffledIndex });
+
+      const index = playlistContext.songs.findIndex(
+        (song) => song.name === name
+      );
+      if (index === null || index === undefined) return;
+      const shuffledIndex = playlistContext.shuffledOrder.indexOf(index);
+
+      setPlaylistContext({
+        ...playlistContext,
+        index,
+        shuffledIndex,
+      });
+      setPlaying((p) => true);
     }
-    setPlaying((p) => true);
   };
 
   const toggle = () => {

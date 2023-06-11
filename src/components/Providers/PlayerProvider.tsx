@@ -7,6 +7,7 @@ import {
   ReactNode,
   SetStateAction,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -89,10 +90,10 @@ export default function PlayerProvider(props: { children: ReactNode }) {
     }
   }, [playerSrc, playing]);
 
-  const handleProgress = (progress: OnProgressProps) => {
+  const handleProgress = useCallback((progress: OnProgressProps) => {
     const { playedSeconds } = progress;
     setPlaytime(playedSeconds);
-  };
+  }, []);
 
   return (
     <playerContext.Provider

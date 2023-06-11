@@ -125,20 +125,9 @@ function KandiBarPiece({
   };
   const handleMouseLeave = () => setHighlightThreshold(baseline);
 
-  const mockSendDonation = async (amount: number) => {
-    if (amount <= 0) return;
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(null);
-      }, 2000);
-    });
-  };
-
   const donateKandiMutation = useMutation(sendDonation, {
     onMutate: async (amount: number) => {
       await queryClient.cancelQueries(USER_DONATIONS_QUERY);
-
-      console.log(`just canceled queries for new donation of amount ${amount}`);
 
       // save this for rollback
       const previousUserDonations =
@@ -167,8 +156,6 @@ function KandiBarPiece({
     },
 
     onError(error, variables, context) {
-      console.log("just rolled back");
-
       queryClient.setQueryData(
         USER_DONATIONS_QUERY,
         context?.previousUserDonations
@@ -177,7 +164,6 @@ function KandiBarPiece({
     },
 
     onSettled: () => {
-      console.log("settled");
       queryClient.invalidateQueries(USER_DONATIONS_QUERY);
     },
   });
@@ -187,8 +173,7 @@ function KandiBarPiece({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={() => {
-        if (index <= highlightThreshold) return;
-        console.log("fired");
+        if (index < highlightThreshold) return;
         donateKandiMutation.mutate(index - baseline);
       }}
       color={index <= highlightThreshold ? "white" : "black"}
