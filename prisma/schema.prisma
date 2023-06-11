@@ -51,8 +51,8 @@ model static_playlists {
   origin_url       String?
   track_count      Int                @db.SmallInt
   route_alias      String             @unique
-  playlists_tracks playlists_tracks[]
   description      String?
+  playlists_tracks playlists_tracks[]
 }
 
 model static_tracks {

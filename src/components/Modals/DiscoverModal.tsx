@@ -1,4 +1,3 @@
-import usePlaylistBrowser from "@/lib/hooks/usePlaylistBrowser";
 import { PlaylistPreview } from "@/lib/types";
 import { msToTime } from "@/lib/util";
 import {
@@ -14,6 +13,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useModal } from "../Providers/ModalProvider";
 import { usePlayerController } from "../Player/PlayerController";
+import { usePlayer } from "../Providers/PlayerProvider";
 
 export default function DiscoverModal() {
   const { playlistPreviews, previewsLoading, previewsError } =
@@ -54,7 +54,7 @@ export default function DiscoverModal() {
 }
 
 function ScrollPiece({ preview }: { preview: PlaylistPreview }) {
-  const { browse } = usePlaylistBrowser();
+  const { browse } = usePlayer();
   const { setDiscoverModal } = useModal();
 
   const handleSelect = () => {

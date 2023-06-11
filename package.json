@@ -35,6 +35,7 @@
     "framer-motion": "^10.12.4",
     "next": "^13.4.1",
     "next-auth": "^4.22.1",
+    "next-usequerystate": "^1.7.3",
     "nprogress": "^0.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -48,6 +49,6 @@
     "wavesurfer.js": "^7.0.0-beta.5"
   },
   "devDependencies": {
-    "prisma": "^4.14.1"
+    "prisma": "^4.15.0"
   }
 }

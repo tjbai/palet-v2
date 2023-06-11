@@ -1,20 +1,14 @@
 import { usePlayer } from "@/components/Providers/PlayerProvider";
-import usePlaylistBrowser from "@/lib/hooks/usePlaylistBrowser";
-import { PlaylistPreview } from "@/lib/types";
 import { artistsToString, msToTime } from "@/lib/util";
 import { Box, Flex, Text } from "@chakra-ui/react";
-import axios from "axios";
-import error from "next/error";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { isError, useQuery, useQueryClient } from "react-query";
 import { usePlayerController } from "../PlayerController";
 
 export default function VerticalTrackDisplay() {
   const { playlistContext, currentTrack, playTime, browsePlaylistContext } =
     usePlayer();
   const [offset, setOffset] = useState(0);
-  const { browse } = usePlaylistBrowser();
+  const { browse } = usePlayer();
 
   useEffect(() => {
     if (!currentTrack) return;
@@ -114,7 +108,7 @@ export default function VerticalTrackDisplay() {
 
 function PlaylistDashboard() {
   const { browsePlaylistContext } = usePlayer();
-  const { browse } = usePlaylistBrowser();
+  const { browse } = usePlayer();
   const {
     previewsLoading,
     previewsError,

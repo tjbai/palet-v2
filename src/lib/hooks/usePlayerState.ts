@@ -1,6 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { NowPlaying, PlayerQueryParams, PlaylistContext } from "../types";
+import { useQueryClient } from "react-query";
+import { BROWSE_PLAYLIST_CONTEXT_QUERY } from "../constants";
+import { NowPlaying, PlaylistContext } from "../types";
+import { PlayerQueryParams } from "./../types";
 import useQueryParams from "./useQueryParams";
 
 const MODE_LOWER_BOUND = 0;
@@ -17,6 +20,15 @@ export default function usePlayerState() {
   const [loading, setLoading] = useState<boolean>(false);
   const [playerDisplayMode, setPlayerDisplayMode] = useState(0);
   const [shuffled, setShuffled] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  // const [typeQuery, setTypeQuery] = useQueryState("playerType", {
+  //   parse: (query: string) => parseInt(query),
+  //   serialize: (value) => value.toString(),
+  // });
+  // const [crateQuery, setCrateQuery] = useQueryState("crate");
+  // TODO: Figure out a smoother way to persist state in query params
   const { queryParams, setQueryParams } = useQueryParams<PlayerQueryParams>();
 
   useEffect(() => {
@@ -131,26 +143,24 @@ export default function usePlayerState() {
   /* Honestly, this section probably doesn't belong here */
 
   const setMode = (mode: number) => {
-    setQueryParams({ type: mode, crate: queryParams.crate });
     setPlayerDisplayMode(mode);
   };
 
   const prevMode = () => {
     setPlayerDisplayMode((prevMode) => {
-      const newMode =
-        prevMode === MODE_LOWER_BOUND ? MODE_UPPER_BOUND : prevMode - 1;
-      setQueryParams({ type: newMode, crate: queryParams.crate });
-      return newMode;
+      return prevMode === MODE_LOWER_BOUND ? MODE_UPPER_BOUND : prevMode - 1;
     });
   };
 
   const nextMode = () => {
     setPlayerDisplayMode((prevMode) => {
-      const newMode =
-        prevMode === MODE_UPPER_BOUND ? MODE_LOWER_BOUND : prevMode + 1;
-      setQueryParams({ type: newMode, crate: queryParams.crate });
-      return newMode;
+      return prevMode === MODE_UPPER_BOUND ? MODE_LOWER_BOUND : prevMode + 1;
     });
+  };
+
+  const browse = (routeAlias: string) => {
+    setQueryParams({ crate: routeAlias });
+    queryClient.invalidateQueries(BROWSE_PLAYLIST_CONTEXT_QUERY);
   };
 
   return {
@@ -174,5 +184,6 @@ export default function usePlayerState() {
     playerDisplayMode,
     toggleShuffle,
     shuffled,
+    browse,
   };
 }
