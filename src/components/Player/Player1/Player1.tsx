@@ -2,10 +2,15 @@
 
 import { usePlayer } from "@/components/Providers/PlayerProvider";
 import { useStyles } from "@/components/Providers/StyleProvider";
-import { Box, Flex, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { Box, Flex, Text, color } from "@chakra-ui/react";
+import { Dispatch, SetStateAction, use, useEffect, useState } from "react";
 import BelowNowPlayingWrapper from "../BelowNowPlayingWrapper";
-import { PlaylistContext, NowPlaying } from "@/lib/types";
+import { PlaylistContext, NowPlaying, UserDonations } from "@/lib/types";
+import { isArrayLiteralExpression } from "typescript";
+import { MAX_KANDI_DONATION, USER_DONATIONS_QUERY } from "@/lib/constants";
+import { usePlayerController } from "../PlayerController";
+import useKandi from "@/lib/hooks/useKandi";
+import { QueryClient, useMutation, useQueryClient } from "react-query";
 
 export default function Player1({
   playlistContext,
@@ -40,10 +45,21 @@ export default function Player1({
 function ScrollPiece({ song, index }: { song: NowPlaying; index: number }) {
   const { currentTrack, selectSong } = usePlayer();
   const [selected, setSelected] = useState(currentTrack?.id === song.id);
+  const { userDonations } = usePlayerController();
+  const [baselineThreshold, setBaselineThreshold] = useState(
+    userDonations?.linkedSongs[song.id] ?? 0
+  );
+  const [highlightThreshold, setHighlightThreshold] = useState(
+    userDonations?.linkedSongs[song.id] ?? 0
+  );
 
   useEffect(() => {
     setSelected(currentTrack?.id === song.id);
   }, [currentTrack]);
+
+  useEffect(() => {
+    setBaselineThreshold(userDonations?.linkedSongs[song.id] ?? 0);
+  }, [userDonations]);
 
   return (
     <Flex
@@ -61,6 +77,7 @@ function ScrollPiece({ song, index }: { song: NowPlaying; index: number }) {
       pb="15px"
       opacity={selected ? 1 : 0.5}
       zIndex={10}
+      position="relative"
     >
       <Box position="relative" top="-200px" id={`song-${song.id}`} />
       <Text
@@ -70,6 +87,115 @@ function ScrollPiece({ song, index }: { song: NowPlaying; index: number }) {
       >
         {song.name}
       </Text>
+
+      {/* {selected && userDonations ? (
+        <Flex position="absolute" bottom="0px" right="0px">
+          {Array.from({ length: MAX_KANDI_DONATION }).map((_, index) => (
+            <KandiBarPiece
+              key={index}
+              setBaselineThreshold={setBaselineThreshold}
+              baselineThreshold={userDonations?.linkedSongs[song.id] ?? 0}
+              index={index + 1}
+              color={index + 1 <= baselineThreshold ? "white" : "black"}
+              songId={song.id}
+            />
+          ))}
+        </Flex>
+      ) : null} */}
+    </Flex>
+  );
+}
+
+function KandiBarPiece({
+  setBaselineThreshold,
+  baselineThreshold,
+  index,
+  color,
+  songId,
+}: {
+  setBaselineThreshold: Dispatch<SetStateAction<number>>;
+  baselineThreshold: number;
+  index: number;
+  color: string;
+  songId: number;
+}) {
+  const { sendDonation } = useKandi();
+  const queryClient = useQueryClient();
+
+  const handleMouseEnter = () => {
+    if (index > baselineThreshold) {
+      setBaselineThreshold(index);
+    }
+  };
+  const handleMouseLeave = () => setBaselineThreshold(baselineThreshold);
+
+  const mockSendDonation = async (amount: number) => {
+    setTimeout(() => {
+      console.log(`just attempted to donate ${amount}`);
+    }, 2000);
+  };
+
+  const donateKandiMutation = useMutation(mockSendDonation, {
+    onMutate: async (amount) => {
+      await queryClient.cancelQueries(USER_DONATIONS_QUERY);
+
+      console.log(`just canceled queries for new donation of amount ${amount}`);
+
+      // save this for rollback
+      const previousUserDonations =
+        queryClient.getQueryData(USER_DONATIONS_QUERY);
+      const previousBaselineThreshold = baselineThreshold;
+
+      // generate optimistic update
+      queryClient.setQueryData(
+        USER_DONATIONS_QUERY,
+        (old: UserDonations | undefined) => {
+          if (old) {
+            return {
+              ...old,
+              linkedSongs: {
+                ...old.linkedSongs,
+                [songId]: baselineThreshold + amount,
+              },
+            };
+          } else return {} as UserDonations; // this really shouldn't ever happen????
+        }
+      );
+
+      // local state optimistic update too
+      setBaselineThreshold((p: number) => p + amount);
+
+      console.log("just finished changes");
+
+      return { previousUserDonations, previousBaselineThreshold };
+    },
+
+    onError(error, variables, context) {
+      console.log("just rolled back");
+
+      queryClient.setQueryData(
+        USER_DONATIONS_QUERY,
+        context?.previousUserDonations
+      );
+      setBaselineThreshold(context?.previousBaselineThreshold!);
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries(USER_DONATIONS_QUERY);
+    },
+  });
+
+  return (
+    <Flex
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={() => {
+        if (index <= baselineThreshold) return;
+        donateKandiMutation.mutate(index - baselineThreshold);
+      }}
+      color={color}
+    >
+      {index}
     </Flex>
   );
 }

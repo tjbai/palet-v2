@@ -23,7 +23,7 @@ export interface PlaylistPreview {
 }
 
 export interface NowPlaying {
-  id: string | number;
+  id: number;
   name: string;
   artists: string[];
   cdnPath: string;
@@ -39,9 +39,9 @@ export interface User {
   kandiBalance: number;
 }
 
-export interface UserDonationSet {
+export interface UserDonations {
   clerkId: string;
-  linkedSongs: { songId: number; totalDonation: number }[];
+  linkedSongs: { [songId: number]: number };
 }
 
 export interface PlayerQueryParams {

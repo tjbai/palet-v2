@@ -1,1 +1,11 @@
 export const MAX_KANDI_DONATION = 5;
+
+const USER_DONATIONS_QUERY = "userDonations";
+const PLAYLIST_PREVIEWS_QUERY = "playlisPreviews";
+const BROWSE_PLAYLIST_CONTEXT_QUERY = "browsePlaylistContext";
+
+export {
+  USER_DONATIONS_QUERY,
+  PLAYLIST_PREVIEWS_QUERY,
+  BROWSE_PLAYLIST_CONTEXT_QUERY,
+};

@@ -1,8 +1,8 @@
+import { UserDonations } from "./../../../../lib/types";
 import { currentUser } from "@clerk/nextjs";
 import prisma from "../../../../../prisma";
 import { NextResponse } from "next/server";
 import { bi2n } from "@/lib/util";
-import { UserDonationSet } from "@/lib/types";
 
 export async function GET() {
   const user = await currentUser();
@@ -17,13 +17,15 @@ export async function GET() {
     },
   });
 
+  const linkedSongs: { [songId: number]: number } = {};
+  prismaRes.forEach((d) => {
+    linkedSongs[bi2n(d.track_id)!] = d.amount;
+  });
+
   const donations = {
     clerkId: user.id,
-    linkedSongs: prismaRes.map((d) => ({
-      songId: bi2n(d.track_id),
-      totalDonation: d.amount,
-    })),
-  } as UserDonationSet;
+    linkedSongs,
+  } as UserDonations;
 
   return NextResponse.json({ donations });
 }

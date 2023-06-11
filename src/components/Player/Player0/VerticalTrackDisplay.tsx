@@ -8,7 +8,7 @@ import error from "next/error";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { isError, useQuery, useQueryClient } from "react-query";
-import { usePlaylistPreviews } from "../PlayerController";
+import { usePlayerController } from "../PlayerController";
 
 export default function VerticalTrackDisplay() {
   const { playlistContext, currentTrack, playTime, browsePlaylistContext } =
@@ -115,14 +115,19 @@ export default function VerticalTrackDisplay() {
 function PlaylistDashboard() {
   const { browsePlaylistContext } = usePlayer();
   const { browse } = usePlaylistBrowser();
-  const { isLoading, isError, error, playlistPreviews } = usePlaylistPreviews();
+  const {
+    previewsLoading,
+    previewsError,
+    previewsErrorMessage,
+    playlistPreviews,
+  } = usePlayerController();
   const [displayMode, setDisplayMode] = useState("browse");
 
-  if (isLoading) return <Text color="white">Loading...</Text>;
-  if (isError)
+  if (previewsLoading) return <Text color="white">Loading...</Text>;
+  if (previewsError)
     return (
       <Text color="white">
-        Error: {(error as { message: "string" }).message}
+        Error: {(previewsErrorMessage as { message: "string" }).message}
       </Text>
     );
 

@@ -1,3 +1,4 @@
+import usePlaylistBrowser from "@/lib/hooks/usePlaylistBrowser";
 import { PlaylistPreview } from "@/lib/types";
 import { msToTime } from "@/lib/util";
 import {
@@ -5,22 +6,18 @@ import {
   Drawer,
   DrawerCloseButton,
   DrawerContent,
-  DrawerHeader,
   DrawerOverlay,
   Flex,
-  Input,
   Text,
-  list,
 } from "@chakra-ui/react";
 import Image from "next/image";
-import { usePlaylistPreviews } from "../Player/PlayerController";
-import { useModal } from "../Providers/ModalProvider";
 import { useEffect, useState } from "react";
-import { usePlayer } from "../Providers/PlayerProvider";
-import usePlaylistBrowser from "@/lib/hooks/usePlaylistBrowser";
+import { useModal } from "../Providers/ModalProvider";
+import { usePlayerController } from "../Player/PlayerController";
 
 export default function DiscoverModal() {
-  const { playlistPreviews, isLoading, isError } = usePlaylistPreviews();
+  const { playlistPreviews, previewsLoading, previewsError } =
+    usePlayerController();
   const [displayedPreviews, setDisplayedPreviews] = useState(playlistPreviews);
   const [search, setSearch] = useState("");
   const { discoverModal, setDiscoverModal } = useModal();
@@ -34,7 +31,7 @@ export default function DiscoverModal() {
     setDisplayedPreviews(filterByMatch(playlistPreviews));
   }, [playlistPreviews, search]);
 
-  if (isLoading || isError) return null;
+  if (previewsLoading || previewsError) return null;
 
   return (
     <Drawer

@@ -4,7 +4,10 @@ import { useUser } from "@clerk/nextjs";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
-import { MAX_KANDI_DONATION } from "../constants";
+import {
+  BROWSE_PLAYLIST_CONTEXT_QUERY,
+  MAX_KANDI_DONATION,
+} from "../constants";
 
 export default function useKandi() {
   const [donationAmount, setDonationAmount] = useState(0);
@@ -56,7 +59,7 @@ export default function useKandi() {
     }
 
     queryClient.invalidateQueries("user");
-    queryClient.invalidateQueries("browsePlaylistContext");
+    queryClient.invalidateQueries(BROWSE_PLAYLIST_CONTEXT_QUERY);
   };
 
   // Open donation window
@@ -73,5 +76,5 @@ export default function useKandi() {
     };
   }, [donationAmount]);
 
-  return { handleDonation };
+  return { handleDonation, sendDonation };
 }

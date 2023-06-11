@@ -4,7 +4,7 @@ import {
   fetchPlaylistPreviews,
   fetchPlaylistSongs,
 } from "@/lib/services/client/playlist";
-import { PlaylistContext, PlaylistPreview } from "@/lib/types";
+import { PlaylistContext, PlaylistPreview, UserDonations } from "@/lib/types";
 import { searchParamToPlayerState } from "@/lib/util";
 import { Box, Flex, HStack } from "@chakra-ui/react";
 import {
@@ -14,7 +14,7 @@ import {
   useContext,
   useEffect,
 } from "react";
-import { useQuery } from "react-query";
+import { isError, useQuery } from "react-query";
 import DiscoverModal from "../Modals/DiscoverModal";
 import { usePlayer } from "../Providers/PlayerProvider";
 import BottomGradientOverlay from "./BottomGradientOverlay";
@@ -25,19 +25,25 @@ import Player0 from "./Player0";
 import Player1 from "./Player1";
 import Player2 from "./Player2";
 import { fetchUserDonations } from "@/lib/services/client/user";
+import {
+  BROWSE_PLAYLIST_CONTEXT_QUERY,
+  PLAYLIST_PREVIEWS_QUERY,
+  USER_DONATIONS_QUERY,
+} from "@/lib/constants";
 
 export type SearchParam = string | string[] | undefined;
 
-interface PlaylistPreviewContext {
+interface PlayerControllerContext {
   playlistPreviews: PlaylistPreview[] | undefined;
-  isLoading: boolean;
-  isError: boolean;
-  error: any;
+  userDonations: UserDonations | undefined;
+  previewsLoading: boolean;
+  previewsError: boolean;
+  previewsErrorMessage: any;
 }
 
-const playlistPreviewContext = createContext({} as PlaylistPreviewContext);
+const playerControllerContext = createContext({} as PlayerControllerContext);
 
-export const usePlaylistPreviews = () => useContext(playlistPreviewContext);
+export const usePlayerController = () => useContext(playerControllerContext);
 
 export default function PlayerController({
   playlistContext,
@@ -51,7 +57,7 @@ export default function PlayerController({
   const { setPlaylistContext, setBrowsePlaylistContext, setMode } = usePlayer();
 
   const { data: browsePlaylistData } = useQuery(
-    ["browsePlaylistContext", crate],
+    [BROWSE_PLAYLIST_CONTEXT_QUERY, crate],
     fetchPlaylistSongs,
     {
       initialData: playlistContext,
@@ -60,12 +66,15 @@ export default function PlayerController({
 
   const {
     data: playlistPreviews,
-    isLoading,
-    isError,
-    error,
-  } = useQuery("playlistPreviews", fetchPlaylistPreviews);
+    isLoading: previewsLoading,
+    isError: previewsError,
+    error: previewsErrorMessage,
+  } = useQuery(PLAYLIST_PREVIEWS_QUERY, fetchPlaylistPreviews);
 
-  const { data: userDonations } = useQuery("userDonations", fetchUserDonations);
+  const { data: userDonations } = useQuery(
+    USER_DONATIONS_QUERY,
+    fetchUserDonations
+  );
 
   useEffect(() => {
     setPlaylistContext(playlistContext);
@@ -77,8 +86,14 @@ export default function PlayerController({
   }, [browsePlaylistData]);
 
   return (
-    <playlistPreviewContext.Provider
-      value={{ playlistPreviews, isLoading, isError, error }}
+    <playerControllerContext.Provider
+      value={{
+        playlistPreviews,
+        previewsLoading,
+        previewsError,
+        userDonations,
+        previewsErrorMessage,
+      }}
     >
       <KeyEvents />
       <PlayerControllerWrapper>
@@ -88,7 +103,7 @@ export default function PlayerController({
           <PlayerSwitcher />
         </Suspense>
       </PlayerControllerWrapper>
-    </playlistPreviewContext.Provider>
+    </playerControllerContext.Provider>
   );
 }
 

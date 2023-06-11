@@ -1,5 +1,6 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQueryClient } from "react-query";
+import { BROWSE_PLAYLIST_CONTEXT_QUERY } from "../constants";
 
 export default function usePlaylistBrowser() {
   const router = useRouter();
@@ -12,7 +13,7 @@ export default function usePlaylistBrowser() {
       ? `/player?crate=${routeAlias}&type=${type}`
       : `/player?crate=${routeAlias}`;
     router.push(newUrl);
-    queryClient.invalidateQueries("browsePlaylistContext");
+    queryClient.invalidateQueries(BROWSE_PLAYLIST_CONTEXT_QUERY);
   };
 
   return { browse };

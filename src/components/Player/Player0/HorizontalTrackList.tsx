@@ -1,9 +1,7 @@
 import { usePlayer } from "@/components/Providers/PlayerProvider";
 import { artistsToString, msToTime } from "@/lib/util";
 import { Box, Flex, Text } from "@chakra-ui/react";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useQueryClient } from "react-query";
+import { useEffect } from "react";
 
 /*
 Some real fuck shit going on here to get this nicely aligned column
