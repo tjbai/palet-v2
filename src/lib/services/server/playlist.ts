@@ -1,6 +1,6 @@
-import prisma from "../../../prisma";
-import { PlaylistContext, PlaylistPreview } from "../types";
-import { fisherYates, bi2n } from "../util";
+import prisma from "../../../../prisma";
+import { PlaylistContext, PlaylistPreview } from "../../types";
+import { fisherYates, bi2n } from "../../util";
 
 export const fetchPlaylistContext = (
   routeAlias: string | null

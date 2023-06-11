@@ -9,7 +9,7 @@ export default function usePlaylistBrowser() {
   const browse = (routeAlias: string) => {
     const type = searchParams.get("type");
     const newUrl = type
-      ? `/player?type=${type}&crate=${routeAlias}`
+      ? `/player?crate=${routeAlias}&type=${type}`
       : `/player?crate=${routeAlias}`;
     router.push(newUrl);
     queryClient.invalidateQueries("browsePlaylistContext");

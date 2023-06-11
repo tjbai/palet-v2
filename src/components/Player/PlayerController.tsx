@@ -3,7 +3,7 @@
 import {
   fetchPlaylistPreviews,
   fetchPlaylistSongs,
-} from "@/lib/services/clientPlaylist";
+} from "@/lib/services/client/playlist";
 import { PlaylistContext, PlaylistPreview } from "@/lib/types";
 import { searchParamToPlayerState } from "@/lib/util";
 import { Box, Flex, HStack } from "@chakra-ui/react";
@@ -24,6 +24,7 @@ import NowPlaying from "./NowPlaying";
 import Player0 from "./Player0";
 import Player1 from "./Player1";
 import Player2 from "./Player2";
+import { fetchUserDonations } from "@/lib/services/client/user";
 
 export type SearchParam = string | string[] | undefined;
 
@@ -63,6 +64,8 @@ export default function PlayerController({
     isError,
     error,
   } = useQuery("playlistPreviews", fetchPlaylistPreviews);
+
+  const { data: userDonations } = useQuery("userDonations", fetchUserDonations);
 
   useEffect(() => {
     setPlaylistContext(playlistContext);

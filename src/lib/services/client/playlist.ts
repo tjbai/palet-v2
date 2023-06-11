@@ -1,12 +1,11 @@
 import { SearchParam } from "@/components/Player/PlayerController";
 import axios from "axios";
 import { QueryFunctionContext } from "react-query";
-import { PlaylistPreview } from "../types";
+import { PlaylistPreview } from "../../types";
 
 export const fetchPlaylistSongs = async ({
   queryKey,
 }: QueryFunctionContext<SearchParam[], any>) => {
-  console.log("revalidating");
   const [_, routeAlias] = queryKey;
 
   if (!routeAlias) return null;

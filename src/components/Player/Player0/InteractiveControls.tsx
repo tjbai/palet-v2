@@ -20,6 +20,8 @@ import {
   RiPauseFill,
   RiShuffleFill,
 } from "react-icons/ri";
+import { ImSearch } from "react-icons/im";
+import { useModal } from "@/components/Providers/ModalProvider";
 
 const SECTION_SHADOW =
   "-1.78304px -1.78304px 0px #f0eded, -3.56608px -3.56608px 3.56608px #e0e0e0, inset -1.78304px -1.78304px 0px #f0eded, inset -3.56608px -3.56608px 3.56608px #C9D9E8;";
@@ -137,6 +139,8 @@ const GeneralControlButtons = () => {
 };
 
 const ModularControlButtons = () => {
+  const { setDiscoverModal } = useModal();
+
   return (
     <HStack
       spacing={5}
@@ -149,7 +153,13 @@ const ModularControlButtons = () => {
       justify="center"
       borderRadius="20px"
     >
-      <ModularButtonGeneric innerColor="#141414" />
+      {/* <ModularButtonGeneric innerColor="#141414" /> */}
+      <SmallButtonGeneric
+        color="#B8CCE0"
+        onClick={() => setDiscoverModal(true)}
+      >
+        <Icon as={ImSearch} />
+      </SmallButtonGeneric>
       <ModularButtonGeneric innerColor="#828282" />
       <ModularButtonGeneric innerColor="#B8CCE0" />
       <ModularButtonGeneric innerColor="#ECECEC" />

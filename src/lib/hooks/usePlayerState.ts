@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { NowPlaying, PlaylistContext } from "../types";
+import { NowPlaying, PlayerQueryParams, PlaylistContext } from "../types";
+import useQueryParams from "./useQueryParams";
 
 const MODE_LOWER_BOUND = 0;
 const MODE_UPPER_BOUND = 2;
@@ -17,12 +17,7 @@ export default function usePlayerState() {
   const [loading, setLoading] = useState<boolean>(false);
   const [playerDisplayMode, setPlayerDisplayMode] = useState(0);
   const [shuffled, setShuffled] = useState(false);
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  useEffect(() => {
-    console.log(playerDisplayMode);
-  }, [playerDisplayMode]);
+  const { queryParams, setQueryParams } = useQueryParams<PlayerQueryParams>();
 
   useEffect(() => {
     const updatePlayerState = async () => {
@@ -136,11 +131,7 @@ export default function usePlayerState() {
   /* Honestly, this section probably doesn't belong here */
 
   const setMode = (mode: number) => {
-    const crate = searchParams.get("crate");
-    const newUrl = crate
-      ? `/player?crate=${crate}&type=${mode}`
-      : `/player?type=${mode}`;
-    router.push(newUrl);
+    setQueryParams({ type: mode, crate: queryParams.crate });
     setPlayerDisplayMode(mode);
   };
 
@@ -148,7 +139,7 @@ export default function usePlayerState() {
     setPlayerDisplayMode((prevMode) => {
       const newMode =
         prevMode === MODE_LOWER_BOUND ? MODE_UPPER_BOUND : prevMode - 1;
-      setMode(newMode);
+      setQueryParams({ type: newMode, crate: queryParams.crate });
       return newMode;
     });
   };
@@ -157,7 +148,7 @@ export default function usePlayerState() {
     setPlayerDisplayMode((prevMode) => {
       const newMode =
         prevMode === MODE_UPPER_BOUND ? MODE_LOWER_BOUND : prevMode + 1;
-      setMode(newMode);
+      setQueryParams({ type: newMode, crate: queryParams.crate });
       return newMode;
     });
   };
@@ -177,10 +168,10 @@ export default function usePlayerState() {
     loading,
     browsePlaylistContext,
     setBrowsePlaylistContext,
+    setMode,
     nextMode,
     prevMode,
     playerDisplayMode,
-    setMode,
     toggleShuffle,
     shuffled,
   };

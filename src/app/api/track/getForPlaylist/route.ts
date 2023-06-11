@@ -1,4 +1,4 @@
-import { fetchPlaylistContext } from "@/lib/services/serverPlaylist";
+import { fetchPlaylistContext } from "@/lib/services/server/playlist";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 

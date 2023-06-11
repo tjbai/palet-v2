@@ -1,4 +1,4 @@
-import { fetchPlaylistPreviews } from "@/lib/services/serverPlaylist";
+import { fetchPlaylistPreviews } from "@/lib/services/server/playlist";
 import { NextResponse } from "next/server";
 
 export async function GET() {

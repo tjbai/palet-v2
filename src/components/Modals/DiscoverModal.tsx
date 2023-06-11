@@ -1,6 +1,7 @@
 import { PlaylistPreview } from "@/lib/types";
 import { msToTime } from "@/lib/util";
 import {
+  Box,
   Drawer,
   DrawerCloseButton,
   DrawerContent,
@@ -75,24 +76,27 @@ function ScrollPiece({ preview }: { preview: PlaylistPreview }) {
       color="white"
       _hover={{ cursor: "pointer", transform: "scale(1.03)" }}
       transition="0.3s"
-      //   fontFamily="tech"
       onClick={handleSelect}
     >
-      <Image
-        src={preview.imageUrl ?? ""}
-        alt="Playlist Cover"
-        width={200}
-        height={200}
-        quality={90}
-      />
+      {preview.imageUrl ? (
+        <Image
+          src={preview.imageUrl ?? ""}
+          alt="Playlist Cover"
+          width={200}
+          height={200}
+          quality={90}
+        />
+      ) : (
+        <Box w="200px" h="200px" />
+      )}
       <Flex flex={1} direction="column" ml="10px">
         <Text fontSize="50px" lineHeight="50px" noOfLines={2}>
           {preview.name}
         </Text>
-        <Text ml="3px" fontSize="20px" lineHeight="25px">
+        <Text ml="3px" fontSize="15px" lineHeight="25px">
           Kandi: {preview.kandiCount}
         </Text>
-        <Text ml="3px" fontSize="20px" lineHeight="25px">
+        <Text ml="3px" fontSize="15px" lineHeight="25px">
           Duration: {msToTime(preview.totalDuration)}
         </Text>
       </Flex>

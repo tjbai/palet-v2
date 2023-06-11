@@ -1,6 +1,6 @@
 import BelowNowPlayingError from "@/components/Common/BelowNowPlayingError";
 import PlayerController from "@/components/Player/PlayerController";
-import { fetchPlaylistContext } from "@/lib/services/serverPlaylist";
+import { fetchPlaylistContext } from "@/lib/services/server/playlist";
 import { PlaylistContext } from "@/lib/types";
 
 export const revalidate = 60; // revalidate ISR every minute

@@ -38,3 +38,13 @@ export interface User {
   lastName?: string;
   kandiBalance: number;
 }
+
+export interface UserDonationSet {
+  clerkId: string;
+  linkedSongs: { songId: number; totalDonation: number }[];
+}
+
+export interface PlayerQueryParams {
+  type: number;
+  crate: string;
+}

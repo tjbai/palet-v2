@@ -20,8 +20,6 @@ export default function useKandi() {
   const sendDonation = async (amount: number) => {
     if (!user || !currentTrack) return;
 
-    console.log("this fires");
-
     const { data } = await axios.post("/api/track/donateKandi", {
       donationAmount: amount,
       trackId: currentTrack.id,
