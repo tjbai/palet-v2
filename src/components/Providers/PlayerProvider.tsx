@@ -1,7 +1,7 @@
 "use client";
 
 import usePlayerState from "@/lib/hooks/usePlayerState";
-import { PlaylistContext, NowPlaying } from "@/lib/types";
+import { NowPlaying, PlaylistContext } from "@/lib/types";
 import {
   Dispatch,
   ReactNode,

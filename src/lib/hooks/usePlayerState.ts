@@ -1,13 +1,13 @@
 import axios from "axios";
+import { isEqual } from "lodash";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { BROWSE_PLAYLIST_CONTEXT_QUERY } from "../constants";
 import { NowPlaying, PlaylistContext } from "../types";
-import { PlayerQueryParams } from "./../types";
-import useQueryParams from "./useQueryParams";
-import { isEqual } from "lodash";
-import { clearInterval } from "timers";
-import { isEqualsGreaterThanToken } from "typescript";
+import { useQueryStates } from "./Query/useQueryStates";
+import { queryTypes } from "next-usequerystate";
+import { stringify } from "querystring";
+import { type } from "os";
 
 const MODE_LOWER_BOUND = 0;
 const MODE_UPPER_BOUND = 2;
@@ -26,34 +26,25 @@ export default function usePlayerState() {
 
   const queryClient = useQueryClient();
 
-  // const [typeQuery, setTypeQuery] = useQueryState("playerType", {
+  // const [typeQuery, setTypeQuery] = useQueryState("type", {
   //   parse: (query: string) => parseInt(query),
   //   serialize: (value) => value.toString(),
   // });
   // const [crateQuery, setCrateQuery] = useQueryState("crate");
   // TODO: Figure out a smoother way to persist state in query params
-  const { setQueryParams } = useQueryParams<PlayerQueryParams>();
+  // const { setQueryParams } = useQueryParams<PlayerQueryParams>();
+
+  const [playerQueries, setPlayerQueries] = useQueryStates(
+    {
+      type: queryTypes.string,
+      crate: queryTypes.string,
+    },
+    {
+      history: "push",
+    }
+  );
 
   const updatePlayerState = async () => {
-    if (!playlistContext || playlistContext.index === -1) return;
-
-    const newTrack = playlistContext.songs[playlistContext.index];
-    setCurrentTrack(newTrack);
-    setLoading(true);
-
-    const { data } = await axios.post("/api/track/generatePresignedUrl", {
-      audioFilePath: newTrack.cdnPath,
-    });
-    const { signedUrl, error } = data;
-
-    if (error) alert(error);
-    else setPlayerSrc(signedUrl);
-
-    setLoading(false);
-    localStorage.setItem("lastSong", newTrack.name);
-  };
-
-  const updatePlayerStateV2 = async (playlistContext: PlaylistContext) => {
     if (!playlistContext || playlistContext.index === -1) return;
 
     const newTrack = playlistContext.songs[playlistContext.index];
@@ -176,24 +167,40 @@ export default function usePlayerState() {
 
   /* Honestly, this section probably doesn't belong here */
 
-  const setMode = (mode: number) => {
+  const setMode = async (mode: number) => {
     setPlayerDisplayMode(mode);
+    setPlayerQueries((prevQueries) => ({
+      ...prevQueries,
+      type: mode.toString(),
+    }));
   };
 
-  const prevMode = () => {
+  const prevMode = async () => {
     setPlayerDisplayMode((prevMode) => {
-      return prevMode === MODE_LOWER_BOUND ? MODE_UPPER_BOUND : prevMode - 1;
+      const newMode =
+        prevMode === MODE_LOWER_BOUND ? MODE_UPPER_BOUND : prevMode - 1;
+      setPlayerQueries((prevQueries) => ({
+        ...prevQueries,
+        type: newMode.toString(),
+      }));
+      return newMode;
     });
   };
 
   const nextMode = () => {
     setPlayerDisplayMode((prevMode) => {
-      return prevMode === MODE_UPPER_BOUND ? MODE_LOWER_BOUND : prevMode + 1;
+      const newMode =
+        prevMode === MODE_UPPER_BOUND ? MODE_LOWER_BOUND : prevMode + 1;
+      setPlayerQueries((prevQueries) => ({
+        ...prevQueries,
+        type: newMode.toString(),
+      }));
+      return newMode;
     });
   };
 
   const browse = (routeAlias: string) => {
-    setQueryParams({ crate: routeAlias });
+    setPlayerQueries((prevQueries) => ({ ...prevQueries, crate: routeAlias }));
     queryClient.invalidateQueries(BROWSE_PLAYLIST_CONTEXT_QUERY);
   };
 

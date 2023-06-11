@@ -1,11 +1,8 @@
 import { extendTheme } from "@chakra-ui/react";
 
 import "@fontsource/inconsolata";
-import "@fontsource/archivo";
 import "@fontsource/arimo";
-import "@fontsource/share-tech";
 import "@fontsource/share-tech-mono";
-import "@fontsource/vt323";
 
 import Button from "./Button";
 import Modal from "./Modal";
