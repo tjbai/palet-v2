@@ -2,15 +2,15 @@
 
 import { usePlayer } from "@/components/Providers/PlayerProvider";
 import { useStyles } from "@/components/Providers/StyleProvider";
-import { Box, Flex, Text, color } from "@chakra-ui/react";
-import { Dispatch, SetStateAction, use, useEffect, useState } from "react";
-import BelowNowPlayingWrapper from "../BelowNowPlayingWrapper";
-import { PlaylistContext, NowPlaying, UserDonations } from "@/lib/types";
-import { isArrayLiteralExpression } from "typescript";
 import { MAX_KANDI_DONATION, USER_DONATIONS_QUERY } from "@/lib/constants";
-import { usePlayerController } from "../PlayerController";
 import useKandi from "@/lib/hooks/useKandi";
-import { QueryClient, useMutation, useQueryClient } from "react-query";
+import { NowPlaying, PlaylistContext, UserDonations } from "@/lib/types";
+import { Box, Flex, Text, border } from "@chakra-ui/react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
+import BelowNowPlayingWrapper from "../BelowNowPlayingWrapper";
+import { usePlayerController } from "../PlayerController";
+import { px } from "framer-motion";
 
 export default function Player1({
   playlistContext,
@@ -77,17 +77,28 @@ function ScrollPiece({ song, index }: { song: NowPlaying; index: number }) {
       zIndex={10}
       position="relative"
     >
-      <Box position="relative" top="-200px" id={`song-${song.id}`} />
-      <Text
-        className={
-          selected ? "player1-reactive-selected" : "player1-reactive-unselected"
-        }
-      >
-        {song.name}
-      </Text>
+      <Flex flex={1} maxW={selected ? "80%" : "100%"}>
+        <Box position="relative" top="-100px" id={`song-${song.id}`} />
+        <Text
+          className={
+            selected
+              ? "player1-reactive-selected"
+              : "player1-reactive-unselected"
+          }
+        >
+          {song.name}
+        </Text>
+      </Flex>
 
       {selected && userDonations ? (
-        <Flex position="absolute" bottom="0px" right="0px">
+        <Flex
+          position="absolute"
+          right="5%"
+          align="center"
+          justify="center"
+          top="50%"
+          transform="translateY(-50%)"
+        >
           {Array.from({ length: MAX_KANDI_DONATION }).map((_, index) => (
             <KandiBarPiece
               key={index}
@@ -103,6 +114,8 @@ function ScrollPiece({ song, index }: { song: NowPlaying; index: number }) {
     </Flex>
   );
 }
+
+const COLORS = ["#e96034", "#e46044", "#d56170", "#be62b4", "#a463ff"];
 
 function KandiBarPiece({
   setHighlightThreshold,
@@ -177,6 +190,16 @@ function KandiBarPiece({
         donateKandiMutation.mutate(index - baseline);
       }}
       color={index <= highlightThreshold ? "white" : "black"}
+      bg={index <= highlightThreshold ? COLORS[index - 1] : "transparent"}
+      border="1px solid"
+      borderColor={index <= highlightThreshold ? COLORS[index - 1] : "black"}
+      borderLeftRadius={index === 1 ? "2vw" : "0px"}
+      borderRightRadius={index === 5 ? "2vw" : "0px"}
+      p="0.5vw"
+      px="0.75vw"
+      fontSize="5vw"
+      lineHeight="5vw"
+      fontStyle="normal"
     >
       {index}
     </Flex>
