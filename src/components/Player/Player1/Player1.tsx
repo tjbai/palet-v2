@@ -46,9 +46,7 @@ function ScrollPiece({ song, index }: { song: NowPlaying; index: number }) {
   const { currentTrack, selectSong } = usePlayer();
   const [selected, setSelected] = useState(currentTrack?.id === song.id);
   const { userDonations } = usePlayerController();
-  const [baselineThreshold, setBaselineThreshold] = useState(
-    userDonations?.linkedSongs[song.id] ?? 0
-  );
+
   const [highlightThreshold, setHighlightThreshold] = useState(
     userDonations?.linkedSongs[song.id] ?? 0
   );
@@ -58,7 +56,7 @@ function ScrollPiece({ song, index }: { song: NowPlaying; index: number }) {
   }, [currentTrack]);
 
   useEffect(() => {
-    setBaselineThreshold(userDonations?.linkedSongs[song.id] ?? 0);
+    setHighlightThreshold(userDonations?.linkedSongs[song.id] ?? 0);
   }, [userDonations]);
 
   return (
@@ -88,55 +86,56 @@ function ScrollPiece({ song, index }: { song: NowPlaying; index: number }) {
         {song.name}
       </Text>
 
-      {/* {selected && userDonations ? (
+      {selected && userDonations ? (
         <Flex position="absolute" bottom="0px" right="0px">
           {Array.from({ length: MAX_KANDI_DONATION }).map((_, index) => (
             <KandiBarPiece
               key={index}
-              setBaselineThreshold={setBaselineThreshold}
-              baselineThreshold={userDonations?.linkedSongs[song.id] ?? 0}
+              setHighlightThreshold={setHighlightThreshold}
+              highlightThreshold={highlightThreshold}
+              baseline={userDonations?.linkedSongs[song.id] ?? 0}
               index={index + 1}
-              color={index + 1 <= baselineThreshold ? "white" : "black"}
               songId={song.id}
             />
           ))}
         </Flex>
-      ) : null} */}
+      ) : null}
     </Flex>
   );
 }
 
 function KandiBarPiece({
-  setBaselineThreshold,
-  baselineThreshold,
+  setHighlightThreshold,
+  highlightThreshold,
+  baseline,
   index,
-  color,
   songId,
 }: {
-  setBaselineThreshold: Dispatch<SetStateAction<number>>;
-  baselineThreshold: number;
+  setHighlightThreshold: Dispatch<SetStateAction<number>>;
+  highlightThreshold: number;
+  baseline: number;
   index: number;
-  color: string;
   songId: number;
 }) {
   const { sendDonation } = useKandi();
   const queryClient = useQueryClient();
 
   const handleMouseEnter = () => {
-    if (index > baselineThreshold) {
-      setBaselineThreshold(index);
-    }
+    if (index > baseline) setHighlightThreshold(index);
   };
-  const handleMouseLeave = () => setBaselineThreshold(baselineThreshold);
+  const handleMouseLeave = () => setHighlightThreshold(baseline);
 
   const mockSendDonation = async (amount: number) => {
-    setTimeout(() => {
-      console.log(`just attempted to donate ${amount}`);
-    }, 2000);
+    if (amount <= 0) return;
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(null);
+      }, 2000);
+    });
   };
 
-  const donateKandiMutation = useMutation(mockSendDonation, {
-    onMutate: async (amount) => {
+  const donateKandiMutation = useMutation(sendDonation, {
+    onMutate: async (amount: number) => {
       await queryClient.cancelQueries(USER_DONATIONS_QUERY);
 
       console.log(`just canceled queries for new donation of amount ${amount}`);
@@ -144,7 +143,6 @@ function KandiBarPiece({
       // save this for rollback
       const previousUserDonations =
         queryClient.getQueryData(USER_DONATIONS_QUERY);
-      const previousBaselineThreshold = baselineThreshold;
 
       // generate optimistic update
       queryClient.setQueryData(
@@ -155,7 +153,7 @@ function KandiBarPiece({
               ...old,
               linkedSongs: {
                 ...old.linkedSongs,
-                [songId]: baselineThreshold + amount,
+                [songId]: baseline + amount,
               },
             };
           } else return {} as UserDonations; // this really shouldn't ever happen????
@@ -163,11 +161,9 @@ function KandiBarPiece({
       );
 
       // local state optimistic update too
-      setBaselineThreshold((p: number) => p + amount);
+      setHighlightThreshold(baseline + amount);
 
-      console.log("just finished changes");
-
-      return { previousUserDonations, previousBaselineThreshold };
+      return { previousUserDonations };
     },
 
     onError(error, variables, context) {
@@ -177,10 +173,11 @@ function KandiBarPiece({
         USER_DONATIONS_QUERY,
         context?.previousUserDonations
       );
-      setBaselineThreshold(context?.previousBaselineThreshold!);
+      setHighlightThreshold(baseline);
     },
 
     onSettled: () => {
+      console.log("settled");
       queryClient.invalidateQueries(USER_DONATIONS_QUERY);
     },
   });
@@ -190,10 +187,11 @@ function KandiBarPiece({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={() => {
-        if (index <= baselineThreshold) return;
-        donateKandiMutation.mutate(index - baselineThreshold);
+        if (index <= highlightThreshold) return;
+        console.log("fired");
+        donateKandiMutation.mutate(index - baseline);
       }}
-      color={color}
+      color={index <= highlightThreshold ? "white" : "black"}
     >
       {index}
     </Flex>

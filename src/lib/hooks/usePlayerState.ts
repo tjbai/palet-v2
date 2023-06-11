@@ -5,6 +5,8 @@ import { BROWSE_PLAYLIST_CONTEXT_QUERY } from "../constants";
 import { NowPlaying, PlaylistContext } from "../types";
 import { PlayerQueryParams } from "./../types";
 import useQueryParams from "./useQueryParams";
+import { isEqual } from "lodash";
+import { clearInterval } from "timers";
 
 const MODE_LOWER_BOUND = 0;
 const MODE_UPPER_BOUND = 2;
@@ -29,27 +31,28 @@ export default function usePlayerState() {
   // });
   // const [crateQuery, setCrateQuery] = useQueryState("crate");
   // TODO: Figure out a smoother way to persist state in query params
-  const { queryParams, setQueryParams } = useQueryParams<PlayerQueryParams>();
+  const { setQueryParams } = useQueryParams<PlayerQueryParams>();
+
+  const updatePlayerState = async () => {
+    if (!playlistContext || playlistContext.index === -1) return;
+
+    const newTrack = playlistContext.songs[playlistContext.index];
+    setCurrentTrack(newTrack);
+    setLoading(true);
+
+    const { data } = await axios.post("/api/track/generatePresignedUrl", {
+      audioFilePath: newTrack.cdnPath,
+    });
+    const { signedUrl, error } = data;
+
+    if (error) alert(error);
+    else setPlayerSrc(signedUrl);
+
+    setLoading(false);
+    localStorage.setItem("lastSong", newTrack.name);
+  };
 
   useEffect(() => {
-    const updatePlayerState = async () => {
-      if (!playlistContext || playlistContext.index === -1) return;
-
-      const newTrack = playlistContext.songs[playlistContext.index];
-      setCurrentTrack(newTrack);
-
-      setLoading(true);
-      const { data } = await axios.post("/api/track/generatePresignedUrl", {
-        audioFilePath: newTrack.cdnPath,
-      });
-      const { signedUrl, error } = data;
-      if (error) alert(error);
-      else setPlayerSrc(signedUrl);
-      setPlayerSrc(newTrack.cdnPath);
-      setLoading(false);
-
-      localStorage.setItem("lastSong", newTrack.name);
-    };
     updatePlayerState();
   }, [playlistContext]);
 
@@ -104,7 +107,7 @@ export default function usePlayerState() {
   };
 
   const selectSong = (name: string) => {
-    if (browsePlaylistContext !== playlistContext) {
+    if (isEqual(playlistContext, browsePlaylistContext)) {
       if (!browsePlaylistContext || currentTrack?.name === name) return;
       const i = browsePlaylistContext.songs.findIndex(
         (song) => song.name === name
@@ -119,7 +122,7 @@ export default function usePlayerState() {
       const shuffledIndex = playlistContext.shuffledOrder.indexOf(i);
       setPlaylistContext({ ...playlistContext, index: i, shuffledIndex });
     }
-    setPlaying(true);
+    setPlaying((p) => true);
   };
 
   const toggle = () => {
