@@ -56,10 +56,10 @@ function IntroSection() {
             fontWeight="bold"
             fontSize={{ base: "15px", sm: "17px" }}
             border="2px"
-            onClick={() => setJoinModal(true)}
+            onClick={() => router.push("/player")}
             _hover={{ borderColor: "black", color: "white", bg: "black" }}
           >
-            Win tickets to Boiler Room NYC
+            Enter
           </Button>
           <Button
             variant="base"

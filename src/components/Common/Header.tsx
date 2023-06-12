@@ -125,7 +125,6 @@ function Promotional() {
     <>
       <Text
         fontSize={{ base: "12px", md: "15px" }}
-        mr={5}
         _hover={{ cursor: "pointer" }}
         onClick={() => router.push("/player")}
         px={2}
@@ -134,7 +133,7 @@ function Promotional() {
       >
         Join
       </Text>
-      <Text
+      {/* <Text
         borderColor="white"
         fontSize={{ base: "12px", md: "15px" }}
         border="1px solid"
@@ -148,7 +147,7 @@ function Promotional() {
         >
           Events
         </ChakraLink>
-      </Text>
+      </Text> */}
       <Icon
         ml={5}
         as={Instagram}

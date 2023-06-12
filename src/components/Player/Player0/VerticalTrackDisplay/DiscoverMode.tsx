@@ -121,7 +121,7 @@ function ScrollPiece({ preview }: { preview: PlaylistPreview }) {
         <Text ml="5px" fontSize="15px" lineHeight="15px" noOfLines={1}>
           Kandi: {preview.kandiCount}
         </Text>
-        <Text ml="5px">
+        <Text ml="5px" fontSize="15px" lineHeight="15px" noOfLines={2}>
           {preview.description ? `"${preview.description}"` : ""}
         </Text>
       </Flex>
