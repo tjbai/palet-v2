@@ -13,7 +13,12 @@ export default function DiscoverMode() {
 
   return (
     <>
-      <Flex direction="column" flex={1} position="absolute">
+      <Flex
+        direction="column"
+        flex={1}
+        position="absolute"
+        w="calc(100% - 15px)"
+      >
         <Text
           fontSize="120px"
           lineHeight="100px"
@@ -24,6 +29,7 @@ export default function DiscoverMode() {
           ml="5px"
           mt="10px"
           color="dark_orange"
+          noOfLines={1}
         >
           DISCOVER
         </Text>
@@ -39,6 +45,7 @@ export default function DiscoverMode() {
         maxH="calc(100% - 150px)"
         top="150px"
         overflowY="scroll"
+        // boxShadow="inset 0px -10px 8px -5px rgba(255,255,255,0.4)"
       >
         {previewsLoading || previewsError ? (
           <Text>Loading...</Text>
@@ -70,31 +77,41 @@ function ScrollPiece({ preview }: { preview: PlaylistPreview }) {
       direction="row"
       p="10px"
       color="white"
-      _hover={{ cursor: "pointer", transform: "scale(1.02)" }}
+      _hover={{
+        cursor: "pointer",
+      }}
       transition="0.3s"
       onClick={handleSelect}
       bg="black"
-      boxShadow="inset -10px 0px 8px -5px rgba(255,255,255,0.4)"
+      boxShadow="inset -15px 0px 10px -5px rgba(255,255,255,0.25)"
     >
-      {preview.imageUrl ? (
+      <Flex
+        borderRadius="25%"
+        overflow="hidden"
+        mr="5px"
+        minW="100px"
+        minH="100px"
+      >
         <Image
-          src={preview.imageUrl ?? ""}
+          src={
+            preview.imageUrl ??
+            "https://d1770vzirffftt.cloudfront.net/public/default.jpg"
+          }
           alt="Playlist Cover"
           width={100}
           height={100}
           quality={90}
         />
-      ) : (
-        <Box w="200px" h="200px" />
-      )}
+      </Flex>
+
       <Flex flex={1} direction="column" ml="10px" fontFamily="body">
-        <Text fontSize="50px" lineHeight="50px" fontFamily="tech">
+        <Text fontSize="50px" lineHeight="50px" fontFamily="tech" noOfLines={1}>
           {preview.name.toUpperCase()}
         </Text>
-        <Text ml="5px" fontSize="15px" lineHeight="15px">
+        <Text ml="5px" fontSize="15px" lineHeight="15px" noOfLines={1}>
           Kandi: {preview.kandiCount}
         </Text>
-        <Text ml="5px">
+        <Text ml="5px" noOfLines={1}>
           {preview.description ? `"${preview.description}"` : ""}
         </Text>
       </Flex>

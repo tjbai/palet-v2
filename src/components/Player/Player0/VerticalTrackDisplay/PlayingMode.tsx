@@ -57,7 +57,7 @@ export default function PlayingMode() {
       >
         {currentTrack
           ? playlistContext?.name.padEnd(10, " ").toUpperCase()
-          : browsePlaylistContext?.name.padEnd(10, " ").toUpperCase()}
+          : browsePlaylistContext?.name?.padEnd(10, " ").toUpperCase()}
       </Text>
 
       <Flex direction="column">

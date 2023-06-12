@@ -4,12 +4,12 @@ import { fisherYates, bi2n } from "../../util";
 
 export const fetchPlaylistContext = (
   routeAlias: string | null
-): Promise<PlaylistContext | null> => {
+): Promise<{ playlistContext?: PlaylistContext | null; error?: string }> => {
   return new Promise(async (resolve, reject) => {
-    if (!routeAlias) resolve(null);
+    if (!routeAlias) resolve({ playlistContext: null });
 
     try {
-      const prismaRes = await prisma.static_playlists_v2.findUniqueOrThrow({
+      const prismaRes = await prisma.static_playlists_v2.findUnique({
         where: {
           route_alias: routeAlias!,
         },
@@ -22,7 +22,12 @@ export const fetchPlaylistContext = (
         },
       });
 
-      const shuffle = fisherYates(prismaRes?.playlists_tracks_v2.length);
+      if (!prismaRes) {
+        resolve({ error: "Playlist not found" });
+        return;
+      }
+
+      const shuffle = fisherYates(prismaRes.playlists_tracks_v2.length);
 
       const playlistContext = {
         id: bi2n(prismaRes?.id),
@@ -44,7 +49,7 @@ export const fetchPlaylistContext = (
         shuffledIndex: shuffle.indexOf(0),
       } as PlaylistContext;
 
-      resolve(playlistContext);
+      resolve({ playlistContext });
     } catch (error) {
       console.error(error);
       reject(error);
