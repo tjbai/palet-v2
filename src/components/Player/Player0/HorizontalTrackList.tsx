@@ -22,6 +22,8 @@ export default function TrackListController() {
     return () => clearTimeout(timeout);
   }, [currentTrack]);
 
+  console.log(browsePlaylistContext?.name);
+
   return (
     <Flex
       w="100%"

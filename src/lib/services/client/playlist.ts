@@ -15,7 +15,7 @@ export const fetchPlaylistSongs = async ({
   });
 
   if (data.error) return null;
-  return data.playlistContext;
+  return data.playlistContext.playlistContext; // this is fked chill
 };
 
 export const fetchPlaylistPreviews = async () => {

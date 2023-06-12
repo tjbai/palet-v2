@@ -76,6 +76,7 @@ export default function PlayerController({
 
   useEffect(() => {
     setBrowsePlaylistContext(browsePlaylistData);
+    console.log(browsePlaylistData);
   }, [browsePlaylistData]);
 
   return (
