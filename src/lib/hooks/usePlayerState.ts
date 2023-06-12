@@ -8,6 +8,7 @@ import { useQueryStates } from "./Query/useQueryStates";
 import { queryTypes } from "next-usequerystate";
 import { stringify } from "querystring";
 import { type } from "os";
+import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 
 const MODE_LOWER_BOUND = 0;
 const MODE_UPPER_BOUND = 2;
@@ -110,7 +111,7 @@ export default function usePlayerState() {
   };
 
   const selectSong = (name: string) => {
-    if (isEqual(playlistContext, browsePlaylistContext)) {
+    if (!isEqual(playlistContext, browsePlaylistContext)) {
       if (!browsePlaylistContext || currentTrack?.name === name) return;
 
       const index = browsePlaylistContext.songs.findIndex(

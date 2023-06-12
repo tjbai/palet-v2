@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Icon, Input, Text } from "@chakra-ui/react";
 import PlaybackIndicator from "./PlaybackIndicator";
 import { usePlayer } from "@/components/Providers/PlayerProvider";
 import { PlaylistPreview } from "@/lib/types";
@@ -6,6 +6,7 @@ import { msToTime } from "@/lib/util";
 import Image from "next/image";
 import { useModal } from "@/components/Providers/ModalProvider";
 import { usePlayerController } from "../../PlayerController";
+import { BiFilter } from "react-icons/bi";
 
 export default function DiscoverMode() {
   const { playlistPreviews, previewsLoading, previewsError } =
@@ -34,6 +35,16 @@ export default function DiscoverMode() {
           DISCOVER
         </Text>
         <PlaybackIndicator color="dark_orange" />
+        {/* <Flex w="100%" direction="row">
+          <Input
+            variant="flushed"
+            color="white"
+            _placeholder={{ color: "white" }}
+            placeholder="search"
+            _hover={{ cursor: "not-allowed" }}
+          />
+          <Icon as={BiFilter} color="white" />
+        </Flex> */}
       </Flex>
 
       <Flex
@@ -45,10 +56,9 @@ export default function DiscoverMode() {
         maxH="calc(100% - 150px)"
         top="150px"
         overflowY="scroll"
-        // boxShadow="inset 0px -10px 8px -5px rgba(255,255,255,0.4)"
       >
         {previewsLoading || previewsError ? (
-          <Text>Loading...</Text>
+          <Text color="white">Loading...</Text>
         ) : (
           playlistPreviews?.map((preview) => (
             <ScrollPiece key={preview.id} preview={preview} />
@@ -111,7 +121,7 @@ function ScrollPiece({ preview }: { preview: PlaylistPreview }) {
         <Text ml="5px" fontSize="15px" lineHeight="15px" noOfLines={1}>
           Kandi: {preview.kandiCount}
         </Text>
-        <Text ml="5px" noOfLines={1}>
+        <Text ml="5px">
           {preview.description ? `"${preview.description}"` : ""}
         </Text>
       </Flex>

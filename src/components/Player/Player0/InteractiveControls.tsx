@@ -139,7 +139,7 @@ const GeneralControlButtons = () => {
 };
 
 const ModularControlButtons = () => {
-  const { setDiscoverModal } = useModal();
+  const { setDiscoverModal, discoverModal } = useModal();
 
   return (
     <HStack
@@ -154,7 +154,7 @@ const ModularControlButtons = () => {
       borderRadius="20px"
     >
       <SmallButtonGeneric
-        color="#B8CCE0"
+        color={discoverModal ? "orange" : "#B8CCE0"}
         onClick={() => setDiscoverModal((p) => !p)}
       >
         <Icon as={ImSearch} />

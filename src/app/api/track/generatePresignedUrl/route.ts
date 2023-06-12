@@ -7,8 +7,6 @@ interface RequestBody {
 
 // took me way too long to figure this out
 export async function POST(request: NextRequest) {
-  console.log("RECEIVED A REQUEST HERE");
-
   const data: RequestBody = await request.json();
   const { audioFilePath } = data;
 
@@ -24,8 +22,6 @@ export async function POST(request: NextRequest) {
   );
   const privateKey = Buffer.from(privateKeyEncoded, "base64").toString("utf-8");
   const keyPairId = process.env.CDN_PUBLIC_KEY_ID as string;
-
-  console.log(privateKey);
 
   // set expiration date for 2 hours
   const now = new Date();

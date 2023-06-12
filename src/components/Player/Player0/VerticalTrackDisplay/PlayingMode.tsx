@@ -14,8 +14,6 @@ export default function PlayingMode() {
     browse,
   } = usePlayer();
 
-  console.log(browsePlaylistContext?.name);
-
   return (
     <>
       <Text
