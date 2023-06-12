@@ -97,7 +97,6 @@ export default function PlayerController({
     >
       <KeyEvents />
       <PlayerControllerWrapper>
-        <DiscoverModal />
         <PlayerControllerInner playlistContext={playlistContext} />
         <PlayerSwitcher />
       </PlayerControllerWrapper>
@@ -121,12 +120,12 @@ function PlayerControllerInner({
       return (
         <>
           <Player0 playlistContext={playlistContext} />
-          <Hide above="md">
+          <Flex display={{ base: "flex", md: "none" }}>
             <BottomGradientOverlay
               start={{ red: 255, green: 255, blue: 255, opacity: 0.5 }}
               end={{ red: 255, green: 255, blue: 255, opacity: 0 }}
             />
-          </Hide>
+          </Flex>
         </>
       );
     case 1:
@@ -156,12 +155,12 @@ function PlayerControllerInner({
       return (
         <>
           <Player0 playlistContext={playlistContext} />
-          <Hide above="md">
+          <Flex display={{ base: "flex", md: "none" }}>
             <BottomGradientOverlay
               start={{ red: 255, green: 255, blue: 255, opacity: 0.5 }}
               end={{ red: 255, green: 255, blue: 255, opacity: 0 }}
             />
-          </Hide>
+          </Flex>
         </>
       );
   }

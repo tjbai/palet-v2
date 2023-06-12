@@ -1,38 +1,21 @@
 import { usePlayer } from "@/components/Providers/PlayerProvider";
 import { artistsToString, msToTime } from "@/lib/util";
-import { Box, Flex, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { usePlayerController } from "../PlayerController";
+import { Flex, Text, Box } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { usePlayerController } from "../../PlayerController";
+import PlaybackIndicator from "./PlaybackIndicator";
 
-export default function VerticalTrackDisplay() {
-  const { playlistContext, currentTrack, playTime, browsePlaylistContext } =
-    usePlayer();
-  const [offset, setOffset] = useState(0);
-  const { browse } = usePlayer();
-
-  useEffect(() => {
-    if (!currentTrack) return;
-    const elapsedPercentage = (playTime * 1000) / currentTrack.durationMs;
-    const newOffset = elapsedPercentage * (window.innerWidth * 0.4 - 100);
-    setOffset(newOffset);
-  }, [playTime]);
+export default function PlayingMode() {
+  const {
+    playlistContext,
+    currentTrack,
+    playTime,
+    browsePlaylistContext,
+    browse,
+  } = usePlayer();
 
   return (
-    <Flex
-      h="100%"
-      flex={2}
-      mr={{ base: "0px", md: "10px" }}
-      borderRadius="15px"
-      bg="black"
-      fontFamily="tech"
-      maxW={{ base: "100%", md: "40%" }}
-      direction="column"
-      overflow="hidden"
-      pt="5px"
-      pl="15px"
-      overflowY="scroll"
-      boxShadow="inset -5px -5px 20px rgba(255,255,255,0.4)"
-    >
+    <>
       <Text
         color="white"
         mb="10px"
@@ -78,31 +61,10 @@ export default function VerticalTrackDisplay() {
       </Text>
 
       <Flex direction="column">
-        <Flex
-          w="calc(100% - 15px)"
-          border="0.5px solid white"
-          mt="10px"
-          h="0px"
-        >
-          <Box
-            h="12px"
-            w="12px"
-            borderRadius="50%"
-            bg="purple"
-            position="relative"
-            top="-6px"
-            left="-5px"
-            transform={`translateX(${offset}px)`}
-            transition="1s linear transform"
-          />
-        </Flex>
-        <Flex justify="space-between" color="white" mr="15px" mt="5px">
-          <Text>{msToTime(playTime * 1000)}</Text>
-          <Text>{msToTime(currentTrack?.durationMs)}</Text>
-        </Flex>
+        <PlaybackIndicator />
         <PlaylistDashboard />
       </Flex>
-    </Flex>
+    </>
   );
 }
 
@@ -170,44 +132,3 @@ function PlaylistDashboard() {
     </Flex>
   );
 }
-
-/*
-function PlaylistNameGrid({ name }: { name: string | undefined }) {
-  const rows = 2;
-  const cols = 5;
-
-  if (!name) return null;
-
-  const rcToIndex = (r: number, c: number) => {
-    return r * cols + c;
-  };
-
-  return (
-    <Flex pt="15px" m={0} direction="column" border="1px solid red" mr="-100px">
-      {Array.from({ length: rows }).map((_, r) => (
-        <Flex key={r} direction="row" border="1px solid green">
-          {Array.from({ length: cols }).map((_, c) => {
-            const i = rcToIndex(r, c);
-            return (
-              <Box
-                key={i}
-                fontSize="200px"
-                lineHeight="140px"
-                color={
-                  i >= name.length || name.charAt(i) == " "
-                    ? "#212121"
-                    : "purple"
-                }
-              >
-                {i >= name.length || name.charAt(i) == " "
-                  ? "X"
-                  : name.charAt(i).toUpperCase()}
-              </Box>
-            );
-          })}
-        </Flex>
-      ))}
-    </Flex>
-  );
-}
-*/

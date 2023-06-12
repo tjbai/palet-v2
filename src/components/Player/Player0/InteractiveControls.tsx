@@ -153,10 +153,9 @@ const ModularControlButtons = () => {
       justify="center"
       borderRadius="20px"
     >
-      {/* <ModularButtonGeneric innerColor="#141414" /> */}
       <SmallButtonGeneric
         color="#B8CCE0"
-        // onClick={() => setDiscoverModal(true)}
+        onClick={() => setDiscoverModal((p) => !p)}
       >
         <Icon as={ImSearch} />
       </SmallButtonGeneric>

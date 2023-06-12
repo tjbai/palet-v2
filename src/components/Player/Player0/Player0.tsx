@@ -8,6 +8,8 @@ import { useEffect } from "react";
 import HorizontalTrackList from "./HorizontalTrackList";
 import InteractiveControls from "./InteractiveControls";
 import VerticalTrackDisplay from "./VerticalTrackDisplay";
+import { useModal } from "@/components/Providers/ModalProvider";
+import DiscoverMode from "./VerticalTrackDisplay/DiscoverMode";
 
 export default function Player0({
   playlistContext,
