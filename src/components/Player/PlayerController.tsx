@@ -1,21 +1,20 @@
 "use client";
 
 import {
+  BROWSE_PLAYLIST_CONTEXT_QUERY,
+  PLAYLIST_PREVIEWS_QUERY,
+  USER_DONATIONS_QUERY,
+} from "@/lib/constants";
+import {
   fetchPlaylistPreviews,
   fetchPlaylistSongs,
 } from "@/lib/services/client/playlist";
+import { fetchUserDonations } from "@/lib/services/client/user";
 import { PlaylistContext, PlaylistPreview, UserDonations } from "@/lib/types";
 import { searchParamToPlayerState } from "@/lib/util";
-import { Box, Flex, HStack, Hide } from "@chakra-ui/react";
-import {
-  ReactNode,
-  Suspense,
-  createContext,
-  useContext,
-  useEffect,
-} from "react";
-import { isError, useQuery } from "react-query";
-import DiscoverModal from "../Modals/DiscoverModal";
+import { Box, Flex, HStack } from "@chakra-ui/react";
+import { ReactNode, createContext, useContext, useEffect } from "react";
+import { useQuery } from "react-query";
 import { usePlayer } from "../Providers/PlayerProvider";
 import BottomGradientOverlay from "./BottomGradientOverlay";
 import Controls from "./Controls";
@@ -24,12 +23,6 @@ import NowPlaying from "./NowPlaying";
 import Player0 from "./Player0";
 import Player1 from "./Player1";
 import Player2 from "./Player2";
-import { fetchUserDonations } from "@/lib/services/client/user";
-import {
-  BROWSE_PLAYLIST_CONTEXT_QUERY,
-  PLAYLIST_PREVIEWS_QUERY,
-  USER_DONATIONS_QUERY,
-} from "@/lib/constants";
 
 export type SearchParam = string | string[] | undefined;
 

@@ -1,14 +1,13 @@
-import { searchParamToPlayerState } from "@/lib/util";
+import useKandi from "@/lib/hooks/useKandi";
 import { Flex, useToast } from "@chakra-ui/react";
-import { type } from "os";
 import { useEffect } from "react";
 import Kandi from "../Common/Kandi";
-import useKandi from "@/lib/hooks/useKandi";
 import { usePlayer } from "../Providers/PlayerProvider";
+import { BiToggleLeft } from "react-icons/bi";
 
 export default function KeyEvents() {
   const { handleDonation } = useKandi();
-  const { prevMode, nextMode } = usePlayer();
+  const { prevMode, nextMode, toggle, toggleShuffle } = usePlayer();
   const toast = useToast();
 
   useEffect(() => {
@@ -40,6 +39,12 @@ export default function KeyEvents() {
       } else if (e.code === "ArrowRight") {
         e.preventDefault();
         nextMode();
+      } else if (e.code === "KeyP") {
+        e.preventDefault();
+        toggle();
+      } else if (e.code === "KeyS") {
+        e.preventDefault();
+        toggleShuffle();
       }
     };
 

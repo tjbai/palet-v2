@@ -2,17 +2,18 @@ import BelowNowPlayingError from "@/components/Common/BelowNowPlayingError";
 import PlayerController from "@/components/Player/PlayerController";
 import { fetchPlaylistContext } from "@/lib/services/server/playlist";
 import { PlaylistContext } from "@/lib/types";
+import prisma from "../../../prisma";
 
 export const revalidate = 60; // revalidate ISR every minute
 
 // Enables ISR
-// export async function generateStaticParams() {
-//   const playlists = await prisma.static_playlists_v2.findMany();
-//   const playlistNames = playlists.map((playlist) => ({
-//     playlistName: playlist.route_alias,
-//   }));
-//   return playlistNames;
-// }
+export async function generateStaticParams() {
+  const playlists = await prisma.static_playlists_v2.findMany();
+  const playlistNames = playlists.map((playlist) => ({
+    playlistName: playlist.route_alias,
+  }));
+  return playlistNames;
+}
 
 interface FetchReturnObject {
   playlistContext?: PlaylistContext | null;
