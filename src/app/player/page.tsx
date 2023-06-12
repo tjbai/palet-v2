@@ -7,7 +7,7 @@ export const revalidate = 60; // revalidate ISR every minute
 
 // Enables ISR
 // export async function generateStaticParams() {
-//   const playlists = await prisma.static_playlists.findMany();
+//   const playlists = await prisma.static_playlists_v2.findMany();
 //   const playlistNames = playlists.map((playlist) => ({
 //     playlistName: playlist.route_alias,
 //   }));

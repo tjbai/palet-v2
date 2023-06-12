@@ -1,3 +1,4 @@
+import styleConstants from "@/lib/chakra/styleConstants";
 import { Flex } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
@@ -18,7 +19,7 @@ export default function BelowNowPlayingWrapper(props: {
     >
       <Flex
         position="relative"
-        top={{ base: "115px", md: "130px" }}
+        top={{ base: "105px", md: "120px" }}
         direction="column"
         overflowX="scroll"
         pt={`${props.padding}px`}

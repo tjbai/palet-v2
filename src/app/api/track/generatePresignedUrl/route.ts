@@ -1,7 +1,5 @@
 import { getSignedUrl } from "@aws-sdk/cloudfront-signer";
-import { url } from "inspector";
 import { NextRequest, NextResponse } from "next/server";
-import querystring from "querystring";
 
 interface RequestBody {
   audioFilePath: string;
@@ -9,6 +7,8 @@ interface RequestBody {
 
 // took me way too long to figure this out
 export async function POST(request: NextRequest) {
+  console.log("RECEIVED A REQUEST HERE");
+
   const data: RequestBody = await request.json();
   const { audioFilePath } = data;
 
@@ -16,10 +16,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Need to pass in file path" });
   }
 
-  // create path
-  // const encodedAudioFilePath = querystring.escape(audioFilePath);
-  // const cdnDomain = process.env.NEXT_PUBLIC_CDN_BASE_URL;
-  // const url = `${cdnDomain}/${encodedAudioFilePath}`;
   const url = audioFilePath;
 
   // grab keys
@@ -28,6 +24,8 @@ export async function POST(request: NextRequest) {
   );
   const privateKey = Buffer.from(privateKeyEncoded, "base64").toString("utf-8");
   const keyPairId = process.env.CDN_PUBLIC_KEY_ID as string;
+
+  console.log(privateKey);
 
   // set expiration date for 2 hours
   const now = new Date();

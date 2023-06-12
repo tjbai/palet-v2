@@ -26,14 +26,6 @@ export default function usePlayerState() {
 
   const queryClient = useQueryClient();
 
-  // const [typeQuery, setTypeQuery] = useQueryState("type", {
-  //   parse: (query: string) => parseInt(query),
-  //   serialize: (value) => value.toString(),
-  // });
-  // const [crateQuery, setCrateQuery] = useQueryState("crate");
-  // TODO: Figure out a smoother way to persist state in query params
-  // const { setQueryParams } = useQueryParams<PlayerQueryParams>();
-
   const [playerQueries, setPlayerQueries] = useQueryStates(
     {
       type: queryTypes.string,
@@ -128,7 +120,6 @@ export default function usePlayerState() {
       const shuffledIndex = browsePlaylistContext.shuffledOrder.indexOf(index);
 
       setPlaylistContext({ ...browsePlaylistContext, index, shuffledIndex });
-      setPlaying((p) => true);
     } else {
       if (!playlistContext || currentTrack?.name === name) return;
 
@@ -143,8 +134,12 @@ export default function usePlayerState() {
         index,
         shuffledIndex,
       });
-      setPlaying((p) => true);
     }
+
+    // idek
+    setTimeout(() => {
+      setPlaying(true);
+    }, 1000);
   };
 
   const toggle = () => {

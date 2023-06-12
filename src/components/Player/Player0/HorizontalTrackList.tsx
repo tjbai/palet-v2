@@ -105,7 +105,11 @@ export default function TrackListController() {
                 height="13px"
                 ml="5px"
               />
-              <Box color="orange" ml="10px" mr="10px">
+              <Box
+                color={s.kandiCount > 0 ? "orange" : "grey"}
+                ml="10px"
+                mr="10px"
+              >
                 {s.kandiCount}
               </Box>
             </Flex>

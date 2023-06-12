@@ -11,6 +11,7 @@ import { useMutation, useQueryClient } from "react-query";
 import BelowNowPlayingWrapper from "../BelowNowPlayingWrapper";
 import { usePlayerController } from "../PlayerController";
 import { px } from "framer-motion";
+import styleConstants from "@/lib/chakra/styleConstants";
 
 export default function Player1({
   playlistContext,
@@ -34,11 +35,21 @@ export default function Player1({
   }, [currentTrack]);
 
   return (
-    <BelowNowPlayingWrapper height={100} padding={15}>
+    <Flex
+      h="calc(100vh - 120px)"
+      top="120px"
+      position="absolute"
+      flex={1}
+      direction="column"
+      overflowY="scroll"
+    >
       {playlistContext?.songs.map((song: NowPlaying, index: number) => (
         <ScrollPiece key={song.id} song={song} index={index} />
       ))}
-    </BelowNowPlayingWrapper>
+    </Flex>
+    // <BelowNowPlayingWrapper height={100} padding={15}>
+
+    // </BelowNowPlayingWrapper>
   );
 }
 
@@ -175,10 +186,6 @@ function KandiBarPiece({
       );
       setHighlightThreshold(baseline);
     },
-
-    onSettled: () => {
-      queryClient.invalidateQueries(USER_DONATIONS_QUERY);
-    },
   });
 
   return (
@@ -192,7 +199,7 @@ function KandiBarPiece({
       color={index <= highlightThreshold ? "white" : "black"}
       bg={index <= highlightThreshold ? COLORS[index - 1] : "transparent"}
       border="1px solid"
-      borderColor={index <= highlightThreshold ? COLORS[index - 1] : "black"}
+      borderColor={"black"}
       borderLeftRadius={index === 1 ? "2vw" : "0px"}
       borderRightRadius={index === 5 ? "2vw" : "0px"}
       p="0.5vw"

@@ -21,11 +21,11 @@ export default function VerticalTrackDisplay() {
     <Flex
       h="100%"
       flex={2}
-      mr="10px"
+      mr={{ base: "0px", md: "10px" }}
       borderRadius="15px"
       bg="black"
       fontFamily="tech"
-      maxW="40%"
+      maxW={{ base: "100%", md: "40%" }}
       direction="column"
       overflow="hidden"
       pt="5px"
@@ -51,7 +51,7 @@ export default function VerticalTrackDisplay() {
               msToTime(playTime * 1000) +
               "/" +
               msToTime(currentTrack?.durationMs) +
-              ") from: "
+              ")"
             : ""
           : ""}
       </Text>

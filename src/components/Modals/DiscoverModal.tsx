@@ -14,11 +14,11 @@ import { useEffect, useState } from "react";
 import { useModal } from "../Providers/ModalProvider";
 import { usePlayerController } from "../Player/PlayerController";
 import { usePlayer } from "../Providers/PlayerProvider";
+import styleConstants from "@/lib/chakra/styleConstants";
 
 export default function DiscoverModal() {
   const { playlistPreviews, previewsLoading, previewsError } =
     usePlayerController();
-  const [displayedPreviews, setDisplayedPreviews] = useState(playlistPreviews);
   const [search, setSearch] = useState("");
   const { discoverModal, setDiscoverModal } = useModal();
 
@@ -27,26 +27,48 @@ export default function DiscoverModal() {
     return list?.filter((preview) => preview.name.startsWith(search));
   };
 
-  useEffect(() => {
-    setDisplayedPreviews(filterByMatch(playlistPreviews));
-  }, [playlistPreviews, search]);
+  // useEffect(() => {
+  //   setDisplayedPreviews(filterByMatch(playlistPreviews));
+  // }, [playlistPreviews, search]);
 
   if (previewsLoading || previewsError) return null;
 
   return (
     <Drawer
-      isOpen={discoverModal}
+      isOpen={false}
       onClose={() => setDiscoverModal(false)}
-      placement="right"
-      size="xl"
+      placement="left"
+      size="full"
+      blockScrollOnMount
+      preserveScrollBarGap
     >
-      <DrawerOverlay />
-      <DrawerContent bg="bg" pl="10px" w="100%">
-        <DrawerCloseButton color="white" zIndex={5} />
-        <Flex flex={1} direction="column" overflowY="scroll" bg="black">
-          {displayedPreviews?.map((preview) => (
-            <ScrollPiece key={preview.id} preview={preview} />
-          ))}
+      {/* <DrawerOverlay /> */}
+      <DrawerContent w="100%" bg="transparent" p={0}>
+        {/* <DrawerCloseButton color="white" zIndex={5} /> */}
+        <Flex
+          flex={1}
+          direction="column"
+          overflowY="scroll"
+          bg="transparent"
+          pr="10px"
+        >
+          <Flex
+            maxW="40%"
+            position="relative"
+            h={`calc(100vh - ${styleConstants.headerHeight} - 30px)`}
+            top={styleConstants.headerHeight}
+            overflowX="scroll"
+            direction="column"
+            bg="black"
+            borderRightRadius="10px"
+            boxShadow="inset -5px -5px 20px rgba(255,255,255,0.4)"
+          >
+            {/* <Flex flex={1} direction="column" border="1px solid red"> */}
+            {playlistPreviews?.map((preview) => (
+              <ScrollPiece key={preview.id} preview={preview} />
+            ))}
+            {/* </Flex> */}
+          </Flex>
         </Flex>
       </DrawerContent>
     </Drawer>
@@ -71,9 +93,11 @@ function ScrollPiece({ preview }: { preview: PlaylistPreview }) {
       direction="row"
       p="10px"
       color="white"
-      _hover={{ cursor: "pointer", transform: "scale(1.03)" }}
+      _hover={{ cursor: "pointer" }}
       transition="0.3s"
       onClick={handleSelect}
+      bg="black"
+      boxShadow="inset -10px 0px 8px -5px rgba(255,255,255,0.4)"
     >
       {preview.imageUrl ? (
         <Image

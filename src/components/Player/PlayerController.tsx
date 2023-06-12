@@ -6,7 +6,7 @@ import {
 } from "@/lib/services/client/playlist";
 import { PlaylistContext, PlaylistPreview, UserDonations } from "@/lib/types";
 import { searchParamToPlayerState } from "@/lib/util";
-import { Box, Flex, HStack } from "@chakra-ui/react";
+import { Box, Flex, HStack, Hide } from "@chakra-ui/react";
 import {
   ReactNode,
   Suspense,
@@ -99,9 +99,7 @@ export default function PlayerController({
       <PlayerControllerWrapper>
         <DiscoverModal />
         <PlayerControllerInner playlistContext={playlistContext} />
-        <Suspense fallback={null}>
-          <PlayerSwitcher />
-        </Suspense>
+        <PlayerSwitcher />
       </PlayerControllerWrapper>
     </playerControllerContext.Provider>
   );
@@ -120,7 +118,17 @@ function PlayerControllerInner({
 
   switch (playerDisplayMode) {
     case 0:
-      return <Player0 playlistContext={playlistContext} />;
+      return (
+        <>
+          <Player0 playlistContext={playlistContext} />
+          <Hide above="md">
+            <BottomGradientOverlay
+              start={{ red: 255, green: 255, blue: 255, opacity: 0.5 }}
+              end={{ red: 255, green: 255, blue: 255, opacity: 0 }}
+            />
+          </Hide>
+        </>
+      );
     case 1:
       return (
         <>
@@ -145,7 +153,17 @@ function PlayerControllerInner({
         </>
       );
     default:
-      return <Player0 playlistContext={playlistContext} />;
+      return (
+        <>
+          <Player0 playlistContext={playlistContext} />
+          <Hide above="md">
+            <BottomGradientOverlay
+              start={{ red: 255, green: 255, blue: 255, opacity: 0.5 }}
+              end={{ red: 255, green: 255, blue: 255, opacity: 0 }}
+            />
+          </Hide>
+        </>
+      );
   }
 }
 
@@ -195,8 +213,8 @@ function PlayerCircle({ circleState }: { circleState: number }) {
 
   return (
     <Box
-      w={{ base: "20px", md: "10px" }}
-      h={{ base: "20px", md: "10px" }}
+      w={{ base: "30px", md: "10px" }}
+      h={{ base: "30px", md: "10px" }}
       bg={playerDisplayMode === circleState ? "black" : "transparent"}
       border="1px solid black"
       borderRadius="100%"

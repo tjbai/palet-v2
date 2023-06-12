@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { usePlayer } from "../Providers/PlayerProvider";
 import { useStyles } from "../Providers/StyleProvider";
 import Controls from "./Controls";
+import styleConstants from "@/lib/chakra/styleConstants";
 
 export default function NowPlaying() {
   const { gradient } = useStyles();
@@ -15,7 +16,7 @@ export default function NowPlaying() {
       w="calc(100vw - 50px)"
       borderY="1px solid"
       h={{ base: "45px", md: "60px" }}
-      top="70px"
+      top={styleConstants.headerHeight}
       position="fixed"
       align="center"
       justify="space-between"

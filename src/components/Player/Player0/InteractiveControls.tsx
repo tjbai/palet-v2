@@ -156,7 +156,7 @@ const ModularControlButtons = () => {
       {/* <ModularButtonGeneric innerColor="#141414" /> */}
       <SmallButtonGeneric
         color="#B8CCE0"
-        onClick={() => setDiscoverModal(true)}
+        // onClick={() => setDiscoverModal(true)}
       >
         <Icon as={ImSearch} />
       </SmallButtonGeneric>

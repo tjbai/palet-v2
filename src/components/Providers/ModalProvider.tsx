@@ -27,10 +27,10 @@ export default function ModalProvider(props: { children: ReactNode }) {
   const [joinModal, setJoinModal] = useState(false);
   const [discoverModal, setDiscoverModal] = useState(false);
 
-  useEffect(() => {
-    if (!browsePlaylistContext && !playlistContext) setDiscoverModal(true);
-    else setDiscoverModal(false);
-  }, [browsePlaylistContext, playlistContext]);
+  // useEffect(() => {
+  //   if (!browsePlaylistContext && !playlistContext) setDiscoverModal(true);
+  //   else setDiscoverModal(false);
+  // }, [browsePlaylistContext, playlistContext]);
 
   return (
     <modalContext.Provider
