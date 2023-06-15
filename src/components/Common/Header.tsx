@@ -153,7 +153,7 @@ function Promotional() {
         as={Instagram}
         _hover={{ cursor: "pointer" }}
         onClick={() => {
-          window.open("https://www.instagram.com/palet.edm/", "_blank");
+          window.open("https://www.instagram.com/palet.music/", "_blank");
         }}
       />
       <Icon

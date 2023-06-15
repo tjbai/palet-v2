@@ -1,10 +1,9 @@
 import type { WebhookEvent } from "@clerk/clerk-sdk-node";
-import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 import prisma from "../../../../../prisma";
 
-const DEFAULT_STARTING_KANDI = 100;
+const DEFAULT_STARTING_KANDI = 50;
 
 export async function POST(request: Request) {
   try {
