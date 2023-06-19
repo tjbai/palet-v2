@@ -2,7 +2,7 @@
 
 import styleConstants from "@/lib/chakra/styleConstants";
 import { Link as NextLink } from "@chakra-ui/next-js";
-import { Link as ChakraLink, Flex, Icon, Text } from "@chakra-ui/react";
+import { Flex, Icon, Text } from "@chakra-ui/react";
 import { UserButton } from "@clerk/nextjs";
 import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";

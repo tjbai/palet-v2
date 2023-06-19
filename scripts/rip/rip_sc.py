@@ -112,17 +112,19 @@ if __name__ == "__main__":
 
     # scrape_playlist_tracks(url)
 
-    # download_mp3s(
-    #     "https://soundcloud.com/alex-kernagis/sets/club/s-ILPGsQNghcO?si=c9a221b6707440d78f8ab47a23129020&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
-    #     "Club",
-    #     "club",
-    # )
-    # yield_metadata("afiles.nosync/club")
-    upload_to_pg(
-        "The Kernagis Club Mix",
-        "https://soundcloud.com/alex-kernagis/sets/club/s-ILPGsQNghcO?si=c9a221b6707440d78f8ab47a23129020&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
-        "pickles/club.pickle",
+    print('hello')
+
+    download_mp3s(
+        "https://soundcloud.com/palet-music/sets/berlin-techno/s-1xOB6mWR37F?si=f516edda01c040b5bcab74989d1033e3&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
+        "Club",
+        "club",
     )
+    # yield_metadata("afiles.nosync/club")
+    # upload_to_pg(
+    #     "The Kernagis Club Mix",
+    #     "https://soundcloud.com/alex-kernagis/sets/club/s-ILPGsQNghcO?si=c9a221b6707440d78f8ab47a23129020&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
+    #     "pickles/club.pickle",
+    # )
 
 
 # DECLARE
