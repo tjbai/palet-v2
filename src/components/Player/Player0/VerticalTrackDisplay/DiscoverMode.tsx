@@ -35,16 +35,6 @@ export default function DiscoverMode() {
           DISCOVER
         </Text>
         <PlaybackIndicator color="dark_orange" />
-        {/* <Flex w="100%" direction="row">
-          <Input
-            variant="flushed"
-            color="white"
-            _placeholder={{ color: "white" }}
-            placeholder="search"
-            _hover={{ cursor: "not-allowed" }}
-          />
-          <Icon as={BiFilter} color="white" />
-        </Flex> */}
       </Flex>
 
       <Flex

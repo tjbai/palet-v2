@@ -19,7 +19,6 @@ export default function VerticalTrackDisplay() {
       overflow="hidden"
       pt="5px"
       pl="15px"
-      // overflowY="scroll"
       boxShadow="inset -5px -5px 20px rgba(255,255,255,0.4)"
       position="relative"
     >

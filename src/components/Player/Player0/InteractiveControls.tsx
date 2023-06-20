@@ -30,7 +30,7 @@ export default function InteractiveControls() {
   return (
     <Flex w="100%" flex={1}>
       <Flex flex={3} direction="row" pt="20px">
-        <Flex direction="column" h="100%" flex={2}>
+        <Flex direction="column" h="100%" flex={2} ml="5px">
           <DiscoveryModeSwitcherButtons />
         </Flex>
         <Flex direction="column" flex={7}>

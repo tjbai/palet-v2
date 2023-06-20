@@ -1,17 +1,31 @@
 import axios from "axios";
 import { isEqual } from "lodash";
+import { queryTypes } from "next-usequerystate";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { BROWSE_PLAYLIST_CONTEXT_QUERY } from "../constants";
 import { NowPlaying, PlaylistContext } from "../types";
 import { useQueryStates } from "./Query/useQueryStates";
-import { queryTypes } from "next-usequerystate";
-import { stringify } from "querystring";
-import { type } from "os";
-import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 
 const MODE_LOWER_BOUND = 0;
 const MODE_UPPER_BOUND = 2;
+
+// quick and dirty solution to autoplaying a new playlist
+const AUTO_PLAY = [
+  "shibuyuhh club mix",
+  "soho",
+  "jdm",
+  "marmix",
+  "pmixv6",
+  "french_riviera",
+  "espresso",
+  "pmixv3",
+  "smm",
+  "pmixv1",
+  "pmixv4",
+  "pmixv2",
+  "berlin",
+];
 
 export default function usePlayerState() {
   const [playlistContext, setPlaylistContext] =
@@ -24,9 +38,9 @@ export default function usePlayerState() {
   const [loading, setLoading] = useState<boolean>(false);
   const [playerDisplayMode, setPlayerDisplayMode] = useState(0);
   const [shuffled, setShuffled] = useState(false);
+  const [autoplay, setAutoplay] = useState({ on: false, prevName: "" });
 
   const queryClient = useQueryClient();
-
   const [playerQueries, setPlayerQueries] = useQueryStates(
     {
       type: queryTypes.string,
@@ -36,6 +50,13 @@ export default function usePlayerState() {
       history: "push",
     }
   );
+
+  useEffect(() => {
+    if (autoplay.on && autoplay.prevName !== browsePlaylistContext?.name) {
+      setAutoplay((p) => ({ ...p, on: false }));
+      selectSong(browsePlaylistContext?.songs[0].name!);
+    }
+  }, [browsePlaylistContext]);
 
   const updatePlayerState = async () => {
     if (!playlistContext || playlistContext.index === -1) return;
@@ -72,15 +93,24 @@ export default function usePlayerState() {
         shuffledIndex: newShuffledIndex,
       });
     } else {
-      const newSongIndex =
-        (playlistContext.index + 1) % playlistContext.songs.length;
-      const newShuffledIndex =
-        playlistContext.shuffledOrder.indexOf(newSongIndex);
-      setPlaylistContext({
-        ...playlistContext,
-        index: newSongIndex,
-        shuffledIndex: newShuffledIndex,
-      });
+      if (playlistContext.index + 1 == playlistContext.songs.length) {
+        const curIndex =
+          AUTO_PLAY.indexOf(playlistContext.routeAlias) !== -1
+            ? AUTO_PLAY.indexOf(playlistContext.routeAlias)
+            : 0;
+        const nextIndex = (curIndex + 1) % AUTO_PLAY.length;
+        setAutoplay({ on: true, prevName: browsePlaylistContext?.name! });
+        browse(AUTO_PLAY[nextIndex]);
+      } else {
+        const newSongIndex = playlistContext.index + 1;
+        const newShuffledIndex =
+          playlistContext.shuffledOrder.indexOf(newSongIndex);
+        setPlaylistContext({
+          ...playlistContext,
+          index: newSongIndex,
+          shuffledIndex: newShuffledIndex,
+        });
+      }
     }
   };
 
@@ -137,10 +167,7 @@ export default function usePlayerState() {
       });
     }
 
-    // idek
-    setTimeout(() => {
-      setPlaying(true);
-    }, 1000);
+    setTimeout(() => setPlaying(true), 1000);
   };
 
   const toggle = () => {
@@ -160,8 +187,6 @@ export default function usePlayerState() {
   const toggleShuffle = () => {
     setShuffled((p) => !p);
   };
-
-  /* Honestly, this section probably doesn't belong here */
 
   const setMode = async (mode: number) => {
     setPlayerDisplayMode(mode);

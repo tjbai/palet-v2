@@ -1,7 +1,7 @@
 import { usePlayer } from "@/components/Providers/PlayerProvider";
 import { artistsToString, msToTime } from "@/lib/util";
-import { Flex, Text, Box } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { Flex, Text } from "@chakra-ui/react";
+import { useState } from "react";
 import { usePlayerController } from "../../PlayerController";
 import PlaybackIndicator from "./PlaybackIndicator";
 
@@ -60,10 +60,9 @@ export default function PlayingMode() {
           : browsePlaylistContext?.name.padEnd(10, " ").toUpperCase()}
       </Text>
 
-      <Flex direction="column">
-        <PlaybackIndicator />
-        <PlaylistDashboard />
-      </Flex>
+      <PlaybackIndicator />
+
+      <PlaylistDashboard />
     </>
   );
 }
@@ -79,16 +78,22 @@ function PlaylistDashboard() {
   } = usePlayerController();
   const [displayMode, setDisplayMode] = useState("browse");
 
-  if (previewsLoading) return <Text color="white">Loading...</Text>;
+  if (previewsLoading)
+    return (
+      <Text color="white" mt="15px">
+        Loading...
+      </Text>
+    );
+
   if (previewsError)
     return (
-      <Text color="white">
+      <Text color="white" mt="15px">
         Error: {(previewsErrorMessage as { message: "string" }).message}
       </Text>
     );
 
   return (
-    <Flex direction="column" color="white" mt="15px">
+    <Flex direction="column" color="white" mt="15px" overflow="auto">
       <Flex
         direction="row"
         w="calc(100% - 15px)"
@@ -115,20 +120,22 @@ function PlaylistDashboard() {
         </Text>
       </Flex>
 
-      {displayMode === "browse" ? (
-        playlistPreviews!.map((p) => (
-          <Flex
-            key={p.id}
-            color={browsePlaylistContext?.id === p.id ? "purple" : "white"}
-            _hover={{ cursor: "pointer", color: "purple" }}
-            onClick={() => browse(p.routeAlias)}
-          >
-            {p.name}
-          </Flex>
-        ))
-      ) : (
-        <Text>Coming soon...</Text>
-      )}
+      <Flex direction="column">
+        {displayMode === "browse" ? (
+          playlistPreviews!.map((p) => (
+            <Flex
+              key={p.id}
+              color={browsePlaylistContext?.id === p.id ? "purple" : "white"}
+              _hover={{ cursor: "pointer", color: "purple" }}
+              onClick={() => browse(p.routeAlias)}
+            >
+              {p.name}
+            </Flex>
+          ))
+        ) : (
+          <Text>Coming soon...</Text>
+        )}
+      </Flex>
     </Flex>
   );
 }
