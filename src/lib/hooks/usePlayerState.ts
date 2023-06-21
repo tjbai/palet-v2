@@ -6,11 +6,23 @@ import { useQueryClient } from "react-query";
 import { BROWSE_PLAYLIST_CONTEXT_QUERY } from "../constants";
 import { NowPlaying, PlaylistContext } from "../types";
 import { useQueryStates } from "./Query/useQueryStates";
+import { fetchPlaylistPreviews } from "../services/client/playlist";
+import { PlaylistPreview } from "../types";
 
 const MODE_LOWER_BOUND = 0;
 const MODE_UPPER_BOUND = 2;
 
+//Gets the playlist preview asynchronously
+const PlayListPreview = fetchPlaylistPreviews()
+.then ((result) => {
+  return result;
+})
+.catch ( error => {console.log(error);});
+
+
+
 // quick and dirty solution to autoplaying a new playlist
+/*
 const AUTO_PLAY = [
   "shibuyuhh club mix",
   "soho",
@@ -26,6 +38,7 @@ const AUTO_PLAY = [
   "pmixv2",
   "berlin",
 ];
+*/
 
 export default function usePlayerState() {
   const [playlistContext, setPlaylistContext] =
@@ -82,37 +95,49 @@ export default function usePlayerState() {
   }, [playlistContext]);
 
   const nextSong = () => {
-    if (!playlistContext || playlistContext.index === -1) return;
-    if (shuffled) {
-      const newShuffledIndex =
-        (playlistContext.shuffledIndex + 1) % playlistContext.songs.length;
-      const newSongIndex = playlistContext.shuffledOrder[newShuffledIndex];
-      setPlaylistContext({
-        ...playlistContext,
-        index: newSongIndex,
-        shuffledIndex: newShuffledIndex,
+    PlayListPreview.then((result) => {
+
+      //get results from the playlist preview and translate them to AUTO_PLAY
+      //AUTO_PLAY is just an array with all the playlist names, i.e: [pl_1, pl_2, .. pl_x]
+      const preview = result as PlaylistPreview[];
+      const AUTO_PLAY: string[] = [];
+      preview.forEach(playlistItem => {
+        AUTO_PLAY.push(playlistItem.name);
       });
-    } else {
-      if (playlistContext.index + 1 == playlistContext.songs.length) {
-        const curIndex =
-          AUTO_PLAY.indexOf(playlistContext.routeAlias) !== -1
-            ? AUTO_PLAY.indexOf(playlistContext.routeAlias)
-            : 0;
-        const nextIndex = (curIndex + 1) % AUTO_PLAY.length;
-        setAutoplay({ on: true, prevName: browsePlaylistContext?.name! });
-        browse(AUTO_PLAY[nextIndex]);
-      } else {
-        const newSongIndex = playlistContext.index + 1;
+      console.log(AUTO_PLAY);
+      
+      if (!playlistContext || playlistContext.index === -1) return;
+      if (shuffled) {
         const newShuffledIndex =
-          playlistContext.shuffledOrder.indexOf(newSongIndex);
+          (playlistContext.shuffledIndex + 1) % playlistContext.songs.length;
+        const newSongIndex = playlistContext.shuffledOrder[newShuffledIndex];
         setPlaylistContext({
           ...playlistContext,
           index: newSongIndex,
           shuffledIndex: newShuffledIndex,
         });
+      } else {
+        if (playlistContext.index + 1 == playlistContext.songs.length) {
+          const curIndex =
+            AUTO_PLAY.indexOf(playlistContext.routeAlias) !== -1
+              ? AUTO_PLAY.indexOf(playlistContext.routeAlias)
+              : 0;
+          const nextIndex = (curIndex + 1) % AUTO_PLAY.length;
+          setAutoplay({ on: true, prevName: browsePlaylistContext?.name! });
+          browse(AUTO_PLAY[nextIndex]);
+        } else {
+          const newSongIndex = playlistContext.index + 1;
+          const newShuffledIndex =
+            playlistContext.shuffledOrder.indexOf(newSongIndex);
+          setPlaylistContext({
+            ...playlistContext,
+            index: newSongIndex,
+            shuffledIndex: newShuffledIndex,
+          });
+        }
       }
-    }
-  };
+    })
+  };//LAST
 
   const prevSong = () => {
     if (!playlistContext || playlistContext.index === -1) return;
@@ -140,7 +165,7 @@ export default function usePlayerState() {
     }
   };
 
-  const selectSong = (name: string) => {
+  const selectSong = (name: string, playByDefault: boolean = true) => {
     if (!isEqual(playlistContext, browsePlaylistContext)) {
       if (!browsePlaylistContext || currentTrack?.name === name) return;
 
@@ -167,7 +192,8 @@ export default function usePlayerState() {
       });
     }
 
-    setTimeout(() => setPlaying(true), 1000);
+    //plays by default in most cases, added the optional bool for modularity
+    if (playByDefault) setTimeout(() => setPlaying(true), 1000);
   };
 
   const toggle = () => {
@@ -225,6 +251,12 @@ export default function usePlayerState() {
     queryClient.invalidateQueries(BROWSE_PLAYLIST_CONTEXT_QUERY);
   };
 
+  const playFirstSongFromBrowsedPlaylist = (routeAlias: string) => {
+    browse(routeAlias);
+    //console.log(browsePlaylistContext);
+    setTimeout(() => setPlaying(true), 1000);
+  };
+
   return {
     playlistContext,
     setPlaylistContext,
@@ -247,5 +279,6 @@ export default function usePlayerState() {
     toggleShuffle,
     shuffled,
     browse,
+    playFirstSongFromBrowsedPlaylist,
   };
 }
