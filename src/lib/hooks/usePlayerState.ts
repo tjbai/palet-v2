@@ -104,7 +104,6 @@ export default function usePlayerState() {
       preview.forEach(playlistItem => {
         AUTO_PLAY.push(playlistItem.name);
       });
-      console.log(AUTO_PLAY);
       
       if (!playlistContext || playlistContext.index === -1) return;
       if (shuffled) {
