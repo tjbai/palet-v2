@@ -6,39 +6,9 @@ import { useQueryClient } from "react-query";
 import { BROWSE_PLAYLIST_CONTEXT_QUERY } from "../constants";
 import { NowPlaying, PlaylistContext } from "../types";
 import { useQueryStates } from "./Query/useQueryStates";
-import { fetchPlaylistPreviews } from "../services/client/playlist";
-import { PlaylistPreview } from "../types";
 
 const MODE_LOWER_BOUND = 0;
 const MODE_UPPER_BOUND = 2;
-
-//Gets the playlist preview asynchronously
-const PlayListPreview = fetchPlaylistPreviews()
-.then ((result) => {
-  return result;
-})
-.catch ( error => {console.log(error);});
-
-
-
-// quick and dirty solution to autoplaying a new playlist
-/*
-const AUTO_PLAY = [
-  "shibuyuhh club mix",
-  "soho",
-  "jdm",
-  "marmix",
-  "pmixv6",
-  "french_riviera",
-  "espresso",
-  "pmixv3",
-  "smm",
-  "pmixv1",
-  "pmixv4",
-  "pmixv2",
-  "berlin",
-];
-*/
 
 export default function usePlayerState() {
   const [playlistContext, setPlaylistContext] =
@@ -54,7 +24,7 @@ export default function usePlayerState() {
   const [autoplay, setAutoplay] = useState({ on: false, prevName: "" });
 
   const queryClient = useQueryClient();
-  const [playerQueries, setPlayerQueries] = useQueryStates(
+  const [_, setPlayerQueries] = useQueryStates(
     {
       type: queryTypes.string,
       crate: queryTypes.string,
@@ -95,48 +65,37 @@ export default function usePlayerState() {
   }, [playlistContext]);
 
   const nextSong = () => {
-    PlayListPreview.then((result) => {
+    if (!playlistContext || playlistContext.index === -1) return;
 
-      //get results from the playlist preview and translate them to AUTO_PLAY
-      //AUTO_PLAY is just an array with all the playlist names, i.e: [pl_1, pl_2, .. pl_x]
-      const preview = result as PlaylistPreview[];
-      const AUTO_PLAY: string[] = [];
-      preview.forEach(playlistItem => {
-        AUTO_PLAY.push(playlistItem.name);
+    // If we're in shuffle mode
+    if (shuffled) {
+      const newShuffledIndex =
+        (playlistContext.shuffledIndex + 1) % playlistContext.songs.length;
+      const newSongIndex = playlistContext.shuffledOrder[newShuffledIndex];
+      setPlaylistContext({
+        ...playlistContext,
+        index: newSongIndex,
+        shuffledIndex: newShuffledIndex,
       });
-      
-      if (!playlistContext || playlistContext.index === -1) return;
-      if (shuffled) {
-        const newShuffledIndex =
-          (playlistContext.shuffledIndex + 1) % playlistContext.songs.length;
-        const newSongIndex = playlistContext.shuffledOrder[newShuffledIndex];
-        setPlaylistContext({
-          ...playlistContext,
-          index: newSongIndex,
-          shuffledIndex: newShuffledIndex,
-        });
-      } else {
-        if (playlistContext.index + 1 == playlistContext.songs.length) {
-          const curIndex =
-            AUTO_PLAY.indexOf(playlistContext.routeAlias) !== -1
-              ? AUTO_PLAY.indexOf(playlistContext.routeAlias)
-              : 0;
-          const nextIndex = (curIndex + 1) % AUTO_PLAY.length;
-          setAutoplay({ on: true, prevName: browsePlaylistContext?.name! });
-          browse(AUTO_PLAY[nextIndex]);
-        } else {
-          const newSongIndex = playlistContext.index + 1;
-          const newShuffledIndex =
-            playlistContext.shuffledOrder.indexOf(newSongIndex);
-          setPlaylistContext({
-            ...playlistContext,
-            index: newSongIndex,
-            shuffledIndex: newShuffledIndex,
-          });
-        }
-      }
-    })
-  };//LAST
+      return;
+    }
+
+    // If we're NOT at the end
+    if (playlistContext.index + 1 < playlistContext.songs.length) {
+      const newSongIndex = playlistContext.index + 1;
+      const newShuffledIndex =
+        playlistContext.shuffledOrder.indexOf(newSongIndex);
+      setPlaylistContext({
+        ...playlistContext,
+        index: newSongIndex,
+        shuffledIndex: newShuffledIndex,
+      });
+      return;
+    }
+
+    // TODO: else, fetch a new playlist preview, referencing the implementation in /api/playlist/nextPlaylist
+    // when that has been fetched, browse to it and turn on autoplay
+  };
 
   const prevSong = () => {
     if (!playlistContext || playlistContext.index === -1) return;
