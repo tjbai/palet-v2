@@ -6,6 +6,7 @@ import { useQueryClient } from "react-query";
 import { BROWSE_PLAYLIST_CONTEXT_QUERY } from "../constants";
 import { NowPlaying, PlaylistContext } from "../types";
 import { useQueryStates } from "./Query/useQueryStates";
+import { fetchPlaylistPreviews } from "../services/client/playlist";
 
 const MODE_LOWER_BOUND = 0;
 const MODE_UPPER_BOUND = 2;
@@ -64,7 +65,7 @@ export default function usePlayerState() {
     updatePlayerState();
   }, [playlistContext]);
 
-  const nextSong = () => {
+  const nextSong = async () => {
     if (!playlistContext || playlistContext.index === -1) return;
 
     // If we're in shuffle mode
@@ -93,8 +94,37 @@ export default function usePlayerState() {
       return;
     }
 
-    // TODO: else, fetch a new playlist preview, referencing the implementation in /api/playlist/nextPlaylist
-    // when that has been fetched, browse to it and turn on autoplay
+    //at end of playlist, no shuffle
+    else {
+      let routeAlias: string = playlistContext.routeAlias;
+      const nextPlaylist = await getNextPlaylistHelper(routeAlias);
+      if (nextPlaylist.routeAlias === "" ) {
+        throw new Error("ERROR: Failed to get next playlist");
+      }
+      else {
+        setAutoplay({on: true, prevName: browsePlaylistContext?.name!});
+        browse(nextPlaylist.routeAlias);
+      }
+    }
+  };
+
+  //helper method. TODO: move to permanent API call at 'src/app/api/playlist/nextPlaylist/route.ts'
+  const getNextPlaylistHelper = async (routeAlias: string) => {
+    try {
+      const playlistPreviews = await fetchPlaylistPreviews();
+      playlistPreviews.sort((a, b) => b.kandiCount - a.kandiCount); // sort in decreasing order
+      const curIndex = playlistPreviews.findIndex(
+        (preview) => preview.routeAlias === routeAlias
+      );
+      if (curIndex === playlistPreviews.length) {
+        return ({ routeAlias: playlistPreviews[0].routeAlias,  });
+      }
+      return ({
+        routeAlias: playlistPreviews[curIndex + 1].routeAlias, 
+      });
+    } catch (e) {
+      return ({ routeAlias: "", });
+    }
   };
 
   const prevSong = () => {
