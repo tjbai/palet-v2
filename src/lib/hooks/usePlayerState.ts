@@ -179,7 +179,6 @@ export default function usePlayerState() {
         shuffledIndex,
       });
     }
-
     //plays by default in most cases, added the optional bool for modularity
     if (playByDefault) setTimeout(() => setPlaying(true), 1000);
   };
@@ -234,15 +233,12 @@ export default function usePlayerState() {
     });
   };
 
-  const browse = (routeAlias: string) => {
+  const browse = (routeAlias: string, startOnBrowse: boolean = false) => {
+    if (startOnBrowse) {
+      setAutoplay({on: true, prevName: browsePlaylistContext?.name!});
+    }
     setPlayerQueries((prevQueries) => ({ ...prevQueries, crate: routeAlias }));
     queryClient.invalidateQueries(BROWSE_PLAYLIST_CONTEXT_QUERY);
-  };
-
-  const playFirstSongFromBrowsedPlaylist = (routeAlias: string) => {
-    browse(routeAlias);
-    //console.log(browsePlaylistContext);
-    setTimeout(() => setPlaying(true), 1000);
   };
 
   return {
@@ -267,6 +263,5 @@ export default function usePlayerState() {
     toggleShuffle,
     shuffled,
     browse,
-    playFirstSongFromBrowsedPlaylist,
   };
 }
