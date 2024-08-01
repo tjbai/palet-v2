@@ -47,6 +47,6 @@
     "wavesurfer.js": "^7.0.0-beta.5"
   },
   "devDependencies": {
-    "prisma": "^4.15.0"
+    "prisma": "^4.16.2"
   }
 }
